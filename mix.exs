@@ -5,15 +5,17 @@ defmodule AnyEx.MixProject do
     [
       apps_path: "apps",
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      aliases: aliases()
     ]
   end
 
-  # Dependencies listed here are available only for this
-  # project and cannot be accessed from applications inside
-  # the apps folder.
-  #
-  # Run "mix help deps" for examples and options.
+  defp aliases do
+    [
+      "db.create": "ecto.create"
+    ]
+  end
+
   defp deps do
     [
       {:credo, "~> 1.0.0", only: [:dev, :test], runtime: false}

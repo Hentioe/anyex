@@ -11,7 +11,8 @@ defmodule Storage.MixProject do
       lockfile: "../../mix.lock",
       elixir: "~> 1.8",
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      aliases: aliases()
     ]
   end
 
@@ -23,7 +24,15 @@ defmodule Storage.MixProject do
     ]
   end
 
-  # Run "mix help deps" to learn about dependencies.
+  defp aliases do
+    [
+      "table.gen": "ecto.gen.migration",
+      "db.migrate": "ecto.migrate",
+      "db.rollback": "ecto.rollback",
+      "db.reinit": ["ecto.drop", "ecto.create", "ecto.migrate"]
+    ]
+  end
+
   defp deps do
     [
       {:ecto_sql, "~> 3.0"},
