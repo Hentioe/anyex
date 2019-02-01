@@ -1,4 +1,7 @@
 defmodule Storage.Application do
+  @moduledoc """
+  应用入口/监督树管理
+  """
   use Application
 
   def start(_type, _args) do
