@@ -3,13 +3,14 @@ defmodule Storage.Repo.Migrations.CreateAritlce do
 
   def change do
     create table(:article) do
-      add :qtext, :string, null: false
-      add :title, :string
-      add :content, :text, default: "[WIP]"
+      add :qtext, :string, null: false, comment: "查询文本"
+      add :title, :string, null: false, comment: "文章标题"
+      add :content, :text, default: "[WIP]", comment: "文章内容"
+      add :top, :integer, null: false, default: -1, comment: "文章排序"
 
       common_fields(:v001)
     end
 
-    create(unique_index(:article, [:qtext]))
+    create unique_index :article, [:qtext, :title]
   end
 end
