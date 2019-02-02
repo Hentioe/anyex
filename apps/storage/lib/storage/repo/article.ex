@@ -1,6 +1,8 @@
 defmodule Storage.Repo.Article do
   @moduledoc false
   use Storage.Schema
+  alias Storage.Repo.{Category}
+  alias Ecto.{Changeset}
 
   schema "article" do
     field :qtext
@@ -9,11 +11,13 @@ defmodule Storage.Repo.Article do
     field :top, :integer, default: -1
 
     common_fields(:v001)
+
+    belongs_to :category, Category
   end
 
   def changeset(article, params \\ %{}) do
     article
-    |> Ecto.Changeset.cast(params, [:qtext, :title, :content, :top, @status_field])
-    |> Ecto.Changeset.validate_required([:qtext, :top, @status_field])
+    |> Changeset.cast(params, [:qtext, :title, :content, :top, :category_id, @status_field])
+    |> Changeset.validate_required([:qtext, :top, :category_id, @status_field])
   end
 end
