@@ -12,7 +12,10 @@ defmodule AnyEx.MixProject do
 
   defp aliases do
     [
-      "db.create": "ecto.create"
+      "db.create": "ecto.create",
+      "db.migrate": "cmd --app storage mix db.migrate",
+      "db.rollback": "cmd --app storage mix db.rollback",
+      "db.reinit": "cmd --app storage mix db.reinit"
     ]
   end
 
