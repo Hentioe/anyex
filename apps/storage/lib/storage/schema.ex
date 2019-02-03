@@ -23,6 +23,28 @@ defmodule Storage.Schema do
         end
       end
 
+      def update(schema, params) when is_map(params) do
+        params = params |> Map.drop([:__meta__, :__struct__])
+
+        case schema do
+          nil ->
+            {:error, "do not find id: `#{params.id}` of resource"}
+
+          article ->
+            changeset = article |> changeset(params)
+
+            if changeset.valid? do
+              try do
+                Storage.Repo.update(changeset)
+              rescue
+                e in _ -> {:error, e}
+              end
+            else
+              {:error, traverse_errors(changeset)}
+            end
+        end
+      end
+
       defoverridable add: 2
     end
   end
@@ -31,6 +53,15 @@ defmodule Storage.Schema do
     quote bind_quoted: binding() do
       timestamps(type: :utc_datetime_usec)
       field :res_status, :integer, default: 0
+    end
+  end
+
+  defmacro guaranteed_id(params, do: block) do
+    quote do
+      case unquote(params).id do
+        nil -> {:error, "resource id cannot be empty"}
+        _ -> unquote(block)
+      end
     end
   end
 

@@ -26,7 +26,7 @@ defmodule Storage.MixProject do
 
   defp aliases do
     [
-      "table.gen": "ecto.gen.migration",
+      "gen.migration": "ecto.gen.migration",
       "db.migrate": "ecto.migrate",
       "db.rollback": "ecto.rollback",
       "db.reinit": ["ecto.drop", "ecto.create", "ecto.migrate"]
