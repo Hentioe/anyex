@@ -1,18 +1,15 @@
 defmodule Storage do
   @moduledoc """
-  Documentation for Storage.
+  应用入口/监督树管理
   """
+  use Application
 
-  @doc """
-  Hello world.
+  def start(_type, _args) do
+    children = [
+      Storage.Repo
+    ]
 
-  ## Examples
-
-      iex> Storage.hello()
-      :world
-
-  """
-  def hello do
-    :world
+    opts = [strategy: :one_for_one, name: Storage.Supervisor]
+    Supervisor.start_link(children, opts)
   end
 end

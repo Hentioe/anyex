@@ -19,7 +19,7 @@ defmodule Storage.MixProject do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      mod: {Storage.Application, []},
+      mod: {Storage, []},
       extra_applications: [:logger]
     ]
   end

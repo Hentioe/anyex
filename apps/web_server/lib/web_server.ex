@@ -1,18 +1,15 @@
 defmodule WebServer do
   @moduledoc """
-  Documentation for WebServer.
+  应用入口/监督树管理
   """
+  use Application
 
-  @doc """
-  Hello world.
+  def start(_type, _args) do
+    children = [
+      Plug.Cowboy.child_spec(scheme: :http, plug: WebServer.Router, options: [port: 4001])
+    ]
 
-  ## Examples
-
-      iex> WebServer.hello()
-      :world
-
-  """
-  def hello do
-    :world
+    opts = [strategy: :one_for_one, name: WebServer.Supervisor]
+    Supervisor.start_link(children, opts)
   end
 end
