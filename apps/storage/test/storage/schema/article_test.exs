@@ -39,7 +39,7 @@ defmodule Storage.Schema.ArticleTest do
     assert Enum.at(article.tags, 0).id == tag1.id
   end
 
-  test "find list" do
+  test "find article list" do
     {status, category} = Category.add(%{qname: "default", name: "默认类别"})
     assert status == :ok
 

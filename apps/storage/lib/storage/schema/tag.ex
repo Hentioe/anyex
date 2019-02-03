@@ -1,8 +1,13 @@
 defmodule Storage.Schema.Tag do
   @moduledoc false
+
   use Storage.Schema
+
+  alias Storage.Repo
   alias Storage.Schema.{Article}
   alias Ecto.{Changeset}
+
+  import Ecto.Query, only: [from: 2]
 
   schema "tag" do
     field :qname
@@ -23,4 +28,26 @@ defmodule Storage.Schema.Tag do
   end
 
   def add(data), do: add(%__MODULE__{}, data)
+
+  def update(data) do
+    guaranteed_id data do
+      tag = Repo.get(__MODULE__, data.id)
+      tag |> update(data)
+    end
+  end
+
+  def find_list(filters \\ []) when is_list(filters) do
+    res_status = Keyword.get(filters, :res_status, 0)
+    limit = Keyword.get(filters, :limit, 999)
+    offset = Keyword.get(filters, :offset, 0)
+
+    query =
+      from t in __MODULE__,
+        where: t.res_status == ^res_status,
+        order_by: [desc: t.top],
+        limit: ^limit,
+        offset: ^offset
+
+    query |> query_list
+  end
 end
