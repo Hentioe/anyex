@@ -39,7 +39,8 @@ defmodule Storage.Repo.Article do
 
   def update(params) do
     guaranteed_id params do
-      Repo.get(__MODULE__, params.id) |> Repo.preload(:tags) |> update(params)
+      article = Repo.get(__MODULE__, params.id)
+      article |> Repo.preload(:tags) |> update(params)
     end
   end
 end

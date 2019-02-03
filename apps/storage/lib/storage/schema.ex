@@ -8,7 +8,6 @@ defmodule Storage.Schema do
 
       @status_field :res_status
 
-      @spec add(term, Map.t()) :: {:ok, term} | {:error, term}
       def add(schema, params) when is_map(params) do
         changeset = schema |> changeset(params)
 
