@@ -1,10 +1,10 @@
-defmodule Storage.Repo.ArticleTest do
+defmodule Storage.Schema.ArticleTest do
   use ExUnit.Case
 
   alias Storage.Repo
-  alias Storage.Repo.{Article, Category, Tag}
+  alias Storage.Schema.{Article, Category, Tag}
 
-  import Storage.Repo.Article
+  import Storage.Schema.Article
 
   setup do
     on_exit(fn ->

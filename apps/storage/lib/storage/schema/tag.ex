@@ -1,7 +1,7 @@
-defmodule Storage.Repo.Tag do
+defmodule Storage.Schema.Tag do
   @moduledoc false
   use Storage.Schema
-  alias Storage.Repo.{Article}
+  alias Storage.Schema.{Article}
   alias Ecto.{Changeset}
 
   schema "tag" do

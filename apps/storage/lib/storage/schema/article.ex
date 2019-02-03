@@ -1,9 +1,9 @@
-defmodule Storage.Repo.Article do
+defmodule Storage.Schema.Article do
   @moduledoc false
   use Storage.Schema
 
   alias Storage.Repo
-  alias Storage.Repo.{Category, Tag}
+  alias Storage.Schema.{Category, Tag}
   alias Ecto.{Changeset}
 
   schema "article" do
