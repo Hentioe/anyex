@@ -44,6 +44,15 @@ defmodule Storage.Schema do
         end
       end
 
+      def query_list(query) do
+        try do
+          list = query |> Storage.Repo.all()
+          {:ok, list}
+        rescue
+          e in _ -> {:error, e}
+        end
+      end
+
       defoverridable add: 2
     end
   end

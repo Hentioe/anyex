@@ -21,6 +21,8 @@ defmodule Storage.Repo.Article do
 
   @impl Storage.Schema
   def changeset(article, data \\ %{}) do
+    tags = if data[:tags], do: data.tags, else: []
+
     article
     |> Changeset.cast(data, [
       :qtext,
@@ -31,7 +33,7 @@ defmodule Storage.Repo.Article do
       :category_id,
       @status_field
     ])
-    |> Changeset.put_assoc(:tags, data.tags)
+    |> Changeset.put_assoc(:tags, tags)
     |> Changeset.validate_required([:qtext, :title, :top, :category_id, @status_field])
   end
 
@@ -44,6 +46,20 @@ defmodule Storage.Repo.Article do
     end
   end
 
-  def find_list() do
+  import Ecto.Query, only: [from: 2]
+
+  def find_list(filters \\ []) when is_list(filters) do
+    res_stauts = Keyword.get(filters, :res_status, 0)
+    limit = Keyword.get(filters, :limit, 999)
+    offset = Keyword.get(filters, :offset, 0)
+
+    query =
+      from a in __MODULE__,
+        where: a.res_status == ^res_stauts,
+        order_by: [desc: a.top, desc: a.updated_at],
+        limit: ^limit,
+        offset: ^offset
+
+    query |> query_list
   end
 end

@@ -38,4 +38,40 @@ defmodule Storage.Repo.ArticleTest do
     assert length(article.tags) == 1
     assert Enum.at(article.tags, 0).id == tag1.id
   end
+
+  test "find list" do
+    {status, category} = Category.add(%{qname: "default", name: "默认类别"})
+    assert status == :ok
+
+    created_list =
+      1..15
+      |> Enum.map(fn i ->
+        {status, article} =
+          add(%{
+            qtext: "first-article-#{i}",
+            title: "第 #{i} 篇文章",
+            category_id: category.id
+          })
+
+        assert status == :ok
+        assert article.category_id == category.id
+
+        article
+      end)
+
+    {status, list} = find_list()
+    assert status == :ok
+    assert length(list) == 15
+
+    article = Map.merge(Enum.at(created_list, 0), %{res_status: -1})
+    {status, _article} = update(article)
+    assert status == :ok
+    {status, list} = find_list()
+    assert status == :ok
+    assert length(list) == 14
+
+    {status, list} = find_list(offset: 13)
+    assert status == :ok
+    assert length(list) == 1
+  end
 end

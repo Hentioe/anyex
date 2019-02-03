@@ -6,7 +6,8 @@ locals_without_parens = [
   add: 2,
   add: 3,
   create: 1,
-  unique_index: 2
+  unique_index: 2,
+  from: 2
 ]
 
 [
