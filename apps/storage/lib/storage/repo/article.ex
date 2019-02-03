@@ -20,9 +20,9 @@ defmodule Storage.Repo.Article do
   end
 
   @impl Storage.Schema
-  def changeset(article, params \\ %{}) do
+  def changeset(article, data \\ %{}) do
     article
-    |> Changeset.cast(params, [
+    |> Changeset.cast(data, [
       :qtext,
       :title,
       :preface,
@@ -31,16 +31,19 @@ defmodule Storage.Repo.Article do
       :category_id,
       @status_field
     ])
-    |> Changeset.put_assoc(:tags, params.tags)
+    |> Changeset.put_assoc(:tags, data.tags)
     |> Changeset.validate_required([:qtext, :title, :top, :category_id, @status_field])
   end
 
-  def add(params), do: add(%__MODULE__{}, params)
+  def add(data), do: add(%__MODULE__{}, data)
 
-  def update(params) do
-    guaranteed_id params do
-      article = Repo.get(__MODULE__, params.id)
-      article |> Repo.preload(:tags) |> update(params)
+  def update(data) do
+    guaranteed_id data do
+      article = Repo.get(__MODULE__, data.id)
+      article |> Repo.preload(:tags) |> update(data)
     end
+  end
+
+  def find_list() do
   end
 end

@@ -16,11 +16,11 @@ defmodule Storage.Repo.Category do
   end
 
   @impl Storage.Schema
-  def changeset(category, params \\ %{}) do
+  def changeset(category, data \\ %{}) do
     category
-    |> Changeset.cast(params, [:qname, :name, :description, :top, @status_field])
+    |> Changeset.cast(data, [:qname, :name, :description, :top, @status_field])
     |> Changeset.validate_required([:qname, :name, :top, @status_field])
   end
 
-  def add(params), do: add(%__MODULE__{}, params)
+  def add(data), do: add(%__MODULE__{}, data)
 end
