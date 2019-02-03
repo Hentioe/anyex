@@ -31,7 +31,7 @@ defmodule Storage.Repo.ArticleTest do
     assert article.category_id == category.id
     assert length(article.tags) == 2
 
-    article = Map.merge(article, %{itle: "修改后的文章", tags: [tag1]})
+    article = Map.merge(article, %{title: "修改后的文章", tags: [tag1]})
     {status, article} = update(article)
     assert status == :ok
     assert article.category_id == category.id
