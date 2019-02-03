@@ -27,6 +27,7 @@ defmodule WebServer.MixProject do
   defp deps do
     [
       {:storage, in_umbrella: true},
+      {:distillery, "~> 2.0"},
       {:plug_cowboy, "~> 2.0"}
     ]
   end
