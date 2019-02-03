@@ -49,16 +49,21 @@ defmodule Storage.Schema.Article do
   import Ecto.Query, only: [from: 2]
 
   def find_list(filters \\ []) when is_list(filters) do
-    res_stauts = Keyword.get(filters, :res_status, 0)
+    res_status = Keyword.get(filters, :res_status, 0)
     limit = Keyword.get(filters, :limit, 999)
     offset = Keyword.get(filters, :offset, 0)
 
+    tags_query = from t in Tag, where: t.res_status == ^res_status
+
     query =
       from a in __MODULE__,
-        where: a.res_status == ^res_stauts,
+        join: c in assoc(a, :category),
+        where: a.res_status == ^res_status,
+        where: c.res_status == ^res_status,
         order_by: [desc: a.top, desc: a.updated_at],
         limit: ^limit,
-        offset: ^offset
+        offset: ^offset,
+        preload: [:category, tags: ^tags_query]
 
     query |> query_list
   end

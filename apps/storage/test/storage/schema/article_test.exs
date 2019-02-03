@@ -43,6 +43,11 @@ defmodule Storage.Schema.ArticleTest do
     {status, category} = Category.add(%{qname: "default", name: "默认类别"})
     assert status == :ok
 
+    {status, tag1} = Tag.add(%{qname: "t1", name: "标签1"})
+    assert status == :ok
+    {status, tag2} = Tag.add(%{qname: "t2", name: "标签2"})
+    assert status == :ok
+
     created_list =
       1..15
       |> Enum.map(fn i ->
@@ -50,7 +55,8 @@ defmodule Storage.Schema.ArticleTest do
           add(%{
             qtext: "first-article-#{i}",
             title: "第 #{i} 篇文章",
-            category_id: category.id
+            category_id: category.id,
+            tags: [tag1, tag2]
           })
 
         assert status == :ok
