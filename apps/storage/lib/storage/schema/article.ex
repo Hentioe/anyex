@@ -6,6 +6,8 @@ defmodule Storage.Schema.Article do
   alias Storage.Schema.{Category, Tag}
   alias Ecto.{Changeset}
 
+  import Ecto.Query, only: [from: 2]
+
   schema "article" do
     field :qtext
     field :title
@@ -45,8 +47,6 @@ defmodule Storage.Schema.Article do
       article |> Repo.preload(:tags) |> update(data)
     end
   end
-
-  import Ecto.Query, only: [from: 2]
 
   def find_list(filters \\ []) when is_list(filters) do
     res_status = Keyword.get(filters, :res_status, 0)
