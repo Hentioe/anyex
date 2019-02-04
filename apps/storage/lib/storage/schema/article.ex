@@ -3,7 +3,7 @@ defmodule Storage.Schema.Article do
   use Storage.Schema
 
   alias Storage.Repo
-  alias Storage.Schema.{Category, Tag}
+  alias Storage.Schema.{Category, Tag, Comment}
   alias Ecto.{Changeset}
 
   import Ecto.Query, only: [from: 2]
@@ -19,6 +19,7 @@ defmodule Storage.Schema.Article do
 
     belongs_to :category, Category
     many_to_many :tags, Tag, join_through: "articles_tags", on_replace: :delete
+    has_many :comments, Comment
   end
 
   @impl Storage.Schema

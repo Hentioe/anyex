@@ -1,5 +1,5 @@
 defmodule Storage.Schema.TagTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: false
 
   alias Storage.Repo
   alias Storage.Schema.{Tag}
