@@ -32,8 +32,6 @@ defmodule Storage.Schema.CommentTest do
         article_id: article.id
       })
 
-    IO.inspect(comment)
-
     assert status == :ok
 
     comment = Map.merge(comment, %{content: "我是修改后的评论1"})

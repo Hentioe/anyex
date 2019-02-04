@@ -5,7 +5,7 @@ defmodule Storage.Migration do
       use Ecto.Migration
 
       def common_fields(:v001) do
-        timestamps(type: :utc_datetime_usec)
+        timestamps(type: :utc_datetime_usec, comment: "写入时间")
         add :res_status, :integer, default: 0, null: false, comment: "资源状态"
       end
     end

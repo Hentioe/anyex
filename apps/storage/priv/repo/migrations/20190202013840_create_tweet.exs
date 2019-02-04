@@ -3,9 +3,9 @@ defmodule Storage.Repo.Migrations.CreateTweet do
 
   def change do
     create table(:tweet) do
-      add :color, :string, comment: "Tweet 颜色"
-      add :conetnt, :text, null: false, comment: "Tweet 内容"
-      add :top, :integer, null: false, default: -1, comment: "Tweet 排序"
+      add :color, :string, comment: "推文颜色"
+      add :conetnt, :text, null: false, comment: "推文内容"
+      add :top, :integer, null: false, default: -1, comment: "推文排序"
 
       common_fields(:v001)
     end
