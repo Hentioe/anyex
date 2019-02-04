@@ -50,21 +50,50 @@ defmodule Storage.Schema.Article do
   end
 
   def find_list(filters \\ []) when is_list(filters) do
-    res_status = Keyword.get(filters, :res_status, 0)
-    limit = Keyword.get(filters, :limit, 999)
-    offset = Keyword.get(filters, :offset, 0)
+    res_status = Keyword.get(filters, :res_status)
+    limit = Keyword.get(filters, :limit)
+    offset = Keyword.get(filters, :offset)
 
-    tags_query = from t in Tag, where: t.res_status == ^res_status
+    tags_query = from t in Tag, select: t
+
+    tags_query =
+      if res_status do
+        from t in tags_query, where: t.res_status == ^res_status
+      else
+        tags_query
+      end
 
     query =
       from a in __MODULE__,
         join: c in assoc(a, :category),
-        where: a.res_status == ^res_status,
-        where: c.res_status == ^res_status,
-        order_by: [desc: a.top, desc: a.updated_at],
-        limit: ^limit,
-        offset: ^offset,
-        preload: [:category, tags: ^tags_query]
+        order_by: [desc: a.top, desc: a.updated_at]
+
+    query =
+      Enum.reduce(filters, query, fn {key, value}, acc_query ->
+        if value == nil do
+          acc_query
+        else
+          case key do
+            :res_status ->
+              from [a, c] in acc_query,
+                where: a.res_status == ^res_status,
+                where: c.res_status == ^res_status
+
+            :limit ->
+              from _ in acc_query,
+                limit: ^limit
+
+            :offset ->
+              from _ in acc_query,
+                offset: ^offset
+
+            _ ->
+              acc_query
+          end
+        end
+      end)
+
+    query = from _ in query, preload: [:category, tags: ^tags_query]
 
     query |> query_list
   end

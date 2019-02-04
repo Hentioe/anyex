@@ -72,11 +72,11 @@ defmodule Storage.Schema.ArticleTest do
     article = Map.merge(Enum.at(created_list, 0), %{res_status: -1})
     {status, _article} = update(article)
     assert status == :ok
-    {status, list} = find_list()
+    {status, list} = find_list(res_status: 0)
     assert status == :ok
     assert length(list) == 14
 
-    {status, list} = find_list(offset: 13)
+    {status, list} = find_list(offset: 13, res_status: 0)
     assert status == :ok
     assert length(list) == 1
   end
