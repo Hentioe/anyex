@@ -6,8 +6,8 @@ defmodule Storage.Repo.Migrations.CreateTag do
       add :qname, :string, null: false, comment: "查询名称"
       add :name, :string, null: false, comment: "标签名称"
       add :description, :text, comment: "标签描述"
-      add :top, :integer, null: false, default: -1, comment: "标签排序"
 
+      top_field(:v001)
       common_fields(:v001)
     end
 

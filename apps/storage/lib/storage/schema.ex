@@ -53,7 +53,18 @@ defmodule Storage.Schema do
         end
       end
 
+      def top(struct, id) when is_integer(id) do
+        resource = Storage.Repo.get(struct, id)
+
+        case resource do
+          nil -> {:error, "do not find id: `#{id}` of resource"}
+          r -> r |> Map.merge(%{top: :os.system_time(:milli_seconds)}) |> update()
+        end
+      end
+
       defoverridable add: 2
+      defoverridable query_list: 1
+      defoverridable top: 2
     end
   end
 

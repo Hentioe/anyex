@@ -50,4 +50,8 @@ defmodule Storage.Schema.Tag do
 
     query |> query_list
   end
+
+  def top(id) do
+    top(__MODULE__, id)
+  end
 end

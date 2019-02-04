@@ -51,8 +51,6 @@ defmodule Storage.Schema.Article do
 
   def find_list(filters \\ []) when is_list(filters) do
     res_status = Keyword.get(filters, :res_status)
-    limit = Keyword.get(filters, :limit)
-    offset = Keyword.get(filters, :offset)
 
     tags_query = from t in Tag, select: t
 
@@ -76,16 +74,16 @@ defmodule Storage.Schema.Article do
           case key do
             :res_status ->
               from [a, c] in acc_query,
-                where: a.res_status == ^res_status,
-                where: c.res_status == ^res_status
+                where: a.res_status == ^value,
+                where: c.res_status == ^value
 
             :limit ->
               from _ in acc_query,
-                limit: ^limit
+                limit: ^value
 
             :offset ->
               from _ in acc_query,
-                offset: ^offset
+                offset: ^value
 
             _ ->
               acc_query
@@ -96,5 +94,9 @@ defmodule Storage.Schema.Article do
     query = from _ in query, preload: [:category, tags: ^tags_query]
 
     query |> query_list
+  end
+
+  def top(id) do
+    top(__MODULE__, id)
   end
 end
