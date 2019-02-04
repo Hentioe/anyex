@@ -36,16 +36,37 @@ defmodule Storage.Schema.Category do
   end
 
   def find_list(filters \\ []) when is_list(filters) do
-    res_status = Keyword.get(filters, :res_status, 0)
-    limit = Keyword.get(filters, :limit, 999)
-    offset = Keyword.get(filters, :offset, 0)
+    res_status = Keyword.get(filters, :res_status)
+    limit = Keyword.get(filters, :limit)
+    offset = Keyword.get(filters, :offset)
 
     query =
       from c in __MODULE__,
-        where: c.res_status == ^res_status,
-        order_by: [desc: c.top],
-        limit: ^limit,
-        offset: ^offset
+        order_by: [desc: c.top]
+
+    query =
+      Enum.reduce(filters, query, fn {key, value}, acc_query ->
+        if value == nil do
+          acc_query
+        else
+          case key do
+            :res_status ->
+              from c in acc_query,
+                where: c.res_status == ^res_status
+
+            :limit ->
+              from _ in acc_query,
+                limit: ^limit
+
+            :offset ->
+              from _ in acc_query,
+                offset: ^offset
+
+            _ ->
+              acc_query
+          end
+        end
+      end)
 
     query |> query_list
   end
