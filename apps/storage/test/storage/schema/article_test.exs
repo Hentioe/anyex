@@ -33,7 +33,6 @@ defmodule Storage.Schema.ArticleTest do
 
     article = Map.merge(article, %{title: "修改后的文章", tags: [tag1]})
     {status, article} = update(article)
-    IO.inspect(article)
     assert status == :ok
     assert article.category_id == category.id
     assert length(article.tags) == 1
