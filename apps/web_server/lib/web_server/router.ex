@@ -37,7 +37,7 @@ defmodule WebServer.Router do
         conn = conn |> fetch_query_params()
         offset = Map.get(conn.params, "offset", 0)
         limit = Map.get(conn.params, "limit", limit)
-        [conn, %{offset: offset, limit: limit}]
+        [conn, [offset: offset, limit: limit]]
       end
     end
   end

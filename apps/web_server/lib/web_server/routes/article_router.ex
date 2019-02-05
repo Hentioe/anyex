@@ -6,8 +6,9 @@ defmodule WebServer.Routes.ArticleRouter do
 
   get "/list" do
     [conn, paging] = fetch_paging_params(conn, 50)
+    filters = Keyword.merge(paging, res_status: 0)
 
-    case Article.find_list(res_status: 0, offset: paging.offset, limit: paging.limit) do
+    case Article.find_list(filters) do
       {:ok, list} -> resp_json(conn, list)
       {:error, e} -> resp_error(conn, e)
     end
@@ -15,8 +16,9 @@ defmodule WebServer.Routes.ArticleRouter do
 
   get "admin/list" do
     [conn, paging] = fetch_paging_params(conn, 50)
+    filters = paging
 
-    case Article.find_list(offset: paging.offset, limit: paging.limit) do
+    case Article.find_list(filters) do
       {:ok, list} -> resp_json(conn, list)
       {:error, e} -> resp_error(conn, e)
     end
