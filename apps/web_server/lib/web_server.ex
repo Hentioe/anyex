@@ -6,7 +6,11 @@ defmodule WebServer do
 
   def start(_type, _args) do
     children = [
-      Plug.Cowboy.child_spec(scheme: :http, plug: WebServer.Router, options: [port: 4001])
+      Plug.Cowboy.child_spec(
+        scheme: :http,
+        plug: WebServer.Routes,
+        options: [port: 4001]
+      )
     ]
 
     opts = [strategy: :one_for_one, name: WebServer.Supervisor]

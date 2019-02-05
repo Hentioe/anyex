@@ -19,7 +19,7 @@ defmodule WebServer.MixProject do
   def application do
     [
       mod: {WebServer, []},
-      extra_applications: [:logger, :storage]
+      extra_applications: [:logger, :storage, :plug_cowboy]
     ]
   end
 
@@ -28,7 +28,8 @@ defmodule WebServer.MixProject do
     [
       {:storage, in_umbrella: true},
       {:distillery, "~> 2.0"},
-      {:plug_cowboy, "~> 2.0"}
+      {:plug_cowboy, "~> 2.0"},
+      {:jason, "~> 1.1"}
     ]
   end
 end
