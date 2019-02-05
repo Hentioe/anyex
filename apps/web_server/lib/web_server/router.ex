@@ -17,8 +17,11 @@ defmodule WebServer.Router do
     quote do
       use Plug.Router
 
+      alias WebServer.Plugs.{JSONHeaderPlug, JwtAuthPlug}
+
       plug :match
-      plug WebServer.Plugs.JSONHeaderPlug
+      plug JSONHeaderPlug
+      plug JwtAuthPlug
       plug :dispatch
 
       def resp_json(conn, body, status \\ 200) when is_integer(status) do
