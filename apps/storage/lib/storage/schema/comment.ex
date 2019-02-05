@@ -13,8 +13,9 @@ defmodule Storage.Schema.Comment do
     field :author_email
     field :personal_site
     field :content
-    field :top, :integer, default: -1
+    field :owner, :boolean, default: false
 
+    top_field(:v001)
     common_fields(:v001)
 
     belongs_to :article, Article
@@ -30,6 +31,7 @@ defmodule Storage.Schema.Comment do
       :author_email,
       :personal_site,
       :content,
+      :owner,
       :top,
       :article_id,
       :parent_id,
@@ -39,6 +41,7 @@ defmodule Storage.Schema.Comment do
       :author_nickname,
       :author_email,
       :content,
+      :owner,
       :top,
       :article_id,
       @status_field

@@ -13,8 +13,8 @@ defmodule Storage.Schema.Article do
     field :title
     field :preface
     field :content, :string, default: "[WIP]"
-    field :top, :integer, default: -1
 
+    top_field(:v001)
     common_fields(:v001)
 
     belongs_to :category, Category

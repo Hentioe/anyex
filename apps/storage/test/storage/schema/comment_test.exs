@@ -76,6 +76,7 @@ defmodule Storage.Schema.CommentTest do
         author_nickname: "李小狼",
         author_email: "xiaolang@bluerain.io",
         content: "@王小明 回复你的评论2",
+        owner: true,
         article_id: article.id,
         parent_id: comment.id
       })

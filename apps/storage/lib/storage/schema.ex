@@ -75,6 +75,12 @@ defmodule Storage.Schema do
     end
   end
 
+  defmacro top_field(:v001) do
+    quote bind_quoted: binding() do
+      field :top, :integer, default: -1
+    end
+  end
+
   defmacro guaranteed_id(data, do: block) do
     quote do
       case unquote(data).id do

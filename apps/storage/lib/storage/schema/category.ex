@@ -12,8 +12,8 @@ defmodule Storage.Schema.Category do
     field :qname
     field :name
     field :description, :string, default: "none"
-    field :top, :integer, default: -1
 
+    top_field(:v001)
     common_fields(:v001)
 
     has_many :articles, Article

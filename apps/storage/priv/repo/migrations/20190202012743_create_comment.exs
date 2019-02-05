@@ -7,6 +7,7 @@ defmodule Storage.Repo.Migrations.CreateComment do
       add :author_email, :string, null: false, comment: "作者邮箱"
       add :personal_site, :string, comment: "个人主页"
       add :content, :text, null: false, comment: "评论内容"
+      add :owner, :boolean, null: false, default: false, comment: "博主标记"
 
       top_field(:v001)
       common_fields(:v001)
