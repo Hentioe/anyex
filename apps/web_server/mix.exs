@@ -29,7 +29,9 @@ defmodule WebServer.MixProject do
       {:storage, in_umbrella: true},
       {:distillery, "~> 2.0"},
       {:plug_cowboy, "~> 2.0"},
-      {:jason, "~> 1.1"}
+      {:jason, "~> 1.1"},
+      {:joken, "~> 1.5"},
+      {:poison, "~> 3.0"}
     ]
   end
 end
