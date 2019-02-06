@@ -23,6 +23,43 @@ defmodule WebServer.Router do
 
   def schema(schema, include) do
     quote do
+      @status_field :res_status
+      @status_normal [{@status_field, 1}]
+      @status_hidden [{@status_field, 0}]
+      @status_deteled [{@status_field, -1}]
+
+      def specify_status(filters, status) when is_list(filters) and is_list(status) do
+        filters |> Keyword.merge(status)
+      end
+
+      def specify_status(struct_data, [status]) when is_map(struct_data) do
+        struct_data |> Map.merge(%{@status_field => elem(status, 1)})
+      end
+
+      defmacro specify_normal_status(filters) do
+        quote do
+          unquote(filters) |> specify_status(@status_normal)
+        end
+      end
+
+      defmacro specify_hidden_status(filters) do
+        quote do
+          unquote(filters) |> specify_status(@status_hidden)
+        end
+      end
+
+      defmacro specify_deleted_status(filters) do
+        quote do
+          unquote(filters) |> specify_status(@status_deteled)
+        end
+      end
+
+      defmacro no_top(struct_data) do
+        quote do
+          unquote(struct_data) |> Map.merge(%{top: -1})
+        end
+      end
+
       use Plug.Router
 
       alias WebServer.Plugs.{JSONHeaderPlug, JwtAuthPlug}
@@ -81,7 +118,7 @@ defmodule WebServer.Router do
           :list ->
             get "/list" do
               [conn, paging] = fetch_paging_params(var!(conn), 50)
-              filters = Keyword.merge(paging, res_status: 0)
+              filters = paging |> specify_normal_status
 
               conn |> var! |> resp(unquote(schema).find_list(filters))
             end
@@ -111,23 +148,26 @@ defmodule WebServer.Router do
           :add ->
             post "/add" do
               data = var!(conn).body_params
-              result = data |> unquote(schema).add()
+              result = data |> specify_hidden_status |> unquote(schema).add()
               conn |> var! |> resp(result)
             end
 
           :status_manage ->
             put "/admin/hidden/:id" do
-              result = unquote(schema).update(%{id: var!(id), res_status: 0})
+              data = %{id: var!(id)}
+              result = data |> specify_hidden_status |> unquote(schema).update()
               conn |> var! |> resp(result)
             end
 
             delete "/admin/:id" do
-              result = unquote(schema).update(%{id: var!(id), res_status: -1})
+              data = %{id: var!(id)}
+              result = data |> specify_deleted_status |> unquote(schema).update()
               conn |> var! |> resp(result)
             end
 
             put "/admin/normal/:id" do
-              result = unquote(schema).update(%{id: var!(id), res_status: 1})
+              data = %{id: var!(id)}
+              result = data |> specify_normal_status |> unquote(schema).update()
               conn |> var! |> resp(result)
             end
 
@@ -138,7 +178,8 @@ defmodule WebServer.Router do
             end
 
             delete "/admin/top/:id" do
-              result = unquote(schema).update(%{id: var!(id), top: -1})
+              data = %{id: var!(id)}
+              result = data |> no_top |> unquote(schema).update()
               conn |> var! |> resp(result)
             end
 
