@@ -1,9 +1,9 @@
 defmodule WebServerTest.Router.ArticleRouterTest do
   use WebServer.Test.Case
 
-  test "add and update article", _state do
+  test "add and update article", state do
     conn = conn(:post, "/category/admin", %{qname: "c1", name: "类别1"})
-    conn = conn |> put_json_header |> call
+    conn = conn |> put_json_header |> put_authorization(state) |> call
 
     assert conn.status == 200
     r = conn |> resp_to_map
@@ -14,7 +14,7 @@ defmodule WebServerTest.Router.ArticleRouterTest do
       1..3
       |> Enum.map(fn i ->
         conn = conn(:post, "tag/admin", %{qname: "t#{i}", name: "标签#{i}"})
-        conn = conn |> put_json_header |> call
+        conn = conn |> put_json_header |> put_authorization(state) |> call
         assert conn.status == 200
         r = conn |> resp_to_map
         assert r.passed
@@ -29,7 +29,7 @@ defmodule WebServerTest.Router.ArticleRouterTest do
         tags: [%{id: tag1.id}, %{id: tag2.id}, %{id: tag3.id}]
       })
 
-    conn = conn |> put_json_header |> call
+    conn = conn |> put_json_header |> put_authorization(state) |> call
     assert conn.status == 200
     r = conn |> resp_to_map
     assert r.passed
@@ -37,7 +37,7 @@ defmodule WebServerTest.Router.ArticleRouterTest do
     assert length(a1.tags) == 3
 
     conn = conn(:put, "article/admin", %{id: a1.id, tags: [%{id: tag1.id}]})
-    conn = conn |> put_json_header |> call
+    conn = conn |> put_json_header |> put_authorization(state) |> call
     assert conn.status == 200
     r = conn |> resp_to_map
     assert r.passed

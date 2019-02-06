@@ -23,46 +23,9 @@ defmodule WebServer.Router do
 
   def schema(schema, include) do
     quote do
-      @status_field :res_status
-      @status_normal [{@status_field, 1}]
-      @status_hidden [{@status_field, 0}]
-      @status_deteled [{@status_field, -1}]
-
-      def specify_status(filters, status) when is_list(filters) and is_list(status) do
-        filters |> Keyword.merge(status)
-      end
-
-      def specify_status(struct_data, [status]) when is_map(struct_data) do
-        struct_data |> Map.merge(%{@status_field => elem(status, 1)})
-      end
-
-      defmacro specify_normal_status(filters) do
-        quote do
-          unquote(filters) |> specify_status(@status_normal)
-        end
-      end
-
-      defmacro specify_hidden_status(filters) do
-        quote do
-          unquote(filters) |> specify_status(@status_hidden)
-        end
-      end
-
-      defmacro specify_deleted_status(filters) do
-        quote do
-          unquote(filters) |> specify_status(@status_deteled)
-        end
-      end
-
       defmacro no_top(struct_data) do
         quote do
           unquote(struct_data) |> Map.merge(%{top: -1})
-        end
-      end
-
-      defmacro string_key_map(map) do
-        quote bind_quoted: [map: map] do
-          map |> AtomicMap.convert(safe: true)
         end
       end
 
@@ -77,40 +40,12 @@ defmodule WebServer.Router do
         json_decoder: Jason
 
       plug JSONHeaderPlug
-
-      if Mix.env() == :prod, do: plug(JwtAuthPlug)
-
+      plug JwtAuthPlug
       plug :dispatch
 
-      def resp_json(conn, body, status \\ 200) when is_integer(status) do
-        conn
-        |> send_resp(status, Jason.encode!(body))
-      end
-
-      def resp_error(conn, error) when is_map(error) do
-        message = Map.get(error, :message)
-
-        if message == nil do
-          resp_json(conn, %{passed: false, message: "EXPECTED", data: error})
-        else
-          resp_json(conn, %{passed: false, message: message, data: nil})
-        end
-      end
-
-      def resp_error(conn, error, data \\ %{}) when is_binary(error) do
-        resp_json(conn, %{passed: false, message: error, data: data})
-      end
-
-      def resp_success(conn, data \\ %{}) do
-        resp_json(conn, %{passed: true, message: "SUCCESS", data: data})
-      end
-
-      def resp(conn, result) when is_tuple(result) do
-        case result do
-          {:ok, data} -> resp_success(conn, data)
-          {:error, e} -> resp_error(conn, e)
-        end
-      end
+      unquote(import_schema_status_macro())
+      unquote(import_json_resp())
+      unquote(import_helper_macro())
 
       def fetch_paging_params(conn, limit) do
         conn = conn |> fetch_query_params()
@@ -193,6 +128,107 @@ defmodule WebServer.Router do
             raise "unknown inclusion type: #{field}"
         end
       end)
+    end
+  end
+
+  def json_support() do
+    quote do
+      import WebServer.Router
+      use Plug.Router
+
+      alias WebServer.Plugs.{JSONHeaderPlug, JwtAuthPlug}
+
+      plug :match
+
+      plug Plug.Parsers,
+        parsers: [Plug.Parsers.JSON],
+        json_decoder: Jason
+
+      plug JSONHeaderPlug
+      plug JwtAuthPlug
+      plug :dispatch
+
+      unquote(import_json_resp())
+      unquote(import_helper_macro())
+    end
+  end
+
+  defp import_json_resp() do
+    quote do
+      def resp_json(conn, body, status \\ 200) when is_integer(status) do
+        conn
+        |> send_resp(status, Jason.encode!(body))
+      end
+
+      def resp_error(conn, error) when is_map(error) do
+        message = Map.get(error, :message)
+
+        if message == nil do
+          resp_json(conn, %{passed: false, message: "EXPECTED", data: error})
+        else
+          resp_json(conn, %{passed: false, message: message, data: nil})
+        end
+      end
+
+      def resp_error(conn, error, data \\ %{}) when is_binary(error) do
+        resp_json(conn, %{passed: false, message: error, data: data})
+      end
+
+      def resp_success(conn, data \\ %{}) do
+        resp_json(conn, %{passed: true, message: "SUCCESS", data: data})
+      end
+
+      def resp(conn, result) when is_tuple(result) do
+        case result do
+          {:ok, data} -> resp_success(conn, data)
+          {:error, e} -> resp_error(conn, e)
+        end
+      end
+    end
+  end
+
+  defp import_helper_macro() do
+    quote do
+      defmacro string_key_map(map) do
+        quote bind_quoted: [map: map] do
+          map |> AtomicMap.convert(safe: true)
+        end
+      end
+    end
+  end
+
+  defp import_schema_status_macro() do
+    quote do
+      @status_field :res_status
+      @status_normal [{@status_field, 1}]
+      @status_hidden [{@status_field, 0}]
+      @status_deteled [{@status_field, -1}]
+
+      def specify_status(filters, status) when is_list(filters) and is_list(status) do
+        filters |> Keyword.merge(status)
+      end
+
+      def specify_status(struct_data, [status]) when is_map(struct_data) do
+        struct_data |> Map.merge(%{@status_field => elem(status, 1)})
+      end
+
+      defmacro specify_normal_status(filters) do
+        quote do
+          unquote(filters) |> specify_status(@status_normal)
+        end
+      end
+
+      defmacro specify_hidden_status(filters) do
+        quote do
+          unquote(filters) |> specify_status(@status_hidden)
+        end
+      end
+
+      defmacro specify_deleted_status(filters) do
+        quote do
+          unquote(filters) |> specify_status(@status_deteled)
+        end
+      end
     end
   end
 end

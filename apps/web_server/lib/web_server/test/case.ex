@@ -6,7 +6,7 @@ defmodule WebServer.Test.Case do
       use Plug.Test
 
       alias Storage.Repo
-      alias Storage.Schema.{Article, Category, Tag}
+      alias Storage.Schema.{Article, Category, Tag, Comment}
       alias WebServer.Routes
 
       @opts Routes.init([])
@@ -17,9 +17,15 @@ defmodule WebServer.Test.Case do
           Repo.delete_all(Tag)
           Repo.delete_all(Article)
           Repo.delete_all(Category)
+          Repo.delete_all(Comment)
         end)
 
-        {:ok, token: "token"}
+        conn = conn(:post, "token/gen", %{username: "admin", password: "sample123"})
+        conn = conn |> put_req_header("content-type", "application/json") |> Routes.call(@opts)
+        unless conn.status == 200, do: raise("request token failed")
+        r = conn.resp_body |> Jason.decode!(keys: :atoms)
+        unless r.passed, do: raise(r.message)
+        {:ok, token: r.data}
       end
 
       defmacro call(conn) do
@@ -31,6 +37,12 @@ defmodule WebServer.Test.Case do
       defmacro put_json_header(conn) do
         quote do
           put_req_header(unquote(conn), "content-type", "application/json")
+        end
+      end
+
+      defmacro put_authorization(conn, state) do
+        quote do
+          put_req_header(unquote(conn), "authorization", unquote(state).token)
         end
       end
 
