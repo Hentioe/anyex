@@ -7,6 +7,8 @@ defmodule Storage.Schema do
       @behaviour Storage.Schema
 
       @status_field :res_status
+      @top_field :top
+      @common_fields [@status_field, :inserted_at, :updated_at]
 
       def add(schema, data) when is_map(data) do
         changeset = schema |> changeset(data)

@@ -8,6 +8,10 @@ defmodule Storage.Schema.Article do
 
   import Ecto.Query, only: [from: 2]
 
+  @derive {Jason.Encoder,
+           only:
+             [:id, :qtext, :title, :preface, :content, @top_field] ++
+               @common_fields ++ [:category, :tags, :comments]}
   schema "article" do
     field :qtext
     field :title

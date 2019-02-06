@@ -76,43 +76,61 @@ defmodule WebServer.Router do
         [conn, [offset: offset, limit: limit]]
       end
 
-      get "/list" do
-        [conn, paging] = fetch_paging_params(var!(conn), 50)
-        filters = Keyword.merge(paging, res_status: 0)
-
-        conn |> var! |> resp(unquote(schema).find_list(filters))
-      end
-
-      get "admin/list" do
-        [conn, paging] = fetch_paging_params(var!(conn), 50)
-        filters = paging
-
-        conn |> var! |> resp(unquote(schema).find_list(filters))
-      end
-
-      post "/admin" do
-        data = var!(conn).body_params
-        result = data |> unquote(schema).add()
-        conn |> var! |> resp(result)
-      end
-
-      put "/admin/hidden/:id" do
-        result = unquote(schema).update(%{id: var!(id), res_status: 0})
-        conn |> var! |> resp(result)
-      end
-
-      delete "/admin/:id" do
-        result = unquote(schema).update(%{id: var!(id), res_status: -1})
-        conn |> var! |> resp(result)
-      end
-
-      put "/admin/normal/:id" do
-        result = unquote(schema).update(%{id: var!(id), res_status: 1})
-        conn |> var! |> resp(result)
-      end
-
       Enum.each(unquote(include), fn field ->
         case field do
+          :list ->
+            get "/list" do
+              [conn, paging] = fetch_paging_params(var!(conn), 50)
+              filters = Keyword.merge(paging, res_status: 0)
+
+              conn |> var! |> resp(unquote(schema).find_list(filters))
+            end
+
+          :admin_list ->
+            get "admin/list" do
+              [conn, paging] = fetch_paging_params(var!(conn), 50)
+              filters = paging
+
+              conn |> var! |> resp(unquote(schema).find_list(filters))
+            end
+
+          :admin_add ->
+            post "/admin" do
+              data = var!(conn).body_params
+              result = data |> unquote(schema).add()
+              conn |> var! |> resp(result)
+            end
+
+          :admin_update ->
+            put "/admin" do
+              data = var!(conn).body_params
+              result = data |> unquote(schema).update()
+              conn |> var! |> resp(result)
+            end
+
+          :add ->
+            post "/add" do
+              data = var!(conn).body_params
+              result = data |> unquote(schema).add()
+              conn |> var! |> resp(result)
+            end
+
+          :status_manage ->
+            put "/admin/hidden/:id" do
+              result = unquote(schema).update(%{id: var!(id), res_status: 0})
+              conn |> var! |> resp(result)
+            end
+
+            delete "/admin/:id" do
+              result = unquote(schema).update(%{id: var!(id), res_status: -1})
+              conn |> var! |> resp(result)
+            end
+
+            put "/admin/normal/:id" do
+              result = unquote(schema).update(%{id: var!(id), res_status: 1})
+              conn |> var! |> resp(result)
+            end
+
           :top ->
             post "/admin/top/:id" do
               result = unquote(schema).top(var!(id))

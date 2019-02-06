@@ -8,6 +8,10 @@ defmodule Storage.Schema.Comment do
 
   import Ecto.Query, only: [from: 2]
 
+  @derive {Jason.Encoder,
+           only:
+             [:id, :author_nickname, :personal_site, :content, :owner, @top_field] ++
+               @common_fields ++ [:comments]}
   schema "comment" do
     field :author_nickname
     field :author_email

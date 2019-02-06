@@ -8,6 +8,7 @@ defmodule Storage.Schema.Category do
 
   import Ecto.Query, only: [from: 2]
 
+  @derive {Jason.Encoder, only: [:id, :qname, :name, :description, @top_field] ++ @common_fields}
   schema "category" do
     field :qname
     field :name

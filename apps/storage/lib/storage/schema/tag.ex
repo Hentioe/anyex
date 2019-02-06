@@ -9,6 +9,7 @@ defmodule Storage.Schema.Tag do
 
   import Ecto.Query, only: [from: 2]
 
+  @derive {Jason.Encoder, only: [:id, :qname, :name, :description, @top_field] ++ @common_fields}
   schema "tag" do
     field :qname
     field :name
