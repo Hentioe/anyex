@@ -38,7 +38,7 @@ defmodule Storage.Schema.Tag do
   end
 
   def find_list(filters \\ []) when is_list(filters) do
-    res_status = Keyword.get(filters, :res_status, 0)
+    res_status = Keyword.get(filters, :res_status, 1)
     limit = Keyword.get(filters, :limit, 999)
     offset = Keyword.get(filters, :offset, 0)
 

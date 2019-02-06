@@ -85,9 +85,8 @@ defmodule Storage.Schema.Comment do
         else
           case key do
             :res_status ->
-              from [c, sc] in acc_query,
-                where: c.res_status == ^value,
-                where: sc.res_status == ^value
+              from c in acc_query,
+                where: c.res_status == ^value
 
             :limit ->
               from _ in acc_query,
