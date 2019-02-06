@@ -52,6 +52,11 @@ defmodule Storage.Schema.Tag do
     query |> query_list
   end
 
+  def load_in(id_list) when is_list(id_list) do
+    query = from t in __MODULE__, where: t.id in ^id_list
+    query |> query_list
+  end
+
   def top(id) do
     top(__MODULE__, id)
   end

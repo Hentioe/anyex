@@ -60,6 +60,12 @@ defmodule WebServer.Router do
         end
       end
 
+      defmacro string_key_map(map) do
+        quote bind_quoted: [map: map] do
+          map |> AtomicMap.convert(safe: true)
+        end
+      end
+
       use Plug.Router
 
       alias WebServer.Plugs.{JSONHeaderPlug, JwtAuthPlug}
@@ -133,21 +139,21 @@ defmodule WebServer.Router do
 
           :admin_add ->
             post "/admin" do
-              data = var!(conn).body_params
+              data = var!(conn).body_params |> string_key_map
               result = data |> unquote(schema).add()
               conn |> var! |> resp(result)
             end
 
           :admin_update ->
             put "/admin" do
-              data = var!(conn).body_params
+              data = var!(conn).body_params |> string_key_map
               result = data |> unquote(schema).update()
               conn |> var! |> resp(result)
             end
 
           :add ->
             post "/add" do
-              data = var!(conn).body_params
+              data = var!(conn).body_params |> string_key_map |> clean_timestamps
               result = data |> specify_hidden_status |> unquote(schema).add()
               conn |> var! |> resp(result)
             end

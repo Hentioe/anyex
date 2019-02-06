@@ -10,8 +10,14 @@ defmodule Storage.Schema do
       @top_field :top
       @common_fields [@status_field, :inserted_at, :updated_at]
 
+      defmacro clean_timestamps(data) do
+        quote bind_quoted: [data: data] do
+          data |> Map.put(:inserted_at, nil) |> Map.put(:updated_at, nil)
+        end
+      end
+
       def add(schema, data) when is_map(data) do
-        changeset = schema |> changeset(data)
+        changeset = schema |> clean_timestamps |> changeset(data)
 
         if changeset.valid? do
           try do
@@ -25,14 +31,14 @@ defmodule Storage.Schema do
       end
 
       def update(schema, data) when is_map(data) do
-        data = data |> Map.drop([:__meta__, :__struct__])
+        data = data |> Map.drop([:__meta__, :__struct__]) |> clean_timestamps
 
         case schema do
           nil ->
             {:error, "no resource were found with id: #{data.id}"}
 
-          article ->
-            changeset = article |> changeset(data)
+          resource ->
+            changeset = resource |> changeset(data)
 
             if changeset.valid? do
               try do

@@ -11,7 +11,7 @@ defmodule Storage.Schema.Article do
   @derive {Jason.Encoder,
            only:
              [:id, :qtext, :title, :preface, :content, @top_field] ++
-               @common_fields ++ [:category, :tags, :comments]}
+               @common_fields ++ [:category, :tags]}
   schema "article" do
     field :qtext
     field :title
@@ -30,6 +30,13 @@ defmodule Storage.Schema.Article do
   def changeset(article, data \\ %{}) do
     tags = if data[:tags], do: data.tags, else: []
 
+    data =
+      if data[:category_id] || !(data[:category] && data[:category][:id]) do
+        data
+      else
+        data |> Map.put(:category_id, data[:category][:id])
+      end
+
     article
     |> Changeset.cast(data, [
       :qtext,
@@ -44,12 +51,28 @@ defmodule Storage.Schema.Article do
     |> Changeset.validate_required([:qtext, :title, :top, :category_id, @status_field])
   end
 
-  def add(data), do: add(%__MODULE__{}, data)
+  def add(data) do
+    # 添加之前获取所有的 tags
+    tags = data[:tags] || []
+    tag_id_list = tags |> Enum.map(fn t -> t.id end)
+
+    with {:ok, tags} <- Tag.load_in(tag_id_list),
+         {:ok, created} <- add(%__MODULE__{}, Map.put(data, :tags, tags)) do
+      try do
+        created = created |> Repo.preload(:category)
+        {:ok, created}
+      rescue
+        e in _ -> {:error, e}
+      end
+    else
+      e -> e
+    end
+  end
 
   def update(data) do
     guaranteed_id data do
       article = Repo.get(__MODULE__, data.id)
-      article |> Repo.preload(:tags) |> update(data)
+      article |> Repo.preload(:tags) |> Repo.preload(:category) |> update(data)
     end
   end
 

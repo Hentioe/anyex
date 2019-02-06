@@ -31,7 +31,7 @@ defmodule Storage.Schema.ArticleTest do
     assert article.category_id == category.id
     assert length(article.tags) == 2
 
-    article = Map.merge(article, %{title: "修改后的文章", tags: [tag1]})
+    article = Map.merge(%{id: article.id}, %{title: "修改后的文章", tags: [%{id: tag1.id}]})
     {status, article} = update(article)
     assert status == :ok
     assert article.category_id == category.id
@@ -56,7 +56,7 @@ defmodule Storage.Schema.ArticleTest do
             qtext: "first-article-#{i}",
             title: "第 #{i} 篇文章",
             category_id: category.id,
-            tags: [tag1, tag2]
+            tags: [%{id: tag1.id}, %{id: tag2.id}]
           })
 
         assert status == :ok

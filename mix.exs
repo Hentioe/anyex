@@ -15,7 +15,9 @@ defmodule AnyEx.MixProject do
       "db.create": "ecto.create",
       "db.migrate": "cmd --app storage mix db.migrate",
       "db.rollback": "cmd --app storage mix db.rollback",
-      "db.reinit": "cmd --app storage mix db.reinit"
+      "db.reinit": "cmd --app storage mix db.reinit",
+      "db.test": "cmd --app storage mix test",
+      "server.test": "cmd --app web_server mix test"
     ]
   end
 

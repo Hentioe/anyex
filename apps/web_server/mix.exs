@@ -31,7 +31,8 @@ defmodule WebServer.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:jason, "~> 1.1"},
       {:joken, "~> 1.5"},
-      {:poison, "~> 3.0"}
+      {:poison, "~> 3.0"},
+      {:atomic_map, "~> 0.9.3"}
     ]
   end
 end
