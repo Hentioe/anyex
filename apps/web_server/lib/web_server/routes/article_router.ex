@@ -9,7 +9,7 @@ defmodule WebServer.Routes.ArticleRouter do
     filters = Keyword.merge(paging, res_status: 0)
 
     case Article.find_list(filters) do
-      {:ok, list} -> resp_json(conn, list)
+      {:ok, list} -> resp_success(conn, list)
       {:error, e} -> resp_error(conn, e)
     end
   end

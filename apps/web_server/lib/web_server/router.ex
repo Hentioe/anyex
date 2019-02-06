@@ -29,8 +29,12 @@ defmodule WebServer.Router do
         |> send_resp(status, Jason.encode!(body))
       end
 
-      def resp_error(conn, reason, code \\ -1) do
-        resp_json(conn, %{status: "error", error: %{code: code, reason: to_string(reason)}})
+      def resp_error(conn, error, data \\ %{}) do
+        resp_json(conn, %{passed: false, message: to_string(error), data: data})
+      end
+
+      def resp_success(conn, data \\ %{}) do
+        resp_json(conn, %{passed: true, message: "SUCCESS", data: data})
       end
 
       def fetch_paging_params(conn, limit) do
