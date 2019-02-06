@@ -27,7 +27,7 @@ defmodule Storage.Schema do
 
         case schema do
           nil ->
-            {:error, "do not find id: `#{data.id}` of resource"}
+            {:error, "no resource were found with id: #{data.id}"}
 
           article ->
             changeset = article |> changeset(data)
@@ -53,11 +53,11 @@ defmodule Storage.Schema do
         end
       end
 
-      def top(struct, id) when is_integer(id) do
+      def top(struct, id) do
         resource = Storage.Repo.get(struct, id)
 
         case resource do
-          nil -> {:error, "do not find id: `#{id}` of resource"}
+          nil -> {:error, "no resource were found with id: #{id}"}
           r -> r |> Map.merge(%{top: :os.system_time(:milli_seconds)}) |> update()
         end
       end

@@ -1,7 +1,11 @@
 defmodule WebServer.Router do
   @moduledoc false
   defmacro __using__(schema: schema) do
-    apply(__MODULE__, :schema, [schema])
+    apply(__MODULE__, :schema, [schema, []])
+  end
+
+  defmacro __using__(schema: schema, include: include) do
+    apply(__MODULE__, :schema, [schema, include])
   end
 
   defmacro __using__(which) when is_atom(which) do
@@ -17,7 +21,7 @@ defmodule WebServer.Router do
     end
   end
 
-  def schema(schema) do
+  def schema(schema, include) do
     quote do
       use Plug.Router
 
@@ -85,6 +89,45 @@ defmodule WebServer.Router do
 
         conn |> var! |> resp(unquote(schema).find_list(filters))
       end
+
+      post "/admin" do
+        data = var!(conn).body_params
+        result = data |> unquote(schema).add()
+        conn |> var! |> resp(result)
+      end
+
+      put "/admin/hidden/:id" do
+        result = unquote(schema).update(%{id: var!(id), res_status: 0})
+        conn |> var! |> resp(result)
+      end
+
+      delete "/admin/:id" do
+        result = unquote(schema).update(%{id: var!(id), res_status: -1})
+        conn |> var! |> resp(result)
+      end
+
+      put "/admin/normal/:id" do
+        result = unquote(schema).update(%{id: var!(id), res_status: 1})
+        conn |> var! |> resp(result)
+      end
+
+      Enum.each(unquote(include), fn field ->
+        case field do
+          :top ->
+            post "/admin/top/:id" do
+              result = unquote(schema).top(var!(id))
+              conn |> var! |> resp(result)
+            end
+
+            delete "/admin/top/:id" do
+              result = unquote(schema).update(%{id: var!(id), top: -1})
+              conn |> var! |> resp(result)
+            end
+
+          _ ->
+            raise "unknown inclusion type: #{field}"
+        end
+      end)
     end
   end
 end
