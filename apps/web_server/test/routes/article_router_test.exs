@@ -145,6 +145,7 @@ defmodule WebServerTest.Router.ArticleRouterTest do
         qtext: "i-am-article",
         title: "我是第一篇文章",
         category: c1,
+        content: "# 前言",
         tags: [%{id: tag1.id}, %{id: tag2.id}, %{id: tag3.id}]
       })
 
@@ -159,6 +160,7 @@ defmodule WebServerTest.Router.ArticleRouterTest do
     r = conn |> resp_to_map
     assert r.passed
     assert r.data != nil
+    assert r.data.content == "<h1>前言</h1>\n"
 
     conn = conn(:delete, "/article/admin/#{article.id}") |> put_authorization(state) |> call
     assert conn.status == 200
@@ -176,5 +178,6 @@ defmodule WebServerTest.Router.ArticleRouterTest do
     r = conn |> resp_to_map
     assert r.passed
     assert r.data != nil
+    assert r.data.content == "# 前言"
   end
 end

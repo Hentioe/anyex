@@ -32,7 +32,8 @@ defmodule WebServer.MixProject do
       {:jason, "~> 1.1"},
       {:joken, "~> 1.5"},
       {:poison, "~> 3.0"},
-      {:atomic_map, "~> 0.9.3"}
+      {:atomic_map, "~> 0.9.3"},
+      {:earmark, "~> 1.3"}
     ]
   end
 end

@@ -29,7 +29,25 @@ defmodule WebServer.Routes.ArticleRouter do
 
   get "/query/:qtext" do
     filters = [qtext: qtext] |> specify_normal_status
-    r = Article.find(filters)
+
+    r =
+      case Article.find(filters) do
+        {:ok, nil} ->
+          {:ok, nil}
+
+        {:ok, article} ->
+          case article.content |> Earmark.as_html() do
+            {:ok, html, _} ->
+              {:ok, %{article | content: html}}
+
+            e ->
+              e
+          end
+
+        e ->
+          e
+      end
+
     conn |> resp(r)
   end
 
