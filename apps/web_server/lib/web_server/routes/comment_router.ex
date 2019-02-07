@@ -31,31 +31,7 @@ defmodule WebServer.Routes.CommentRouter do
   get "/from_article/:id" do
     [conn, paging] = fetch_paging_params(conn, 50)
     filters = paging |> specify_normal_status |> Keyword.merge(article_id: id)
-
-    r =
-      case Comment.find_list(filters) do
-        {:ok, list} ->
-          list =
-            list
-            |> Enum.map(fn c ->
-              if Enum.empty?(c.comments) == 0 do
-                c
-              else
-                comments =
-                  c.comments
-                  |> Enum.map(fn c ->
-                    %{c | comments: []}
-                  end)
-
-                %{c | comments: comments}
-              end
-            end)
-
-          {:ok, list}
-
-        e ->
-          e
-      end
+    r = Comment.find_list(filters)
 
     conn |> resp(r)
   end

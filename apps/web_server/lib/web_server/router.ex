@@ -44,8 +44,8 @@ defmodule WebServer.Router do
       plug :dispatch
 
       unquote(import_schema_status_macro())
-      unquote(import_json_resp())
       unquote(import_helper_macro())
+      unquote(import_json_resp())
 
       def fetch_paging_params(conn, limit) do
         conn = conn |> fetch_query_params()
@@ -175,6 +175,18 @@ defmodule WebServer.Router do
       end
 
       def resp_success(conn, data \\ %{}) do
+        # 修正 Comment 的深度评论列表 NotLoaded 转换问题（置为 []）
+        data =
+          if __MODULE__ == WebServer.Routes.CommentRouter do
+            if is_list(data) do
+              data |> clean_deep_comments
+            else
+              [data] |> clean_deep_comments |> Enum.at(0)
+            end
+          else
+            data
+          end
+
         resp_json(conn, %{passed: true, message: "SUCCESS", data: data})
       end
 
@@ -192,6 +204,25 @@ defmodule WebServer.Router do
       defmacro string_key_map(map) do
         quote bind_quoted: [map: map] do
           map |> AtomicMap.convert(safe: true)
+        end
+      end
+
+      defmacro clean_deep_comments(list) do
+        quote do
+          unquote(list)
+          |> Enum.map(fn c ->
+            if Enum.empty?(c.comments) == 0 do
+              c
+            else
+              comments =
+                c.comments
+                |> Enum.map(fn c ->
+                  %{c | comments: []}
+                end)
+
+              %{c | comments: comments}
+            end
+          end)
         end
       end
     end

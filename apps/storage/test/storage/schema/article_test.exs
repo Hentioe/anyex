@@ -105,7 +105,7 @@ defmodule Storage.Schema.ArticleTest do
     assert status == :ok
     assert article.title == "第一篇文章"
 
-    {status, article} = update(%{id: article.id, res_status: -1})
+    {status, _article} = update(%{id: article.id, res_status: -1})
     assert status == :ok
     {status, article} = find(qtext: "first-article", res_status: 1)
     assert status == :ok

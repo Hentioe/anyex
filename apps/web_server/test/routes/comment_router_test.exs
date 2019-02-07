@@ -118,5 +118,17 @@ defmodule WebServerTest.Router.CommentRouterTest do
     assert r.passed
     list = r.data
     assert length(list) == 3
+
+    conn = conn(:delete, "/comment/admin/#{c1.id}") |> put_authorization(state) |> call
+    assert conn.status == 200
+    r = conn |> resp_to_map
+    assert r.passed
+
+    conn = conn(:get, "/comment/from_article/#{article.id}") |> call
+    assert conn.status == 200
+    r = conn |> resp_to_map
+    assert r.passed
+    list = r.data
+    assert length(list) == 2
   end
 end
