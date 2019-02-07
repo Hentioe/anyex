@@ -14,10 +14,10 @@ defmodule WebServer.Test.Case do
       setup do
         on_exit(fn ->
           Repo.delete_from!(:articles_tags)
+          Repo.delete_all(Comment)
           Repo.delete_all(Tag)
           Repo.delete_all(Article)
           Repo.delete_all(Category)
-          Repo.delete_all(Comment)
         end)
 
         conn = conn(:post, "token/gen", %{username: "admin", password: "sample123"})

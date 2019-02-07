@@ -1,4 +1,5 @@
 defmodule Storage.Schema.Comment do
+  
   @moduledoc false
   use Storage.Schema
 
@@ -52,7 +53,15 @@ defmodule Storage.Schema.Comment do
     ])
   end
 
-  def add(data), do: add(%__MODULE__{}, data)
+  def add(data) do
+    with {:ok, created} <- add(%__MODULE__{}, data),
+         created <- created |> Repo.preload(:comments) do
+      {:ok, created}
+    else
+      e ->
+        e
+    end
+  end
 
   def update(data) do
     guaranteed_id data do

@@ -88,7 +88,7 @@ defmodule WebServer.Router do
 
           :add ->
             post "/add" do
-              data = var!(conn).body_params |> string_key_map |> clean_timestamps
+              data = var!(conn).body_params |> string_key_map
               result = data |> specify_hidden_status |> unquote(schema).add()
               conn |> var! |> resp(result)
             end
