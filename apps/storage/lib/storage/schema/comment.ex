@@ -10,7 +10,7 @@ defmodule Storage.Schema.Comment do
 
   @derive {Jason.Encoder,
            only:
-             [:id, :author_nickname, :personal_site, :content, :owner, @top_field] ++
+             [:id, :author_nickname, :author_email, :personal_site, :content, :owner, @top_field] ++
                @common_fields ++ [:comments]}
   schema "comment" do
     field :author_nickname

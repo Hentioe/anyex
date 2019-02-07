@@ -225,6 +225,27 @@ defmodule WebServer.Router do
           end)
         end
       end
+
+      defmacro hidden_comments_email(list) do
+        quote do
+          unquote(list)
+          |> Enum.map(fn c ->
+            c = %{c | author_email: "[HIDDEN]"}
+
+            if Enum.empty?(c.comments) == 0 do
+              c
+            else
+              comments =
+                c.comments
+                |> Enum.map(fn c ->
+                  c = %{c | author_email: "[HIDDEN]"}
+                end)
+
+              %{c | comments: comments}
+            end
+          end)
+        end
+      end
     end
   end
 

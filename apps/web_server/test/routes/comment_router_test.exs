@@ -76,7 +76,7 @@ defmodule WebServerTest.Router.CommentRouterTest do
     assert r.passed
     article = r.data
 
-    [c1, _c2, _c3] =
+    [_c1, _c2, c3] =
       1..3
       |> Enum.map(fn i ->
         conn =
@@ -102,7 +102,7 @@ defmodule WebServerTest.Router.CommentRouterTest do
         author_email: "me}@bluerain.io",
         author_nickname: "绅士喵",
         content: "我是第一条评论的回复～",
-        parent_id: c1.id
+        parent_id: c3.id
       })
 
     conn = conn |> put_json_header |> put_authorization(state) |> call
@@ -118,8 +118,12 @@ defmodule WebServerTest.Router.CommentRouterTest do
     assert r.passed
     list = r.data
     assert length(list) == 3
+    c3 = hd(list)
+    assert c3.author_email == "[HIDDEN]"
+    c4 = c3.comments |> hd
+    assert c4.author_email == "[HIDDEN]"
 
-    conn = conn(:delete, "/comment/admin/#{c1.id}") |> put_authorization(state) |> call
+    conn = conn(:delete, "/comment/admin/#{c3.id}") |> put_authorization(state) |> call
     assert conn.status == 200
     r = conn |> resp_to_map
     assert r.passed
