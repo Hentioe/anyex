@@ -175,9 +175,9 @@ defmodule WebServer.Router do
       end
 
       def resp_success(conn, data \\ %{}) do
-        # 修正 Comment 的深度评论列表 NotLoaded 转换问题（置为 []）
         data =
           if __MODULE__ == WebServer.Routes.CommentRouter do
+            # 修正 Comment 的深度评论列表 NotLoaded 转换问题（置为 []）
             if is_list(data) do
               data |> clean_deep_comments
             else

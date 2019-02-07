@@ -15,7 +15,7 @@ defmodule WebServer.Routes.ArticleRouter do
           list =
             list
             |> Enum.map(fn article ->
-              %{article | content: "[NotLoad]"}
+              %{article | content: "[NotLoaded]"}
             end)
 
           {:ok, list}

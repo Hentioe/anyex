@@ -91,7 +91,7 @@ defmodule WebServerTest.Router.ArticleRouterTest do
     list = r.data
     assert length(list) == 15
     a1 = list |> Enum.at(0)
-    assert a1.content == "[NotLoad]"
+    assert a1.content == "[NotLoaded]"
 
     conn = conn(:put, "/article/admin/hidden/#{Enum.at(list, 0).id}")
     conn = conn |> put_authorization(state) |> call
