@@ -80,4 +80,35 @@ defmodule Storage.Schema.ArticleTest do
     assert status == :ok
     assert length(list) == 1
   end
+
+  test "find article" do
+    {status, category} = Category.add(%{qname: "default", name: "默认类别"})
+    assert status == :ok
+
+    {status, tag1} = Tag.add(%{qname: "t1", name: "标签1"})
+    assert status == :ok
+    {status, tag2} = Tag.add(%{qname: "t2", name: "标签2"})
+    assert status == :ok
+
+    {status, article} =
+      add(%{
+        qtext: "first-article",
+        title: "第一篇文章",
+        category_id: category.id,
+        tags: [%{id: tag1.id}, %{id: tag2.id}]
+      })
+
+    assert status == :ok
+    assert article.category_id == category.id
+
+    {status, article} = find(qtext: "first-article", res_status: 1)
+    assert status == :ok
+    assert article.title == "第一篇文章"
+
+    {status, article} = update(%{id: article.id, res_status: -1})
+    assert status == :ok
+    {status, article} = find(qtext: "first-article", res_status: 1)
+    assert status == :ok
+    assert article == nil
+  end
 end

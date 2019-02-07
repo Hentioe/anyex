@@ -52,7 +52,6 @@ defmodule Storage.Schema.Article do
   end
 
   def add(data) do
-    # 添加之前获取所有的 tags
     tags = data[:tags] || []
     tag_id_list = tags |> Enum.map(fn t -> t.id end)
 
@@ -76,8 +75,13 @@ defmodule Storage.Schema.Article do
     end
   end
 
-  def find_list(filters \\ []) when is_list(filters) do
+  def find_list(filters \\ []) do
+    find(Keyword.drop(filters, [:id, :qtext]))
+  end
+
+  def find(filters \\ []) when is_list(filters) do
     res_status = Keyword.get(filters, :res_status)
+    find_one? = filters[:id] || filters[:qtext] || nil
 
     tags_query = from t in Tag, select: t
 
@@ -112,6 +116,14 @@ defmodule Storage.Schema.Article do
               from _ in acc_query,
                 offset: ^value
 
+            :qtext ->
+              from a in acc_query,
+                where: a.qtext == ^value
+
+            :id ->
+              from a in acc_query,
+                where: a.id == ^value
+
             _ ->
               acc_query
           end
@@ -120,7 +132,7 @@ defmodule Storage.Schema.Article do
 
     query = from _ in query, preload: [:category, tags: ^tags_query]
 
-    query |> query_list
+    if find_one?, do: query |> query_one, else: query |> query_list
   end
 
   def top(id) do

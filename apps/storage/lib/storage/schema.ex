@@ -61,6 +61,15 @@ defmodule Storage.Schema do
         end
       end
 
+      def query_one(query) do
+        try do
+          data = query |> Storage.Repo.one()
+          {:ok, data}
+        rescue
+          e in _ -> {:error, e}
+        end
+      end
+
       def top(struct, id) do
         resource = Storage.Repo.get(struct, id)
 
