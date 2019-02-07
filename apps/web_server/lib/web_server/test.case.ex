@@ -12,11 +12,13 @@ defmodule WebServer.Test.Case do
       @opts Routes.init([])
 
       setup do
-        Repo.delete_from!(:articles_tags)
-        Repo.delete_all(Tag)
-        Repo.delete_all(Article)
-        Repo.delete_all(Category)
-        Repo.delete_all(Comment)
+        on_exit(fn ->
+          Repo.delete_from!(:articles_tags)
+          Repo.delete_all(Tag)
+          Repo.delete_all(Article)
+          Repo.delete_all(Category)
+          Repo.delete_all(Comment)
+        end)
 
         conn = conn(:post, "token/gen", %{username: "admin", password: "sample123"})
         conn = conn |> put_req_header("content-type", "application/json") |> Routes.call(@opts)

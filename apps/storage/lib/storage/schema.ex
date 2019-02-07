@@ -61,7 +61,7 @@ defmodule Storage.Schema do
         end
       end
 
-      def query_one(query) do
+      def query_one(query, excludes \\ []) do
         try do
           data = query |> Storage.Repo.one()
           {:ok, data}
