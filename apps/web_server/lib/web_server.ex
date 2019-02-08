@@ -9,7 +9,7 @@ defmodule WebServer do
       System.get_env("ANYEX_PORT") || Application.get_env(:web_server, :port) ||
         raise "please give me a port parameter!"
 
-    port = is_integer(port) || String.to_integer(port)
+    port = if is_integer(port), do: port, else: String.to_integer(port)
 
     children = [
       Plug.Cowboy.child_spec(
