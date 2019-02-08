@@ -9,6 +9,9 @@ defmodule WebServer.Test.Case do
       alias Storage.Schema.{Article, Category, Tag, Comment}
       alias WebServer.Routes
 
+      @admin_username Application.get_env(:web_server, :admin_username)
+      @admin_password Application.get_env(:web_server, :admin_password)
+
       @opts Routes.init([])
 
       setup do
@@ -20,7 +23,7 @@ defmodule WebServer.Test.Case do
           Repo.delete_all(Category)
         end)
 
-        conn = conn(:post, "token/gen", %{username: "admin", password: "sample123"})
+        conn = conn(:post, "token/gen", %{username: @admin_username, password: @admin_password})
         conn = conn |> put_req_header("content-type", "application/json") |> Routes.call(@opts)
         unless conn.status == 200, do: raise("request token failed")
         r = conn.resp_body |> Jason.decode!(keys: :atoms)

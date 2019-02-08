@@ -5,11 +5,17 @@ defmodule WebServer do
   use Application
 
   def start(_type, _args) do
+    port =
+      System.get_env("ANYEX_PORT") || Application.get_env(:web_server, :port) ||
+        raise "please give me a port parameter!"
+
+    port = is_integer(port) || String.to_integer(port)
+
     children = [
       Plug.Cowboy.child_spec(
         scheme: :http,
         plug: WebServer.Routes,
-        options: [port: 4001]
+        options: [port: port]
       )
     ]
 
