@@ -8,13 +8,22 @@ services:
       - 5432:5432
     environment:
       POSTGRES_PASSWORD: sampledb123
-      POSTGRES_DB: anyex-prod
+      POSTGRES_DB: anyex_prod
     restart: always
 
   server:
     image: bluerain/anyex
     ports:
       - 8080:8080
+    environment:
+      ANYEX_DB_NAME: anyex_prod
+      ANYEX_DB_USERNAME: postgres
+      ANYEX_DB_PASSWORD: sampledb123
+      ANYEX_DB_HOSTNAME: db
+      ANYEX_SERVER_PORT: 8080
+      ANYEX_SERVER_USERNAME: admin
+      ANYEX_SERVER_PASSWORD: admin123
+      ANYEX_SERVER_SECRET: 7EvrcO4jDM
     depends_on:
       - db
     restart: always

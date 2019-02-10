@@ -3,15 +3,17 @@ defmodule WebServer do
   应用入口/监督树管理
   """
   use Application
+  alias WebServer.Configure.Helper, as: ConfigHelper
+  alias WebServer.Configure.Store, as: ConfigStore
 
   def start(_type, _args) do
-    port =
-      System.get_env("ANYEX_PORT") || Application.get_env(:web_server, :port) ||
-        raise "please give me a port parameter!"
+    configs = ConfigHelper.init()
+    port = ConfigHelper.get_config!(:web_server, :port)
 
     port = if is_integer(port), do: port, else: String.to_integer(port)
 
     children = [
+      {ConfigStore, configs: configs},
       Plug.Cowboy.child_spec(
         scheme: :http,
         plug: WebServer.Routes,
