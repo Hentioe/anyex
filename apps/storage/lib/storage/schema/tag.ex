@@ -38,16 +38,33 @@ defmodule Storage.Schema.Tag do
   end
 
   def find_list(filters \\ []) when is_list(filters) do
-    res_status = Keyword.get(filters, :res_status, 1)
-    limit = Keyword.get(filters, :limit, 999)
-    offset = Keyword.get(filters, :offset, 0)
-
     query =
       from t in __MODULE__,
-        where: t.res_status == ^res_status,
-        order_by: [desc: t.top],
-        limit: ^limit,
-        offset: ^offset
+        order_by: [desc: t.top]
+
+    query =
+      Enum.reduce(filters, query, fn {key, value}, acc_query ->
+        if value == nil do
+          acc_query
+        else
+          case key do
+            :res_status ->
+              from t in acc_query,
+                where: t.res_status == ^value
+
+            :limit ->
+              from _ in acc_query,
+                limit: ^value
+
+            :offset ->
+              from _ in acc_query,
+                offset: ^value
+
+            _ ->
+              acc_query
+          end
+        end
+      end)
 
     query |> query_list
   end

@@ -44,11 +44,11 @@ defmodule Storage.Schema.TagTest do
     tag = Map.merge(Enum.at(created_list, 0), %{res_status: -1})
     {status, _tag} = update(tag)
     assert status == :ok
-    {status, list} = find_list()
+    {status, list} = find_list(res_status: 1)
     assert status == :ok
     assert length(list) == 14
 
-    {status, list} = find_list(offset: 13)
+    {status, list} = find_list(res_status: 1, offset: 13)
     assert status == :ok
     assert length(list) == 1
   end

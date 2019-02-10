@@ -37,10 +37,6 @@ defmodule Storage.Schema.Category do
   end
 
   def find_list(filters \\ []) when is_list(filters) do
-    res_status = Keyword.get(filters, :res_status)
-    limit = Keyword.get(filters, :limit)
-    offset = Keyword.get(filters, :offset)
-
     query =
       from c in __MODULE__,
         order_by: [desc: c.top]
@@ -53,15 +49,15 @@ defmodule Storage.Schema.Category do
           case key do
             :res_status ->
               from c in acc_query,
-                where: c.res_status == ^res_status
+                where: c.res_status == ^value
 
             :limit ->
               from _ in acc_query,
-                limit: ^limit
+                limit: ^value
 
             :offset ->
               from _ in acc_query,
-                offset: ^offset
+                offset: ^value
 
             _ ->
               acc_query
