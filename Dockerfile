@@ -16,7 +16,7 @@ COPY _build/prod/rel/anyex $APP_HOME
 WORKDIR $APP_HOME
 
 
-ENV LANG=en_US.UTF-8
+ENV LANG=C.UTF-8
 ENV PATH="$APP_HOME/bin:$PATH"
 
-ENTRYPOINT [ "anyex", "console" ]
+ENTRYPOINT [ "anyex", "foreground" ]
