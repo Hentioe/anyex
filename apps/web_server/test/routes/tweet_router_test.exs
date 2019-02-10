@@ -93,12 +93,22 @@ defmodule WebServerTest.Router.TweetRouterTest do
     tweet = r.data
     assert tweet.res_status == -1
 
+    conn = conn(:post, "/tweet/admin/top/#{Enum.at(list, 10).id}")
+
+    conn = conn |> put_authorization(state) |> call
+    assert conn.status == 200
+    r = conn |> resp_to_map
+    assert r.passed
+    top_t = r.data
+    assert top_t.top > -1
+
     conn = conn(:get, "tweet/list") |> call
     assert conn.status == 200
     r = conn |> resp_to_map
     assert r.passed
     list = r.data
     assert length(list) == 14
+    assert Enum.at(list, 0).id == top_t.id
 
     conn = conn(:get, "tweet/admin/list") |> put_authorization(state) |> call
     assert conn.status == 200
