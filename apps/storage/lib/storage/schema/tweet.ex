@@ -1,31 +1,27 @@
-defmodule Storage.Schema.Tag do
+defmodule Storage.Schema.Tweet do
   @moduledoc false
 
   use Storage.Schema
 
   alias Storage.Repo
-  alias Storage.Schema.{Article}
   alias Ecto.{Changeset}
 
   import Ecto.Query, only: [from: 2]
 
-  @derive {Jason.Encoder, only: [:id, :qname, :name, :description, @top_field] ++ @common_fields}
-  schema "tag" do
-    field :qname
-    field :name
-    field :description, :string, default: "none"
+  @derive {Jason.Encoder, only: [:id, :theme, :content, @top_field] ++ @common_fields}
+  schema "tweet" do
+    field :theme
+    field :content
 
     top_field(:v001)
     common_fields(:v001)
-
-    many_to_many :articles, Article, join_through: "articles_tags"
   end
 
   @impl Storage.Schema
-  def changeset(tag, data \\ %{}) do
-    tag
-    |> Changeset.cast(data, [:qname, :name, :description, :top, @status_field])
-    |> Changeset.validate_required([:qname, :name, :top, @status_field])
+  def changeset(tweet, data \\ %{}) do
+    tweet
+    |> Changeset.cast(data, [:theme, :content, :top, @status_field])
+    |> Changeset.validate_required([:content, :top, @status_field])
   end
 
   def add(data), do: add(%__MODULE__{}, data)
@@ -40,7 +36,7 @@ defmodule Storage.Schema.Tag do
   def find_list(filters \\ []) when is_list(filters) do
     query =
       from t in __MODULE__,
-        order_by: [desc: t.top]
+        order_by: [desc: t.top, desc: t.inserted_at]
 
     query =
       Enum.reduce(filters, query, fn {key, value}, acc_query ->
@@ -66,11 +62,6 @@ defmodule Storage.Schema.Tag do
         end
       end)
 
-    query |> query_list
-  end
-
-  def load_in(id_list) when is_list(id_list) do
-    query = from t in __MODULE__, where: t.id in ^id_list
     query |> query_list
   end
 

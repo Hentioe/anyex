@@ -2,7 +2,14 @@ defmodule WebServer.Routes do
   @moduledoc false
   use WebServer.Router, :default
 
-  alias WebServer.Routes.{ArticleRouter, CategoryRouter, TagRouter, TokenRouter, CommentRouter}
+  alias WebServer.Routes.{
+    ArticleRouter,
+    CategoryRouter,
+    TagRouter,
+    TokenRouter,
+    CommentRouter,
+    TweetRouter
+  }
 
   get "/" do
     send_resp(conn, 200, "Welcome to AnyEx!")
@@ -13,6 +20,7 @@ defmodule WebServer.Routes do
   forward "/tag", to: TagRouter
   forward "/token", to: TokenRouter
   forward "/comment", to: CommentRouter
+  forward "/tweet", to: TweetRouter
 
   use WebServer.RouterHelper, :default_routes
 end

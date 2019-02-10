@@ -1,106 +1,106 @@
-defmodule WebServerTest.Router.TagRouterTest do
+defmodule WebServerTest.Router.TweetRouterTest do
   use WebServer.TestCase
 
-  test "add and update tag", state do
+  test "add and update tweet", state do
     conn =
-      conn(:post, "/tag/admin", %{
-        qname: "tag-1",
-        name: "标签1"
+      conn(:post, "/tweet/admin", %{
+        theme: "green",
+        content: "推文1"
       })
 
     conn = conn |> put_json_header |> put_authorization(state) |> call
     assert conn.status == 200
     r = conn |> resp_to_map
     assert r.passed
-    tag = r.data
-    assert tag.qname == "tag-1"
-    assert tag.name == "标签1"
+    tweet = r.data
+    assert tweet.theme == "green"
+    assert tweet.content == "推文1"
 
     conn =
-      conn(:put, "/tag/admin", %{
-        id: tag.id,
-        qname: "tag-1-updated",
-        name: "更新后的标签1"
+      conn(:put, "/tweet/admin", %{
+        id: tweet.id,
+        theme: "red",
+        content: "更新后的推文1"
       })
 
     conn = conn |> put_json_header |> put_authorization(state) |> call
     assert conn.status == 200
     r = conn |> resp_to_map
     assert r.passed
-    tag = r.data
-    assert tag.qname == "tag-1-updated"
-    assert tag.name == "更新后的标签1"
+    tweet = r.data
+    assert tweet.theme == "red"
+    assert tweet.content == "更新后的推文1"
 
-    conn = conn(:delete, "/tag/admin/#{tag.id}")
-
-    conn = conn |> put_authorization(state) |> call
-    assert conn.status == 200
-    r = conn |> resp_to_map
-    assert r.passed
-    tag = r.data
-    assert tag.res_status == -1
-
-    conn = conn(:put, "/tag/admin/hidden/#{tag.id}")
+    conn = conn(:delete, "/tweet/admin/#{tweet.id}")
 
     conn = conn |> put_authorization(state) |> call
     assert conn.status == 200
     r = conn |> resp_to_map
     assert r.passed
-    tag = r.data
-    assert tag.res_status == 0
+    tweet = r.data
+    assert tweet.res_status == -1
 
-    conn = conn(:put, "/tag/admin/normal/#{tag.id}")
+    conn = conn(:put, "/tweet/admin/hidden/#{tweet.id}")
 
     conn = conn |> put_authorization(state) |> call
     assert conn.status == 200
     r = conn |> resp_to_map
     assert r.passed
-    tag = r.data
-    assert tag.res_status == 1
+    tweet = r.data
+    assert tweet.res_status == 0
+
+    conn = conn(:put, "/tweet/admin/normal/#{tweet.id}")
+
+    conn = conn |> put_authorization(state) |> call
+    assert conn.status == 200
+    r = conn |> resp_to_map
+    assert r.passed
+    tweet = r.data
+    assert tweet.res_status == 1
   end
 
-  test "find tag list", state do
+  test "find tweet list", state do
     1..15
     |> Enum.map(fn i ->
       conn =
-        conn(:post, "/tag/admin", %{
-          qname: "tag-#{i}",
-          name: "标签#{i}"
+        conn(:post, "/tweet/admin", %{
+          theme: "#FFFFF#{i}",
+          content: "推文#{i}"
         })
 
       conn = conn |> put_json_header |> put_authorization(state) |> call
       assert conn.status == 200
       r = conn |> resp_to_map
       assert r.passed
-      tag = r.data
-      assert tag.qname == "tag-#{i}"
-      assert tag.name == "标签#{i}"
+      tweet = r.data
+      assert tweet.theme == "#FFFFF#{i}"
+      assert tweet.content == "推文#{i}"
     end)
 
-    conn = conn(:get, "tag/list") |> call
+    conn = conn(:get, "tweet/list") |> call
     assert conn.status == 200
     r = conn |> resp_to_map
     assert r.passed
     list = r.data
     assert length(list) == 15
 
-    conn = conn(:delete, "/tag/admin/#{Enum.at(list, 0).id}")
+    conn = conn(:delete, "/tweet/admin/#{Enum.at(list, 0).id}")
 
     conn = conn |> put_authorization(state) |> call
     assert conn.status == 200
     r = conn |> resp_to_map
     assert r.passed
-    tag = r.data
-    assert tag.res_status == -1
+    tweet = r.data
+    assert tweet.res_status == -1
 
-    conn = conn(:get, "tag/list") |> call
+    conn = conn(:get, "tweet/list") |> call
     assert conn.status == 200
     r = conn |> resp_to_map
     assert r.passed
     list = r.data
     assert length(list) == 14
 
-    conn = conn(:get, "tag/admin/list") |> put_authorization(state) |> call
+    conn = conn(:get, "tweet/admin/list") |> put_authorization(state) |> call
     assert conn.status == 200
     r = conn |> resp_to_map
     assert r.passed

@@ -1,5 +1,5 @@
 defmodule WebServerTest.Router.CategoryRouterTest do
-  use WebServer.Test.Case
+  use WebServer.TestCase
 
   test "add and update category", state do
     conn =

@@ -1,5 +1,5 @@
 defmodule WebServerTest.Router.ArticleRouterTest do
-  use WebServer.Test.Case
+  use WebServer.TestCase
 
   test "add and update article", state do
     conn = conn(:post, "/category/admin", %{qname: "c1", name: "类别1"})

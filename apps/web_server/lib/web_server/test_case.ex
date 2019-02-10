@@ -1,4 +1,4 @@
-defmodule WebServer.Test.Case do
+defmodule WebServer.TestCase do
   @moduledoc false
   defmacro __using__(_) do
     quote do
@@ -6,7 +6,7 @@ defmodule WebServer.Test.Case do
       use Plug.Test
 
       alias Storage.Repo
-      alias Storage.Schema.{Article, Category, Tag, Comment}
+      alias Storage.Schema.{Article, Category, Tag, Comment, Tweet}
       alias WebServer.Routes
 
       @admin_username Application.get_env(:web_server, :admin_username)
@@ -21,6 +21,7 @@ defmodule WebServer.Test.Case do
           Repo.delete_all(Tag)
           Repo.delete_all(Article)
           Repo.delete_all(Category)
+          Repo.delete_all(Tweet)
         end)
 
         conn = conn(:post, "token/gen", %{username: @admin_username, password: @admin_password})
