@@ -39,6 +39,11 @@ environment :prod do
   set include_src: false
   set cookie: :"HUGAx`Cog]vquaM%LPh@`WvE]os4mD35b3b3>}QkyaRdRtohyewDoF1y7@{9]5]("
   set vm_args: "rel/vm.args"
+  set(
+    commands: [
+      migrate: "rel/commands/migrate.sh"
+    ]
+  )
 end
 
 # You may define one or more releases in this file.
