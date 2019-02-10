@@ -1,6 +1,8 @@
 defmodule WebServerTest.Router.ArticleRouterTest do
   use WebServer.TestCase
 
+  require Integer
+
   test "add and update article", state do
     conn = conn(:post, "/category/admin", %{qname: "c1", name: "类别1"})
     conn = conn |> put_json_header |> put_authorization(state) |> call
@@ -54,6 +56,14 @@ defmodule WebServerTest.Router.ArticleRouterTest do
     assert r.passed
     c1 = r.data
 
+    conn = conn(:post, "/category/admin", %{qname: "c2", name: "类别2"})
+    conn = conn |> put_json_header |> put_authorization(state) |> call
+
+    assert conn.status == 200
+    r = conn |> resp_to_map
+    assert r.passed
+    c2 = r.data
+
     [tag1, tag2, tag3] =
       1..3
       |> Enum.map(fn i ->
@@ -68,13 +78,18 @@ defmodule WebServerTest.Router.ArticleRouterTest do
     _created_list =
       1..15
       |> Enum.map(fn i ->
-        conn =
-          conn(:post, "/article/admin", %{
-            qtext: "i-am-article-#{i}",
-            title: "我是第 #{i} 篇文章",
-            category: c1,
-            tags: [%{id: tag1.id}, %{id: tag2.id}, %{id: tag3.id}]
-          })
+        article = %{
+          qtext: "i-am-article-#{i}",
+          title: "我是第 #{i} 篇文章",
+          tags: [%{id: tag1.id}, %{id: tag2.id}, %{id: tag3.id}]
+        }
+
+        article =
+          if Integer.is_odd(i),
+            do: Map.put(article, :category, c1),
+            else: Map.put(article, :category, c2)
+
+        conn = conn(:post, "/article/admin", article)
 
         conn = conn |> put_json_header |> put_authorization(state) |> call
         assert conn.status == 200
@@ -82,6 +97,14 @@ defmodule WebServerTest.Router.ArticleRouterTest do
         assert r.passed
         r.data
       end)
+
+    conn = conn(:get, "/article/list?category_qname=#{c1.qname}")
+    conn = conn |> call
+    assert conn.status == 200
+    r = conn |> resp_to_map
+    assert r.passed
+    list = r.data
+    assert length(list) == 8
 
     conn = conn(:get, "/article/list")
     conn = conn |> call

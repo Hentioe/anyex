@@ -124,6 +124,10 @@ defmodule Storage.Schema.Article do
               from a in acc_query,
                 where: a.id == ^value
 
+            :category_qname ->
+              from [_, c] in acc_query,
+                where: c.qname == ^value
+
             _ ->
               acc_query
           end

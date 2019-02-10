@@ -1,4 +1,5 @@
 defmodule Storage.ReleaseTasks do
+  @moduledoc false
   alias Ecto.Migrator
 
   @otp_app :storage
