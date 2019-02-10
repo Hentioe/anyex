@@ -19,7 +19,7 @@ defmodule WebServer.Configure.Helper do
     name = item |> Atom.to_string() |> String.upcase()
     env_var = "#{@prefix}#{name}"
 
-    System.get_env("#{@prefix}#{env_var}") ||
+    System.get_env(env_var) ||
       Application.get_env(app, item) ||
       raise "please give me a #{item} parameter!"
   end
