@@ -65,7 +65,7 @@ defmodule WebServerTest.Router.TweetRouterTest do
       conn =
         conn(:post, "/tweet/admin", %{
           theme: "#FFFFF#{i}",
-          content: "推文#{i}"
+          content: "# 推文#{i}"
         })
 
       conn = conn |> put_json_header |> put_authorization(state) |> call
@@ -74,15 +74,18 @@ defmodule WebServerTest.Router.TweetRouterTest do
       assert r.passed
       tweet = r.data
       assert tweet.theme == "#FFFFF#{i}"
-      assert tweet.content == "推文#{i}"
+      assert tweet.content == "# 推文#{i}"
     end)
 
-    conn = conn(:get, "tweet/list") |> call
+    conn = conn(:get, "/tweet/list") |> call
     assert conn.status == 200
     r = conn |> resp_to_map
     assert r.passed
     list = r.data
     assert length(list) == 15
+
+    first_t = list |> Enum.at(0)
+    assert first_t.content == "<h1>推文15</h1>\n"
 
     conn = conn(:delete, "/tweet/admin/#{Enum.at(list, 0).id}")
 
@@ -102,7 +105,7 @@ defmodule WebServerTest.Router.TweetRouterTest do
     top_t = r.data
     assert top_t.top > -1
 
-    conn = conn(:get, "tweet/list") |> call
+    conn = conn(:get, "/tweet/list") |> call
     assert conn.status == 200
     r = conn |> resp_to_map
     assert r.passed
@@ -110,7 +113,7 @@ defmodule WebServerTest.Router.TweetRouterTest do
     assert length(list) == 14
     assert Enum.at(list, 0).id == top_t.id
 
-    conn = conn(:get, "tweet/admin/list") |> put_authorization(state) |> call
+    conn = conn(:get, "/tweet/admin/list") |> put_authorization(state) |> call
     assert conn.status == 200
     r = conn |> resp_to_map
     assert r.passed

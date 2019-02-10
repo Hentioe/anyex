@@ -93,14 +93,14 @@ defmodule WebServerTest.Router.CategoryRouterTest do
     category = r.data
     assert category.res_status == -1
 
-    conn = conn(:get, "category/list") |> call
+    conn = conn(:get, "/category/list") |> call
     assert conn.status == 200
     r = conn |> resp_to_map
     assert r.passed
     list = r.data
     assert length(list) == 14
 
-    conn = conn(:get, "category/admin/list") |> put_authorization(state) |> call
+    conn = conn(:get, "/category/admin/list") |> put_authorization(state) |> call
     assert conn.status == 200
     r = conn |> resp_to_map
     assert r.passed

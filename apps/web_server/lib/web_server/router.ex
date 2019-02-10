@@ -65,7 +65,7 @@ defmodule WebServer.Router do
             end
 
           :admin_list ->
-            get "admin/list" do
+            get "/admin/list" do
               [conn, paging] = fetch_paging_params(var!(conn), 50)
               filters = paging
 

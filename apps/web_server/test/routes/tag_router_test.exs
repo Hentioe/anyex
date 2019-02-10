@@ -93,14 +93,14 @@ defmodule WebServerTest.Router.TagRouterTest do
     tag = r.data
     assert tag.res_status == -1
 
-    conn = conn(:get, "tag/list") |> call
+    conn = conn(:get, "/tag/list") |> call
     assert conn.status == 200
     r = conn |> resp_to_map
     assert r.passed
     list = r.data
     assert length(list) == 14
 
-    conn = conn(:get, "tag/admin/list") |> put_authorization(state) |> call
+    conn = conn(:get, "/tag/admin/list") |> put_authorization(state) |> call
     assert conn.status == 200
     r = conn |> resp_to_map
     assert r.passed
