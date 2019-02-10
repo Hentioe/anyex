@@ -9,6 +9,7 @@ services:
     environment:
       POSTGRES_PASSWORD: sampledb123
       POSTGRES_DB: anyex-prod
+    restart: always
 
   server:
     image: bluerain/anyex
@@ -16,3 +17,4 @@ services:
       - 8080:8080
     depends_on:
       - db
+    restart: always
