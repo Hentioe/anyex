@@ -94,10 +94,11 @@ defmodule Storage.Schema.CommentTest do
 
     assert status == :ok
 
-    {status, list} = find_list()
+    {status, list} = find_list(res_status: 1)
 
     assert status == :ok
     assert length(list) == 3
+    list |> Enum.each(fn c -> assert is_list(c.comments) == false end)
     {status, list} = find_list(article_id: article.id)
     assert status == :ok
     assert length(list) == 1

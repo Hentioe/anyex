@@ -71,6 +71,8 @@ defmodule Storage.Schema.Comment do
 
   def find_list(filters \\ []) when is_list(filters) do
     res_status = Keyword.get(filters, :res_status)
+    article_id = Keyword.get(filters, :article_id)
+    belongs_to_article? = article_id != nil
 
     query =
       from c in __MODULE__,
@@ -115,7 +117,12 @@ defmodule Storage.Schema.Comment do
         end
       end)
 
-    query = from _ in query, preload: [comments: ^subcommentds_query]
+    query =
+      if belongs_to_article? do
+        from _ in query, preload: [comments: ^subcommentds_query]
+      else
+        query
+      end
 
     query |> query_list
   end

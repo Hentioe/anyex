@@ -6,6 +6,30 @@ defmodule WebServer.Routes.CommentRouter do
     schema: Comment,
     include: [:admin_update, :status_manage, :top]
 
+  get "/list" do
+    [conn, paging] = fetch_paging_params(conn, 50)
+    filters = paging |> specify_normal_status
+
+    r =
+      case Comment.find_list(filters) do
+        {:ok, list} ->
+          list =
+            list
+            |> Enum.map(fn c ->
+              %{c | comments: []}
+            end)
+
+          list = list |> hidden_comments_email
+
+          {:ok, list}
+
+        e ->
+          e
+      end
+
+    conn |> resp(r)
+  end
+
   post "/add" do
     data =
       conn.body_params

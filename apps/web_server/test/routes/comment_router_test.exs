@@ -99,7 +99,7 @@ defmodule WebServerTest.Router.CommentRouterTest do
     conn =
       conn(:post, "/comment/admin/add", %{
         article_id: article.id,
-        author_email: "me}@bluerain.io",
+        author_email: "me@bluerain.io",
         author_nickname: "绅士喵",
         content: "我是第一条评论的回复～",
         parent_id: c3.id
@@ -111,6 +111,13 @@ defmodule WebServerTest.Router.CommentRouterTest do
     assert r.passed
     comment = r.data
     assert comment.owner == true
+
+    conn = conn(:get, "/comment/list") |> call
+    assert conn.status == 200
+    r = conn |> resp_to_map
+    assert r.passed
+    list = r.data
+    assert length(list) == 4
 
     conn = conn(:get, "/comment/from_article/#{article.id}") |> call
     assert conn.status == 200
