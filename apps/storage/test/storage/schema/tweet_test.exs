@@ -14,7 +14,6 @@ defmodule Storage.Schema.TweetTest do
 
   test "add and update tweet" do
     {status, tweet} = add(%{theme: "red", content: "推文1"})
-    IO.inspect(tweet)
     assert status == :ok
     assert tweet.theme == "red"
     assert tweet.content == "推文1"
