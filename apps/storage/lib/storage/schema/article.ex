@@ -82,6 +82,7 @@ defmodule Storage.Schema.Article do
   def find(filters \\ []) when is_list(filters) do
     res_status = Keyword.get(filters, :res_status)
     find_one? = filters[:id] || filters[:qtext] || nil
+    tag_qname = Keyword.get(filters, :tag_qname)
 
     tags_query = from t in Tag, select: t
 
@@ -136,7 +137,16 @@ defmodule Storage.Schema.Article do
 
     query = from _ in query, preload: [:category, tags: ^tags_query]
 
-    if find_one?, do: query |> query_one, else: query |> query_list
+    if tag_qname do
+      tag_query = from t in Tag, where: t.qname == ^tag_qname, preload: [articles: ^query]
+
+      case tag_query |> Tag.query_one() do
+        {:ok, tag} -> {:ok, tag.articles}
+        e -> e
+      end
+    else
+      if find_one?, do: query |> query_one, else: query |> query_list
+    end
   end
 
   def top(id) do

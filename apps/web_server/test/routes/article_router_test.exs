@@ -81,13 +81,15 @@ defmodule WebServerTest.Router.ArticleRouterTest do
         article = %{
           qtext: "i-am-article-#{i}",
           title: "我是第 #{i} 篇文章",
-          tags: [%{id: tag1.id}, %{id: tag2.id}, %{id: tag3.id}]
+          tags: [%{id: tag1.id}, %{id: tag2.id}]
         }
 
         article =
-          if Integer.is_odd(i),
-            do: Map.put(article, :category, c1),
-            else: Map.put(article, :category, c2)
+          if Integer.is_odd(i) do
+            article |> Map.put(:category, c1) |> Map.put(:tags, [%{id: tag1.id}])
+          else
+            article |> Map.put(:category, c2) |> Map.put(:tags, [%{id: tag2.id}, %{id: tag3.id}])
+          end
 
         conn = conn(:post, "/article/admin", article)
 
@@ -105,6 +107,14 @@ defmodule WebServerTest.Router.ArticleRouterTest do
     assert r.passed
     list = r.data
     assert length(list) == 8
+
+    conn = conn(:get, "/article/list?tag_qname=#{tag2.qname}")
+    conn = conn |> call
+    assert conn.status == 200
+    r = conn |> resp_to_map
+    assert r.passed
+    list = r.data
+    assert length(list) == 7
 
     conn = conn(:get, "/article/list")
     conn = conn |> call

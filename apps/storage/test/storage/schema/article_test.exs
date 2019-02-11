@@ -6,6 +6,8 @@ defmodule Storage.Schema.ArticleTest do
 
   import Storage.Schema.Article
 
+  require Integer
+
   setup do
     on_exit(fn ->
       Repo.delete_from!(:articles_tags)
@@ -51,13 +53,19 @@ defmodule Storage.Schema.ArticleTest do
     created_list =
       1..15
       |> Enum.map(fn i ->
-        {status, article} =
-          add(%{
-            qtext: "first-article-#{i}",
-            title: "第 #{i} 篇文章",
-            category_id: category.id,
-            tags: [%{id: tag1.id}, %{id: tag2.id}]
-          })
+        article = %{
+          qtext: "first-article-#{i}",
+          title: "第 #{i} 篇文章",
+          category_id: category.id,
+          tags: []
+        }
+
+        article =
+          if Integer.is_odd(i),
+            do: %{article | tags: [%{id: tag1.id}]},
+            else: %{article | tags: [%{id: tag2.id}]}
+
+        {status, article} = article |> add()
 
         assert status == :ok
         assert article.category_id == category.id
@@ -68,6 +76,10 @@ defmodule Storage.Schema.ArticleTest do
     {status, list} = find_list()
     assert status == :ok
     assert length(list) == 15
+
+    {status, list} = find_list(tag_qname: "t2", res_status: 1)
+    assert status == :ok
+    assert length(list) == 7
 
     article = Map.merge(Enum.at(created_list, 0), %{res_status: -1})
     {status, _article} = update(article)

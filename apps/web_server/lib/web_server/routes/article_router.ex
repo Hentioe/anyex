@@ -11,7 +11,9 @@ defmodule WebServer.Routes.ArticleRouter do
     [conn, paging] = conn |> fetch_paging_params()
     filter = paging |> specify_normal_status
     category_qname = Map.get(conn.params, "category_qname", nil)
+    tag_qname = Map.get(conn.params, "tag_qname", nil)
     filter = filter |> Keyword.put(:category_qname, category_qname)
+    filter = filter |> Keyword.put(:tag_qname, tag_qname)
 
     r =
       case filter |> Article.find_list() do
