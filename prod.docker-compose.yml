@@ -15,6 +15,7 @@ services:
     image: bluerain/anyex
     ports:
       - 8080:8080
+    stdin_open: true
     environment:
       ANYEX_DB_NAME: anyex_prod
       ANYEX_DB_USERNAME: postgres

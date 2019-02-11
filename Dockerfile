@@ -19,4 +19,4 @@ WORKDIR $APP_HOME
 ENV LANG=C.UTF-8
 ENV PATH="$APP_HOME/bin:$PATH"
 
-ENTRYPOINT [ "anyex", "foreground" ]
+ENTRYPOINT [ "anyex", "console" ]
