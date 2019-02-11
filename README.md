@@ -46,8 +46,8 @@ cd anyex
     docker-compose -f prod.docker-compose.yml up -d
     ````
 
-    到这里应用已经启动成功，使用 `curl localhost:8080` 命令测试会在终端输出 `Welcome to AnyEx!`  则表示成功运行。
-    不过还没有结束。虽然数据库、应用容器都已经被编排好了，参数也都配置好了，但还没有进行表数据生成，如果访问需要操作表的 API 都会返回错误。
+    到这里应用已经启动，使用 `curl localhost:8080` 命令测试会在终端输出 `Welcome to AnyEx!`  则表示成功运行。
+    不过还没有结束。虽然数据库、应用容器都已经被编排好了，参数也都配置好了(在 `prod.docker-compose.yml` 中定义)。但还没有进行表数据生成，如果访问需要操作数据表的 API 都会返回错误。
 
 1. 数据迁移
 
