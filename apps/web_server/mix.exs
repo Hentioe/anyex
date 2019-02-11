@@ -4,7 +4,7 @@ defmodule WebServer.MixProject do
   def project do
     [
       app: :web_server,
-      version: "0.1.4-dev",
+      version: "0.1.4",
       build_path: "../../_build",
       config_path: "../../config/config.exs",
       deps_path: "../../deps",
