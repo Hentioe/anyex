@@ -59,7 +59,7 @@ cd anyex
 
 ### 手动编译
 
-* 安装 Elixir
+1. 安装 Elixir
 
     每一种系统（或 Linux 发型版）安装的方式都不同，[这里](https://elixir-lang.org/install.html)是官方的安装指南页面。
 
