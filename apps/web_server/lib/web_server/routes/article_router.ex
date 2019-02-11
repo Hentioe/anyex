@@ -1,6 +1,7 @@
 defmodule WebServer.Routes.ArticleRouter do
   @moduledoc false
   alias Storage.Schema.{Article}
+  alias WebServer.Configure.Store, as: ConfigStore
 
   use WebServer.Router,
     schema: Article,
@@ -39,12 +40,23 @@ defmodule WebServer.Routes.ArticleRouter do
           {:ok, nil}
 
         {:ok, article} ->
-          case article.content |> Earmark.as_html() do
-            {:ok, html, _} ->
-              {:ok, %{article | content: html}}
+          markdown_support = ConfigStore.get(:web_server, :article_markdown_support) || false
 
-            e ->
-              e
+          markdown_support? =
+            if is_atom(markdown_support),
+              do: markdown_support,
+              else: String.to_existing_atom(markdown_support)
+
+          if markdown_support? do
+            case article.content |> Earmark.as_html() do
+              {:ok, html, _} ->
+                {:ok, %{article | content: html}}
+
+              e ->
+                e
+            end
+          else
+            {:ok, article}
           end
 
         e ->

@@ -5,7 +5,9 @@ defmodule WebServer.Configure.Helper do
     {:web_server, :port},
     {:web_server, :username},
     {:web_server, :password},
-    {:web_server, :secret}
+    {:web_server, :secret},
+    {:web_server, :article_markdown_support},
+    {:web_server, :tweet_markdown_support}
   ]
 
   def init do
@@ -19,9 +21,11 @@ defmodule WebServer.Configure.Helper do
     name = item |> Atom.to_string() |> String.upcase()
     env_var = "#{@prefix}#{name}"
 
-    System.get_env(env_var) ||
-      Application.get_env(app, item) ||
-      raise "please give me a #{item} parameter!"
+    val =
+      System.get_env(env_var) ||
+        Application.get_env(app, item)
+
+    if val !== nil, do: val, else: raise("please give me a #{item} parameter!")
   end
 
   def gen_key(app, item) do

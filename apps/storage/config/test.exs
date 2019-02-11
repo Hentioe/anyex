@@ -1,3 +1,3 @@
 use Mix.Config
 
-read_config("test.exs")
+import_config "dev.exs"

@@ -6,11 +6,12 @@
 
 如果您没有 Elixir 或 Erlang/OTP 程序的编译和部署经验，推荐使用 Docker 来进行一个傻瓜式的搭建流程，同时也不会污染文件系统（多余的 Erlang/Elixir 运行时和缓存）。
 
-不过在进行下列的流程之前您需要 clone 代码到本地，并进入项目主目录：
+不过在进行下列的流程之前您需要 clone 代码到本地，并进入项目主目录并切到最新的 release 版本：
 
 ```` bash
 git clone https://github.com/anyex-project/anyex.git
 cd anyex
+git checkout v0.1.2
 ````
 
 ### 基于 Docker
