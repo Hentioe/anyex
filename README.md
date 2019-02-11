@@ -9,7 +9,7 @@
 不过在进行下列的流程之前您需要 clone 代码到本地，并进入项目主目录：
 
 ```` bash
-https://github.com/anyex-project/anyex.git
+git clone https://github.com/anyex-project/anyex.git
 cd anyex
 ````
 
@@ -31,7 +31,7 @@ cd anyex
 1. 打包应用
 
     ```` bash
-    docker run -ti --rm -v $PWD:/code bluerain/elixir:1.8.1-slim mix release
+    docker run -ti --rm -v $PWD:/code --env MIX_ENV=prod bluerain/elixir:1.8.1-slim mix release
     ````
 
 1. 构建镜像
@@ -56,6 +56,8 @@ cd anyex
     ````
 
     至此，AnyEx 整个已经部署好了。得益于 Docker Compose 对容器的编排，应用总能在系统重启后自动运行并在进程崩溃时自动重启。
+
+    注意：这一步中的容器 `anyex_server_1` 不一定存在，容器的命名可能会因为 `docker-compose` 的版本差异而不同，应以实际创建的 `server` 容器名为主。
 
 ### 手动编译
 
