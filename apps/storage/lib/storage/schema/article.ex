@@ -141,6 +141,7 @@ defmodule Storage.Schema.Article do
       tag_query = from t in Tag, where: t.qname == ^tag_qname, preload: [articles: ^query]
 
       case tag_query |> Tag.query_one() do
+        {:ok, nil} -> {:ok, []}
         {:ok, tag} -> {:ok, tag.articles}
         e -> e
       end
