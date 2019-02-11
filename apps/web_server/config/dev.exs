@@ -6,4 +6,5 @@ config :web_server,
   password: "admin123",
   secret: "PZgMUvcbgR",
   article_markdown_support: true,
-  tweet_markdown_support: true
+  tweet_markdown_support: true,
+  default_limit: 50

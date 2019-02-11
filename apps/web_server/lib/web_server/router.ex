@@ -47,10 +47,16 @@ defmodule WebServer.Router do
       unquote(import_helper_macro())
       unquote(import_json_resp())
 
-      def fetch_paging_params(conn, limit) do
+      def fetch_paging_params(conn) do
+        alias WebServer.Configure.Store, as: ConfigStore
+        default_limit = ConfigStore.get(:web_server, :default_limit)
+
+        default_limit =
+          if is_integer(default_limit), do: default_limit, else: String.to_integer(default_limit)
+
         conn = conn |> fetch_query_params()
         offset = Map.get(conn.params, "offset", 0)
-        limit = Map.get(conn.params, "limit", limit)
+        limit = Map.get(conn.params, "limit", default_limit)
         [conn, [offset: offset, limit: limit]]
       end
 
@@ -58,7 +64,7 @@ defmodule WebServer.Router do
         case field do
           :list ->
             get "/list" do
-              [conn, paging] = fetch_paging_params(var!(conn), 50)
+              [conn, paging] = fetch_paging_params(var!(conn))
               filters = paging |> specify_normal_status
 
               conn |> var! |> resp(unquote(schema).find_list(filters))
@@ -66,7 +72,7 @@ defmodule WebServer.Router do
 
           :admin_list ->
             get "/admin/list" do
-              [conn, paging] = fetch_paging_params(var!(conn), 50)
+              [conn, paging] = fetch_paging_params(var!(conn))
               filters = paging
 
               conn |> var! |> resp(unquote(schema).find_list(filters))

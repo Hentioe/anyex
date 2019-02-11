@@ -8,7 +8,7 @@ defmodule WebServer.Routes.TweetRouter do
     include: [:admin_list, :admin_add, :admin_update, :status_manage, :top]
 
   get "/list" do
-    [conn, paging] = fetch_paging_params(conn, 50)
+    [conn, paging] = conn |> fetch_paging_params()
     filters = paging |> specify_normal_status
 
     r =

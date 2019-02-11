@@ -8,7 +8,7 @@ defmodule WebServer.Routes.ArticleRouter do
     include: [:admin_list, :admin_add, :admin_update, :status_manage, :top]
 
   get "/list" do
-    [conn, paging] = fetch_paging_params(conn, 50)
+    [conn, paging] = conn |> fetch_paging_params()
     filter = paging |> specify_normal_status
     category_qname = Map.get(conn.params, "category_qname", nil)
     filter = filter |> Keyword.put(:category_qname, category_qname)

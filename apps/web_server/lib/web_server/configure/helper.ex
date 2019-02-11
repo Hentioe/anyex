@@ -7,7 +7,8 @@ defmodule WebServer.Configure.Helper do
     {:web_server, :password},
     {:web_server, :secret},
     {:web_server, :article_markdown_support},
-    {:web_server, :tweet_markdown_support}
+    {:web_server, :tweet_markdown_support},
+    {:web_server, :default_limit}
   ]
 
   def init do

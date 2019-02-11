@@ -7,7 +7,7 @@ defmodule WebServer.Routes.CommentRouter do
     include: [:admin_update, :status_manage, :top]
 
   get "/list" do
-    [conn, paging] = fetch_paging_params(conn, 50)
+    [conn, paging] = conn |> fetch_paging_params()
     filters = paging |> specify_normal_status
 
     r =
@@ -53,7 +53,7 @@ defmodule WebServer.Routes.CommentRouter do
   end
 
   get "/from_article/:id" do
-    [conn, paging] = fetch_paging_params(conn, 50)
+    [conn, paging] = conn |> fetch_paging_params()
     filters = paging |> specify_normal_status |> Keyword.merge(article_id: id)
 
     r =
