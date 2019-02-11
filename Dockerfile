@@ -2,7 +2,7 @@ FROM debian:stretch
 
 
 RUN apt-get update \
-    && apt-get install openssl -y\
+    && apt-get install openssl -y \
     && rm -rf /var/lib/apt/lists/* \
     && rm -rf /var/lib/apt/lists/partial/*
 

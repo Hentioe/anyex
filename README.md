@@ -97,6 +97,9 @@ git checkout v0.1.2
     username: "admin",
     password: "admin123",
     secret: "7EvrcO4jDM"
+    article_markdown_support: true,
+    tweet_markdown_support: true,
+    default_limit: 50
     ````
 
     上面分别是数据库配置和 Web 服务配置，此处编辑的配置将永久编译到二进制应用中（如果要打包分发的话）。
@@ -156,6 +159,9 @@ git checkout v0.1.2
     ANYEX_SERVER_USERNAME=admin \
     ANYEX_SERVER_PASSWORD=admin123 \
     ANYEX_SERVER_SECRET=7EvrcO4jDM \
+    ANYEX_SERVER_ARTICLE_MARKDOWN_SUPPORT=true \
+    ANYEX_SERVER_TWEET_MARKDOWN_SUPPORT=true \
+    ANYEX_SERVER_DEFAULT_LIMIT=50 \
     /usr/local/anyex/bin/anyex foreground
     ````
 
@@ -173,6 +179,9 @@ git checkout v0.1.2
 * `ANYEX_SERVER_USERNAME`: 管理员用户名（用于申请 Token 的用户名）
 * `ANYEX_SERVER_PASSWORD`: 管理员密码（用于申请 Token 的密码）
 * `ANYEX_SERVER_SECRET`: Token 密文（用于加解密 Token）
+* `ANYEX_SERVER_ARTICLE_MARKDOWN_SUPPORT`: 启用文章 Markdown 支持
+* `ANYEX_SERVER_TWEET_MARKDOWN_SUPPORT`: 启用 Tweet Markdown 支持
+* `ANYEX_SERVER_DEFAULT_LIMIT`: 默认的分页限制（每一页最大数量）
 
 ### 附加说明
 
