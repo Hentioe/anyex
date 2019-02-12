@@ -25,7 +25,7 @@ defmodule WebServer.Configure.Helper do
 
   def string_in_list_conv(item, val) do
     if is_binary(val) do
-      val |> String.split(",")
+      val |> String.split(",") |> Enum.map(&String.trim(&1))
     else
       if is_list(val), do: val, else: raise("#{item} needs a list or string value")
     end
@@ -36,7 +36,7 @@ defmodule WebServer.Configure.Helper do
   end
 
   def string_conv(_item, val) do
-    if is_integer(val), do: Integer.to_string(val), else: val
+    if is_integer(val), do: Integer.to_string(val), else: val |> String.trim()
   end
 
   def integer_conv(_item, val) do
@@ -45,7 +45,7 @@ defmodule WebServer.Configure.Helper do
 
   def atom_in_list_conv(item, val) do
     if is_binary(val) do
-      list = val |> String.split(",")
+      list = val |> String.split(",") |> Enum.map(&String.trim(&1))
 
       list |> Enum.map(&String.to_atom(&1))
     else
