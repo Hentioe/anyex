@@ -5,6 +5,7 @@ config :web_server,
   username: "admin",
   password: "admin123",
   secret: "PZgMUvcbgR",
-  default_limit: 50,
+  default_limit: 25,
+  max_limit: 50,
   markdown_enables: [:article, :tweet],
   cors_origins: ["*"]

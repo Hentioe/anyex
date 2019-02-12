@@ -37,13 +37,12 @@ defmodule WebServer.Router do
       def fetch_paging_params(conn) do
         alias WebServer.Configure.Store, as: ConfigStore
         default_limit = ConfigStore.get(:web_server, :default_limit)
-
-        default_limit =
-          if is_integer(default_limit), do: default_limit, else: String.to_integer(default_limit)
+        max_limit = ConfigStore.get(:web_server, :max_limit)
 
         conn = conn |> fetch_query_params()
         offset = Map.get(conn.params, "offset", 0)
         limit = Map.get(conn.params, "limit", default_limit)
+        limit = if limit > max_limit, do: max_limit, else: limit
         [conn, [offset: offset, limit: limit]]
       end
 

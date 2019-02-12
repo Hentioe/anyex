@@ -7,6 +7,7 @@ defmodule WebServer.Configure.Helper do
     {:web_server, :password, :string},
     {:web_server, :secret, :string},
     {:web_server, :default_limit, :integer},
+    {:web_server, :max_limit, :integer},
     {:web_server, :cors_origins, :string_in_list},
     {:web_server, :markdown_enables, :atom_in_list}
   ]
