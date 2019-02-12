@@ -6,11 +6,11 @@ defmodule WebServer.Jwt do
 
   def gen_token(username, password) do
     user = %{username: username, password: password}
-    secret_key = ConfigStore.get(:web_server, :secret)
+    secret = ConfigStore.get(:web_server, :secret)
 
     user
     |> token()
-    |> with_signer(hs256(secret_key))
+    |> with_signer(hs256(secret))
     |> with_exp(gen_exp())
     |> sign
     |> get_compact
@@ -19,7 +19,7 @@ defmodule WebServer.Jwt do
   def validate(authorization) do
     username = ConfigStore.get(:web_server, :username)
     password = ConfigStore.get(:web_server, :password)
-    secret_key = ConfigStore.get(:web_server, :secret)
+    secret = ConfigStore.get(:web_server, :secret)
 
     %{claims: claims, error: error} =
       authorization
@@ -27,7 +27,7 @@ defmodule WebServer.Jwt do
       |> with_validation("username", &(&1 == username))
       |> with_validation("password", &(&1 == password))
       |> with_validation("exp", &(&1 >= now_to_unix()))
-      |> with_signer(hs256(secret_key))
+      |> with_signer(hs256(secret))
       |> verify
 
     if error do

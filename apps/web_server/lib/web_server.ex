@@ -10,8 +10,6 @@ defmodule WebServer do
     configs = ConfigHelper.init()
     port = ConfigHelper.get_config!(:web_server, :port)
 
-    port = if is_integer(port), do: port, else: String.to_integer(port)
-
     children = [
       {ConfigStore, configs: configs},
       Plug.Cowboy.child_spec(

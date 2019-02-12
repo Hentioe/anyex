@@ -42,12 +42,7 @@ defmodule WebServer.Routes.ArticleRouter do
           {:ok, nil}
 
         {:ok, article} ->
-          markdown_support = ConfigStore.get(:web_server, :article_markdown_support) || false
-
-          markdown_support? =
-            if is_atom(markdown_support),
-              do: markdown_support,
-              else: String.to_existing_atom(markdown_support)
+          markdown_support? = ConfigStore.exists(:web_server, :markdown_enables, :article)
 
           if markdown_support? do
             case article.content |> Earmark.as_html() do

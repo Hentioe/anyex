@@ -11,4 +11,9 @@ defmodule WebServer.Configure.Store do
     val = Agent.get(__MODULE__, &Map.get(&1, key))
     val || default
   end
+
+  def exists(app, item, name) do
+    list = get(app, item) || []
+    name in list
+  end
 end

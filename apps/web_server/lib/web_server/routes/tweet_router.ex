@@ -14,12 +14,7 @@ defmodule WebServer.Routes.TweetRouter do
     r =
       case Tweet.find_list(filters) do
         {:ok, list} ->
-          markdown_support = ConfigStore.get(:web_server, :tweet_markdown_support) || false
-
-          markdown_support? =
-            if is_atom(markdown_support),
-              do: markdown_support,
-              else: String.to_existing_atom(markdown_support)
+          markdown_support? = ConfigStore.exists(:web_server, :markdown_enables, :tweet)
 
           list =
             list

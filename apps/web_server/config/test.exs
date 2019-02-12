@@ -3,6 +3,5 @@ use Mix.Config
 import_config "dev.exs"
 
 config :web_server,
-  article_markdown_support: true,
-  tweet_markdown_support: true,
+  markdown_enables: [:article, :tweet],
   default_limit: 15

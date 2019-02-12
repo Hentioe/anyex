@@ -4,7 +4,7 @@ defmodule WebServer.MixProject do
   def project do
     [
       app: :web_server,
-      version: "0.2.0",
+      version: "0.2.1-dev",
       build_path: "../../_build",
       config_path: "../../config/config.exs",
       deps_path: "../../deps",
@@ -33,7 +33,8 @@ defmodule WebServer.MixProject do
       {:joken, "~> 1.5"},
       {:poison, "~> 3.0"},
       {:atomic_map, "~> 0.9.3"},
-      {:earmark, "~> 1.3"}
+      {:earmark, "~> 1.3"},
+      {:cors_plug, "~> 2.0"}
     ]
   end
 end

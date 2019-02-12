@@ -29,23 +29,10 @@ defmodule WebServer.Router do
         end
       end
 
-      use Plug.Router
-
       alias WebServer.Plugs.{JSONHeaderPlug, JwtAuthPlug}
 
-      plug :match
-
-      plug Plug.Parsers,
-        parsers: [Plug.Parsers.JSON],
-        json_decoder: Jason
-
-      plug JSONHeaderPlug
-      plug JwtAuthPlug
-      plug :dispatch
-
+      unquote(import_json_support())
       unquote(import_schema_status_macro())
-      unquote(import_helper_macro())
-      unquote(import_json_resp())
 
       def fetch_paging_params(conn) do
         alias WebServer.Configure.Store, as: ConfigStore
@@ -140,11 +127,20 @@ defmodule WebServer.Router do
   def json_support() do
     quote do
       import WebServer.Router
+      unquote(import_json_support())
+    end
+  end
+
+  defp import_json_support do
+    quote do
       use Plug.Router
 
       alias WebServer.Plugs.{JSONHeaderPlug, JwtAuthPlug}
+      alias WebServer.Configure.Store, as: ConfigStore
 
       plug :match
+
+      plug CORSPlug, origin: &__MODULE__.origins/0, methods: ["*"]
 
       plug Plug.Parsers,
         parsers: [Plug.Parsers.JSON],
@@ -154,8 +150,12 @@ defmodule WebServer.Router do
       plug JwtAuthPlug
       plug :dispatch
 
-      unquote(import_json_resp())
       unquote(import_helper_macro())
+      unquote(import_json_resp())
+
+      def origins do
+        ConfigStore.get(:web_server, :cors_origins)
+      end
     end
   end
 
