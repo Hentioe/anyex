@@ -11,7 +11,7 @@
 ```` bash
 git clone https://github.com/anyex-project/anyex.git
 cd anyex
-git checkout v0.2.0
+git checkout v0.2.1
 ````
 
 ### 基于 Docker
@@ -47,8 +47,8 @@ git checkout v0.2.0
     docker-compose -f prod.docker-compose.yml up -d
     ````
 
-    到这里应用已经启动，使用 `curl localhost:8080` 命令测试会在终端输出 `Welcome to AnyEx!`  则表示成功运行。
-    
+    到这里应用已经启动，使用 `curl localhost:8080` 命令测试会在终端输出 `Welcome to AnyEx!`  表示成功运行。
+
     不过还没有结束。虽然数据库、应用容器都已经被编排好了，参数也都配置好了(在 `prod.docker-compose.yml` 中定义)。但还没有进行表数据生成，如果访问需要操作数据表的 API 都会返回错误。
 
 1. 数据迁移
@@ -82,10 +82,10 @@ git checkout v0.2.0
     use Mix.Config
 
     config :storage, Storage.Repo,
-    database: "anyex_prod",
-    username: "postgres",
-    hostname: "localhost",
-    password: "sampledb123"
+      database: "anyex_prod",
+      username: "postgres",
+      hostname: "localhost",
+      password: "sampledb123"
     ````
 
     编辑 `apps/web_server/config/prod.secret.exs` 文件：
@@ -94,13 +94,14 @@ git checkout v0.2.0
     use Mix.Config
 
     config :web_server,
-    port: 8080,
-    username: "admin",
-    password: "admin123",
-    secret: "7EvrcO4jDM"
-    article_markdown_support: true,
-    tweet_markdown_support: true,
-    default_limit: 50
+      port: 8080,
+      username: "admin",
+      password: "admin123",
+      secret: "7EvrcO4jDM",
+      default_limit: 15,
+      max_limit: 50,
+      markdown_enables: [:article, :tweet],
+      cors_origins: ["*"]
     ````
 
     上面分别是数据库配置和 Web 服务配置，此处编辑的配置将永久编译到二进制应用中（如果要打包分发的话）。
@@ -160,9 +161,10 @@ git checkout v0.2.0
     ANYEX_SERVER_USERNAME=admin \
     ANYEX_SERVER_PASSWORD=admin123 \
     ANYEX_SERVER_SECRET=7EvrcO4jDM \
-    ANYEX_SERVER_ARTICLE_MARKDOWN_SUPPORT=true \
-    ANYEX_SERVER_TWEET_MARKDOWN_SUPPORT=true \
-    ANYEX_SERVER_DEFAULT_LIMIT=50 \
+    ANYEX_SERVER_MARKDOWN_ENABLES=article,tweet \
+    ANYEX_SERVER_DEFAULT_LIMIT=25 \
+    ANYEX_SERVER_MAX_LIMIT=25 \
+    ANYEX_SERVER_CORS_ORIGINS="*" \
     /usr/local/anyex/bin/anyex foreground
     ````
 
@@ -179,12 +181,13 @@ git checkout v0.2.0
 * `ANYEX_DB_PASSWORD`: 数据库密码
 * `ANYEX_DB_HOSTNAME`: 数据库主机名
 * `ANYEX_SERVER_PORT`: Web 服务端口
-* `ANYEX_SERVER_USERNAME`: 管理员用户名（用于申请 Token 的用户名）
-* `ANYEX_SERVER_PASSWORD`: 管理员密码（用于申请 Token 的密码）
+* `ANYEX_SERVER_USERNAME`: 管理员用户名（申请 Token 的用户名）
+* `ANYEX_SERVER_PASSWORD`: 管理员密码（申请 Token 的密码）
 * `ANYEX_SERVER_SECRET`: Token 密文（用于加解密 Token）
-* `ANYEX_SERVER_ARTICLE_MARKDOWN_SUPPORT`: 启用文章 Markdown 支持
-* `ANYEX_SERVER_TWEET_MARKDOWN_SUPPORT`: 启用 Tweet Markdown 支持
-* `ANYEX_SERVER_DEFAULT_LIMIT`: 默认的分页限制（每一页最大数量）
+* `ANYEX_SERVER_MARKDOWN_ENABLES`: 启用 Markdown 支持的资源列表
+* `ANYEX_SERVER_DEFAULT_LIMIT`: 默认的分页限制（没有提供 limit 参数时）
+* `ANYEX_SERVER_MAX_LIMIT`: 最大的分页限制（limit 超过此值会被重置为此值）
+* `ANYEX_SERVER_CORS_ORIGINS`: 允许跨域的 origin 列表（允许全部的星号切记加上引号："*"）
 
 ### 附加说明
 
