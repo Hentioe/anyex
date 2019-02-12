@@ -40,7 +40,7 @@ defmodule WebServer.Configure.Helper do
   end
 
   def integer_conv(_item, val) do
-    if is_integer(val), do: val, else: String.to_integer(val)
+    if is_integer(val), do: val, else: val |> String.trim() |> String.to_integer()
   end
 
   def atom_in_list_conv(item, val) do
