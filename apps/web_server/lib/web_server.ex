@@ -8,7 +8,7 @@ defmodule WebServer do
 
   def start(_type, _args) do
     configs = ConfigHelper.init()
-    port = ConfigHelper.get_config!(:web_server, :port)
+    port = configs |> Map.get(ConfigHelper.gen_key(:web_server, :port))
 
     children = [
       {ConfigStore, configs: configs},
