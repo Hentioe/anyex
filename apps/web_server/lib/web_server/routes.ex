@@ -19,6 +19,12 @@ defmodule WebServer.Routes do
     send_resp(conn, 200, "pong")
   end
 
+  get "/version" do
+    {:ok, vsn} = :application.get_key(:web_server, :vsn)
+
+    send_resp(conn, 200, List.to_string(vsn))
+  end
+
   forward "/article", to: ArticleRouter
   forward "/category", to: CategoryRouter
   forward "/tag", to: TagRouter
