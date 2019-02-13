@@ -183,7 +183,7 @@ defmodule WebServer.Router do
         end
       end
 
-      def resp_error(conn, error, data \\ %{}) when is_binary(error) do
+      def resp_error(conn, error, data \\ nil) when is_binary(error) do
         resp_json(conn, %{passed: false, message: error, data: data})
       end
 

@@ -23,16 +23,10 @@ git checkout v0.2.1
     touch apps/web_server/config/prod.secret.exs
     ````
 
-1. 拉取依赖
-
-    ```` bash
-    docker run -ti --rm -v $PWD:/code bluerain/elixir:1.8.1-slim mix deps.get
-    ````
-
 1. 打包应用
 
     ```` bash
-    docker run -ti --rm -v $PWD:/code --env MIX_ENV=prod bluerain/elixir:1.8.1-slim mix release
+    docker run -ti --rm --env MIX_ENV=prod -v $PWD:/code bluerain/elixir:1.8.1-slim mix do clean, deps.get, release
     ````
 
 1. 构建镜像
@@ -65,7 +59,7 @@ git checkout v0.2.1
 
 1. 安装 Elixir
 
-    每一种系统（或 Linux 发型版）安装的方式都不同，[这里](https://elixir-lang.org/install.html)是官方的安装指南页面。
+    不同的操作系统（或 Linux 发型版）安装的方式无法统一，所以这里不作安装说明。更加通用的方式是使用 [asdf](https://github.com/asdf-vm/asdf) 或者参照官方[安装指南](https://elixir-lang.org/install.html)。
 
 1. 添加配置
 
@@ -130,16 +124,10 @@ git checkout v0.2.1
     MIX_ENV=prod db.migrate
     ````
 
-1. 拉取依赖
-
-    ```` bash
-    mix deps.get
-    ````
-
 1. 打包应用
 
     ```` bash
-    MIX_ENV=prod mix release
+    MIX_ENV=prod mix do clean, deps.get, release
     ````
 
 1. 运行应用
