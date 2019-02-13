@@ -133,6 +133,7 @@ defmodule WebServer.Router do
   defp import_json_support do
     quote do
       use Plug.Router
+      use Plug.ErrorHandler
 
       alias WebServer.Plugs.{JSONHeaderPlug, JwtAuthPlug}
       alias WebServer.Configure.Store, as: ConfigStore
@@ -154,6 +155,13 @@ defmodule WebServer.Router do
 
       def origins do
         ConfigStore.get(:web_server, :cors_origins)
+      end
+
+      def handle_errors(conn, %{kind: kind, reason: reason, stack: _stack}) do
+        resp_error(conn, %{
+          kind: kind,
+          reason: "internally did not successfully complete this task"
+        })
       end
     end
   end

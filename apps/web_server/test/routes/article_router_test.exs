@@ -80,8 +80,7 @@ defmodule WebServerTest.Router.ArticleRouterTest do
       |> Enum.map(fn i ->
         article = %{
           qtext: "i-am-article-#{i}",
-          title: "我是第 #{i} 篇文章",
-          tags: [%{id: tag1.id}, %{id: tag2.id}]
+          title: "我是第 #{i} 篇文章"
         }
 
         article =
