@@ -15,6 +15,10 @@ defmodule WebServer.Routes do
     send_resp(conn, 200, "Welcome to AnyEx!")
   end
 
+  get "/ping" do
+    send_resp(conn, 200, "pong")
+  end
+
   forward "/article", to: ArticleRouter
   forward "/category", to: CategoryRouter
   forward "/tag", to: TagRouter
