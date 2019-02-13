@@ -4,7 +4,7 @@ defmodule Storage.MixProject do
   def project do
     [
       app: :storage,
-      version: "0.3.1-dev",
+      version: "0.3.1",
       build_path: "../../_build",
       config_path: "../../config/config.exs",
       deps_path: "../../deps",
