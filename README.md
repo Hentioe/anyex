@@ -11,7 +11,7 @@
 ```` bash
 git clone https://github.com/anyex-project/anyex.git
 cd anyex
-git checkout v0.2.1
+git checkout v0.3.0
 ````
 
 ### 基于 Docker
@@ -26,7 +26,8 @@ git checkout v0.2.1
 1. 打包应用
 
     ```` bash
-    docker run -ti --rm --env MIX_ENV=prod -v $PWD:/code bluerain/elixir:1.8.1-slim mix do clean, deps.get, release
+    docker run -ti --rm --env MIX_ENV=prod -v $PWD:/code bluerain/elixir:1.8.1-slim \
+    mix do clean, deps.get, release
     ````
 
 1. 构建镜像
