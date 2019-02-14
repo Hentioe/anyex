@@ -8,7 +8,8 @@ defmodule WebServer.Routes do
     TagRouter,
     TokenRouter,
     CommentRouter,
-    TweetRouter
+    TweetRouter,
+    LinkRouter
   }
 
   get "/" do
@@ -31,6 +32,7 @@ defmodule WebServer.Routes do
   forward "/token", to: TokenRouter
   forward "/comment", to: CommentRouter
   forward "/tweet", to: TweetRouter
+  forward "/link", to: LinkRouter
 
   use WebServer.RouterHelper, :default_routes
 end

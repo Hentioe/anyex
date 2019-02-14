@@ -6,7 +6,7 @@ defmodule WebServer.TestCase do
       use Plug.Test
 
       alias Storage.Repo
-      alias Storage.Schema.{Article, Category, Tag, Comment, Tweet}
+      alias Storage.Schema.{Article, Category, Tag, Comment, Tweet, Link}
       alias WebServer.Routes
       alias WebServer.Configure.Store, as: ConfigStore
 
@@ -20,6 +20,7 @@ defmodule WebServer.TestCase do
           Repo.delete_all(Article)
           Repo.delete_all(Category)
           Repo.delete_all(Tweet)
+          Repo.delete_all(Link)
         end)
 
         username = ConfigStore.get(:web_server, :username)

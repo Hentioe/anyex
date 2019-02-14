@@ -8,7 +8,8 @@ defmodule Storage.Schema.Link do
 
   import Ecto.Query, only: [from: 2]
 
-  @derive {Jason.Encoder, only: [:id, :qname, :name, :description, @top_field] ++ @common_fields}
+  @derive {Jason.Encoder,
+           only: [:id, :text, :address, :description, :type, @top_field] ++ @common_fields}
   schema "link" do
     field :text
     field :address
