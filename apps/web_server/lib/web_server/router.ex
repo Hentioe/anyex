@@ -23,7 +23,7 @@ defmodule WebServer.Router do
 
   def schema(schema, include) do
     quote do
-      defmacro no_top(struct_data) do
+      defmacro not_top(struct_data) do
         quote do
           unquote(struct_data) |> Map.merge(%{top: -1})
         end
@@ -112,7 +112,7 @@ defmodule WebServer.Router do
 
             delete "/admin/top/:id" do
               data = %{id: var!(id)}
-              result = data |> no_top |> unquote(schema).update()
+              result = data |> not_top |> unquote(schema).update()
               conn |> var! |> resp(result)
             end
 

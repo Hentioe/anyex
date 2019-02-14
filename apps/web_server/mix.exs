@@ -1,10 +1,12 @@
 defmodule WebServer.MixProject do
   use Mix.Project
 
+  @version "0.3.2-dev"
+
   def project do
     [
       app: :web_server,
-      version: "0.3.2-dev",
+      version: @version,
       build_path: "../../_build",
       config_path: "../../config/config.exs",
       deps_path: "../../deps",
@@ -13,6 +15,10 @@ defmodule WebServer.MixProject do
       start_permanent: Mix.env() == :prod,
       deps: deps()
     ]
+  end
+
+  def get_roor_version do
+    Mix.Project.get().project[:version]
   end
 
   # Run "mix help compile.app" to learn about applications.
