@@ -24,7 +24,7 @@ defmodule WebServer.Router do
       plug :dispatch
 
       def redirect(conn, url) do
-        body = "<html><body>You are being <a href=\"\">redirected</a>.</body></html>"
+        body = "<html><body>You are being <a href=\"#{url}\">redirected</a>.</body></html>"
 
         conn
         |> Plug.Conn.put_resp_header("location", url)
