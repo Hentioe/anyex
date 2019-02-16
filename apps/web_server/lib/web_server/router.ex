@@ -15,9 +15,21 @@ defmodule WebServer.Router do
   def default do
     quote do
       use Plug.Router
-
       plug :match
+
+      plug Plug.Static,
+        at: "/",
+        from: {:web_server, "priv/static"}
+
       plug :dispatch
+
+      def redirect(conn, url) do
+        body = "<html><body>You are being <a href=\"\">redirected</a>.</body></html>"
+
+        conn
+        |> Plug.Conn.put_resp_header("location", url)
+        |> Plug.Conn.send_resp(302, body)
+      end
     end
   end
 

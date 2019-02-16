@@ -1,5 +1,6 @@
 defmodule WebServer.Routes do
   @moduledoc false
+
   use WebServer.Router, :default
 
   alias WebServer.Routes.{
@@ -13,7 +14,7 @@ defmodule WebServer.Routes do
   }
 
   get "/" do
-    send_resp(conn, 200, "Welcome to AnyEx!")
+    conn |> redirect("/index.html")
   end
 
   get "/ping" do
