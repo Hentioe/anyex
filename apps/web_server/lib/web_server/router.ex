@@ -58,6 +58,55 @@ defmodule WebServer.Router do
         [conn, [offset: offset, limit: limit]]
       end
 
+      unquote(import_includes(schema, include))
+    end
+  end
+
+  def json_support() do
+    quote do
+      import WebServer.Router
+      unquote(import_json_support())
+    end
+  end
+
+  defp import_json_support do
+    quote do
+      use Plug.Router
+      use Plug.ErrorHandler
+
+      alias WebServer.Plugs.{JSONHeaderPlug, JwtAuthPlug}
+      alias WebServer.Config.Store, as: ConfigStore
+
+      plug :match
+
+      plug CORSPlug, origin: &__MODULE__.origins/0, methods: ["*"]
+
+      plug Plug.Parsers,
+        parsers: [Plug.Parsers.JSON],
+        json_decoder: Jason
+
+      plug JSONHeaderPlug
+      plug JwtAuthPlug
+      plug :dispatch
+
+      unquote(import_helper_macro())
+      unquote(import_json_resp())
+
+      def origins do
+        ConfigStore.get(:web_server, :cors_origins)
+      end
+
+      def handle_errors(conn, %{kind: kind, reason: reason, stack: _stack}) do
+        resp_error(conn, %{
+          kind: kind,
+          reason: "internally did not successfully complete this task"
+        })
+      end
+    end
+  end
+
+  defp import_includes(schema, include) do
+    quote do
       Enum.each(unquote(include), fn field ->
         case field do
           :list ->
@@ -135,68 +184,11 @@ defmodule WebServer.Router do
     end
   end
 
-  def json_support() do
-    quote do
-      import WebServer.Router
-      unquote(import_json_support())
-    end
-  end
-
-  defp import_json_support do
-    quote do
-      use Plug.Router
-      use Plug.ErrorHandler
-
-      alias WebServer.Plugs.{JSONHeaderPlug, JwtAuthPlug}
-      alias WebServer.Config.Store, as: ConfigStore
-
-      plug :match
-
-      plug CORSPlug, origin: &__MODULE__.origins/0, methods: ["*"]
-
-      plug Plug.Parsers,
-        parsers: [Plug.Parsers.JSON],
-        json_decoder: Jason
-
-      plug JSONHeaderPlug
-      plug JwtAuthPlug
-      plug :dispatch
-
-      unquote(import_helper_macro())
-      unquote(import_json_resp())
-
-      def origins do
-        ConfigStore.get(:web_server, :cors_origins)
-      end
-
-      def handle_errors(conn, %{kind: kind, reason: reason, stack: _stack}) do
-        resp_error(conn, %{
-          kind: kind,
-          reason: "internally did not successfully complete this task"
-        })
-      end
-    end
-  end
-
   defp import_json_resp() do
     quote do
       def resp_json(conn, body, status \\ 200) when is_integer(status) do
         conn
         |> send_resp(status, Jason.encode!(body))
-      end
-
-      def resp_error(conn, error) when is_map(error) do
-        message = Map.get(error, :message)
-
-        if message == nil do
-          resp_json(conn, %{passed: false, message: "EXPECTED", data: error})
-        else
-          resp_json(conn, %{passed: false, message: message, data: nil})
-        end
-      end
-
-      def resp_error(conn, error, data \\ nil) when is_binary(error) do
-        resp_json(conn, %{passed: false, message: error, data: data})
       end
 
       def resp_success(conn, data \\ %{}) do
@@ -215,11 +207,31 @@ defmodule WebServer.Router do
         resp_json(conn, %{passed: true, message: "SUCCESS", data: data})
       end
 
+      unquote(import_resp_error_json())
+
       def resp(conn, result) when is_tuple(result) do
         case result do
           {:ok, data} -> resp_success(conn, data)
           {:error, e} -> resp_error(conn, e)
         end
+      end
+    end
+  end
+
+  defp import_resp_error_json do
+    quote do
+      def resp_error(conn, error) when is_map(error) do
+        message = Map.get(error, :message)
+
+        if message == nil do
+          resp_json(conn, %{passed: false, message: "EXPECTED", data: error})
+        else
+          resp_json(conn, %{passed: false, message: message, data: nil})
+        end
+      end
+
+      def resp_error(conn, error, data \\ nil) when is_binary(error) do
+        resp_json(conn, %{passed: false, message: error, data: data})
       end
     end
   end

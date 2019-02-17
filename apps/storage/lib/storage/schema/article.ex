@@ -98,42 +98,7 @@ defmodule Storage.Schema.Article do
         join: c in assoc(a, :category),
         order_by: [desc: a.top, desc: a.updated_at]
 
-    query =
-      Enum.reduce(filters, query, fn {key, value}, acc_query ->
-        if value == nil do
-          acc_query
-        else
-          case key do
-            :res_status ->
-              from [a, c] in acc_query,
-                where: a.res_status == ^value,
-                where: c.res_status == ^value
-
-            :limit ->
-              from _ in acc_query,
-                limit: ^value
-
-            :offset ->
-              from _ in acc_query,
-                offset: ^value
-
-            :qtext ->
-              from a in acc_query,
-                where: a.qtext == ^value
-
-            :id ->
-              from a in acc_query,
-                where: a.id == ^value
-
-            :category_qname ->
-              from [_, c] in acc_query,
-                where: c.qname == ^value
-
-            _ ->
-              acc_query
-          end
-        end
-      end)
+    query = query |> gen_base_query(filters)
 
     query = from _ in query, preload: [:category, tags: ^tags_query]
 
@@ -148,6 +113,44 @@ defmodule Storage.Schema.Article do
     else
       if find_one?, do: query |> query_one, else: query |> query_list
     end
+  end
+
+  defp gen_base_query(query, filters) do
+    Enum.reduce(filters, query, fn {key, value}, acc_query ->
+      if value == nil do
+        acc_query
+      else
+        case key do
+          :res_status ->
+            from [a, c] in acc_query,
+              where: a.res_status == ^value,
+              where: c.res_status == ^value
+
+          :limit ->
+            from _ in acc_query,
+              limit: ^value
+
+          :offset ->
+            from _ in acc_query,
+              offset: ^value
+
+          :qtext ->
+            from a in acc_query,
+              where: a.qtext == ^value
+
+          :id ->
+            from a in acc_query,
+              where: a.id == ^value
+
+          :category_qname ->
+            from [_, c] in acc_query,
+              where: c.qname == ^value
+
+          _ ->
+            acc_query
+        end
+      end
+    end)
   end
 
   def top(id) do
