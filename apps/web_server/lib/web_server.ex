@@ -3,8 +3,8 @@ defmodule WebServer do
   应用入口/监督树管理
   """
   use Application
-  alias WebServer.Configure.Helper, as: ConfigHelper
-  alias WebServer.Configure.Store, as: ConfigStore
+  alias WebServer.Config.Helper, as: ConfigHelper
+  alias WebServer.Config.Store, as: ConfigStore
 
   def start(_type, _args) do
     configs = ConfigHelper.init()

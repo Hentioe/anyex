@@ -1,4 +1,4 @@
-defmodule WebServer.Configure.Store do
+defmodule WebServer.Config.Store do
   @moduledoc false
   use Agent
 
@@ -7,7 +7,7 @@ defmodule WebServer.Configure.Store do
   end
 
   def get(app, item, default \\ nil) when is_atom(app) and is_atom(item) do
-    key = WebServer.Configure.Helper.gen_key(app, item)
+    key = WebServer.Config.Helper.gen_key(app, item)
     val = Agent.get(__MODULE__, &Map.get(&1, key))
     val || default
   end

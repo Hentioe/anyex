@@ -47,7 +47,7 @@ defmodule WebServer.Router do
       unquote(import_schema_status_macro())
 
       def fetch_paging_params(conn) do
-        alias WebServer.Configure.Store, as: ConfigStore
+        alias WebServer.Config.Store, as: ConfigStore
         default_limit = ConfigStore.get(:web_server, :default_limit)
         max_limit = ConfigStore.get(:web_server, :max_limit)
 
@@ -148,7 +148,7 @@ defmodule WebServer.Router do
       use Plug.ErrorHandler
 
       alias WebServer.Plugs.{JSONHeaderPlug, JwtAuthPlug}
-      alias WebServer.Configure.Store, as: ConfigStore
+      alias WebServer.Config.Store, as: ConfigStore
 
       plug :match
 

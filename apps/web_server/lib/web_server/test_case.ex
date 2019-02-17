@@ -8,7 +8,7 @@ defmodule WebServer.TestCase do
       alias Storage.Repo
       alias Storage.Schema.{Article, Category, Tag, Comment, Tweet, Link}
       alias WebServer.Routes
-      alias WebServer.Configure.Store, as: ConfigStore
+      alias WebServer.Config.Store, as: ConfigStore
 
       @opts Routes.init([])
 

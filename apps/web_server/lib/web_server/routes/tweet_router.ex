@@ -1,7 +1,7 @@
 defmodule WebServer.Routes.TweetRouter do
   @moduledoc false
   alias Storage.Schema.{Tweet}
-  alias WebServer.Configure.Store, as: ConfigStore
+  alias WebServer.Config.Store, as: ConfigStore
 
   use WebServer.Router,
     schema: Tweet,

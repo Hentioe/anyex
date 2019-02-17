@@ -1,7 +1,7 @@
 defmodule WebServer.Routes.ArticleRouter do
   @moduledoc false
   alias Storage.Schema.{Article}
-  alias WebServer.Configure.Store, as: ConfigStore
+  alias WebServer.Config.Store, as: ConfigStore
 
   use WebServer.Router,
     schema: Article,

@@ -1,4 +1,4 @@
-defmodule WebServer.Configure.Helper do
+defmodule WebServer.Config.Helper do
   @moduledoc false
   @prefix "ANYEX_SERVER_"
   @config_items [

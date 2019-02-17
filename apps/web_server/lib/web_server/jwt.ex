@@ -2,7 +2,7 @@ defmodule WebServer.Jwt do
   @moduledoc false
   import Joken
 
-  alias WebServer.Configure.Store, as: ConfigStore
+  alias WebServer.Config.Store, as: ConfigStore
 
   def gen_token(username, password) do
     user = %{username: username, password: password}
