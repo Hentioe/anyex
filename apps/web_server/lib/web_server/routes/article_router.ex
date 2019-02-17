@@ -10,10 +10,11 @@ defmodule WebServer.Routes.ArticleRouter do
   get "/list" do
     [conn, paging] = conn |> fetch_paging_params()
     filter = paging |> specify_normal_status
-    category_qname = Map.get(conn.params, "category_qname", nil)
-    tag_qname = Map.get(conn.params, "tag_qname", nil)
-    filter = filter |> Keyword.put(:category_qname, category_qname)
-    filter = filter |> Keyword.put(:tag_qname, tag_qname)
+    category_qname = conn.params |> Map.get("category_qname", nil)
+    tag_qname = conn.params |> Map.get("tag_qname", nil)
+
+    filter =
+      filter |> Keyword.put(:category_qname, category_qname) |> Keyword.put(:tag_qname, tag_qname)
 
     r =
       case filter |> Article.find_list() do
