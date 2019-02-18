@@ -10,7 +10,8 @@ defmodule WebServer.Routes do
     TokenRouter,
     CommentRouter,
     TweetRouter,
-    LinkRouter
+    LinkRouter,
+    CustomRouter
   }
 
   get "/" do
@@ -34,6 +35,7 @@ defmodule WebServer.Routes do
   forward "/comment", to: CommentRouter
   forward "/tweet", to: TweetRouter
   forward "/link", to: LinkRouter
+  forward "/custom", to: CustomRouter
 
   use WebServer.RouterHelper, :default_routes
 end
