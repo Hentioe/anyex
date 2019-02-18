@@ -22,7 +22,7 @@ defmodule WebServer.Routes.CustomRouter do
       try do
         {:ok, String.to_existing_atom(include)}
       rescue
-        _e in _ -> {:error, "nnknown resource type: #{include}"}
+        _e in _ -> {:error, "unknown resource type: #{include}"}
       end
     end)
     |> Enum.filter(&(elem(&1, 0) == :ok))
