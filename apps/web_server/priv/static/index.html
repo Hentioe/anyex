@@ -1,15 +1,113 @@
 <!DOCTYPE html>
-<html>
+<html class="has-navbar-fixed-top">
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AnyEx</title>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no">
+    <title>AnyEx - Build your own blog app</title>
+    <link rel="stylesheet" href="/lib/bulma-0.7.2/bulma.min.css">
+    <link rel="stylesheet" href="/css/index.css">
+    <script defer src="/js/index.js"></script>
+    <script defer src="/lib/fontawesome-5.5.0/all.min.js"></script>
 </head>
 
 <body>
-    Welcome to AnyEx!
+    <div id="root">
+        <nav class="navbar has-shadow is-fixed-top" role="navigation" aria-label="main navigation">
+            <div class="container">
+                <div class="navbar-brand">
+                    <a class="navbar-item" href="/">
+                        <strong>AnyEx</strong>
+                    </a>
+
+                    <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                    </a>
+                </div>
+
+                <div id="navbarBasicExample" class="navbar-menu">
+                    <div class="navbar-start">
+                        <a class="navbar-item" target="_blank" href="https://github.com/anyex-project/anyex/wiki">
+                            <span class="icon has-text-primary">
+                                <i class="fas fa-book"></i>
+                            </span>
+                            <span>
+                                文档
+                            </span>
+                        </a>
+                        <a class="navbar-item" target="_blank" href="https://github.com/anyex-project/anyex/issues">
+                            <span class="icon has-text-info">
+                                <i class="fas fa-info-circle"></i>
+                            </span>
+                            <span>
+                                帮助
+                            </span>
+                        </a>
+
+                        <div class="navbar-item has-dropdown is-hoverable">
+                            <a class="navbar-link">
+                                功能
+                            </a>
+
+                            <div class="navbar-dropdown">
+                                <a class="navbar-item" href="#article">
+                                    文章
+                                </a>
+                                <a class="navbar-item" href="#tag">
+                                    标签
+                                </a>
+                                <a class="navbar-item" href="#category">
+                                    类别
+                                </a>
+                                <a class="navbar-item" href="#comment">
+                                    评论
+                                </a>
+                                <a class="navbar-item" href="#tweet">
+                                    推文
+                                </a>
+                                <hr class="navbar-divider">
+                                <a class="navbar-item" href="#more">
+                                    更多
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="navbar-end">
+                        <a class="navbar-item" href="https://github.com/anyex-project/anyex" target="_blank">
+                            <span class="icon" style="color: #333;">
+                                <i class="fab fa-lg fa-github-alt"></i>
+                            </span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <section class="hero is-medium is-info is-bold">
+            <div class="hero-body">
+                <div class="container">
+                    <h1 class="title">
+                        构建属于你自己的博客应用
+                    </h1>
+                    <h2 class="subtitle">
+                        AnyEx 是一个开源的博客 API 服务应用程序，它具备快速，轻量级且功能完备，易于部署和升级，拥有良好的定制性等特点。
+                    </h2>
+                </div>
+            </div>
+        </section>
+        <footer class="footer">
+            <div class="content has-text-centered">
+                <p>
+                    <strong>AnyEx</strong> by <a href="https://github.com/Hentioe">Hentioe</a>. The source code is
+                    licensed
+                    <a href="http://opensource.org/licenses/mit-license.php">MIT</a>. The website content
+                    is licensed <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY NC SA 4.0</a>.
+                </p>
+            </div>
+        </footer>
+    </div>
 </body>
 
 </html>
