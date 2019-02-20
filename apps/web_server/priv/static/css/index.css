@@ -1,0 +1,16 @@
+.aex-resource>div {
+    display: inline-block;
+}
+
+.aex-resource .subtitle {
+    margin-left: 20px;
+}
+
+@media screen and (max-width: 769px) {
+    .section {
+        padding: 28px;
+    }
+    .columns .aex-resource:first-child {
+        margin-bottom: 40px;
+    }
+}
