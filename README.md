@@ -11,7 +11,7 @@
 ```` bash
 git clone https://github.com/anyex-project/anyex.git
 cd anyex
-git checkout v0.4.0
+git checkout v0.4.1
 ````
 
 ### 基于 Docker
@@ -44,7 +44,7 @@ git checkout v0.4.0
 
     到这里应用已经启动，使用 `curl http://localhost:8080/ping` 命令测试在终端输出 `pong`  表示成功运行。
 
-    不过还没有结束。虽然数据库、应用容器都已经被编排好了，参数也都配置好了(在 `prod.docker-compose.yml` 中定义)。但还没有进行表数据生成，如果访问需要操作数据表的 API 都会返回错误。
+    不过还没有结束。虽然数据库、应用容器都已经启动，参数也都配置好了(在 `prod.docker-compose.yml` 中定义)。但还没有进行表数据生成，如果访问需要操作数据表的 API 都会返回错误。
 
 1. 数据迁移
 
@@ -52,7 +52,7 @@ git checkout v0.4.0
     docker exec -ti anyex_server_1 anyex migrate
     ````
 
-    至此，AnyEx 整个已经部署好了。得益于 Docker Compose 对容器的编排，应用总能在系统重启后自动运行并在进程崩溃时自动重启。
+    执行上述命令至此，AnyEx 整个已经部署好了。得益于 Docker Compose 对容器的编排，应用总能在系统重启后自动运行并在进程崩溃时自动重启。
 
     注意：这一步中的容器 `anyex_server_1` 不一定存在，容器的命名可能会因为 `docker-compose` 的版本差异而不同，应以实际创建的 `server` 容器名为主。
 
