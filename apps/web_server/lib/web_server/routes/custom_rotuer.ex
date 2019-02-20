@@ -1,17 +1,16 @@
 defmodule WebServer.Routes.CustomRouter do
   @moduledoc false
   use WebServer.Router, :json_support
+  use Plug.Test
 
-  @re_res ~r/(?<res>[^\[]+)(\[(?<filters>.+)?\])?/ix
-
-  # alias Storage.Schema.{
-  #   Article,
-  #   Category,
-  #   Tags,
-  #   Comment,
-  #   Tweet,
-  #   Link
-  # }
+  alias WebServer.Routes.{
+    ArticleRouter,
+    CategoryRouter,
+    TagRouter,
+    CommentRouter,
+    TweetRouter,
+    LinkRouter
+  }
 
   get "/" do
     # ?includes=article[offset=0,limit=5]|category[offset=0,limit=5]
@@ -20,61 +19,28 @@ defmodule WebServer.Routes.CustomRouter do
     includes = includes || ""
 
     includes = includes |> parse_includes_s
-    # [article: [nil], category: [%{"offset" => "0"}, %{"limit" => "5"}], c: [nil]]
-    articles =
-      if Keyword.has_key?(includes, :article) do
-      else
-        []
-      end
-
-    categorys =
-      if Keyword.has_key?(includes, :category) do
-      else
-        []
-      end
-
-    tags =
-      if Keyword.has_key?(includes, :tag) do
-      else
-        []
-      end
-
-    comments =
-      if Keyword.has_key?(includes, :comment) do
-      else
-        []
-      end
-
-    tweets =
-      if Keyword.has_key?(includes, :tweet) do
-      else
-        []
-      end
-
-    links =
-      if Keyword.has_key?(includes, :link) do
-      else
-        []
-      end
+    # [article: "offset=0&limit=5", category: "offset=0&limit=5"]
+    articles = includes |> dispatch_to(:article, :get, "/list", ArticleRouter)
+    categories = includes |> dispatch_to(:category, :get, "/list", CategoryRouter)
+    tags = includes |> dispatch_to(:tag, :get, "/list", TagRouter)
+    comments = includes |> dispatch_to(:comment, :get, "/list", CommentRouter)
+    tweets = includes |> dispatch_to(:tweet, :get, "/list", TweetRouter)
+    links = includes |> dispatch_to(:link, :get, "/list", LinkRouter)
 
     all_data =
       %{}
-      |> put_not_empty(:articles, articles)
-      |> put_not_empty(:categorys, categorys)
-      |> put_not_empty(:tags, tags)
-      |> put_not_empty(:comments, comments)
-      |> put_not_empty(:tweets, tweets)
-      |> put_not_empty(:links, links)
+      |> put_data_set(:articles, articles)
+      |> put_data_set(:categories, categories)
+      |> put_data_set(:tags, tags)
+      |> put_data_set(:comments, comments)
+      |> put_data_set(:tweets, tweets)
+      |> put_data_set(:links, links)
 
     conn |> resp_success(all_data)
   end
 
+  @re_res ~r/(?<res>[^\[]+)(\[(?<filters>.+)?\])?/ix
   defp parse_includes_s(includes) do
-    parse_f = fn filter_s ->
-      kv_s = filter_s |> String.split("=")
-      if length(kv_s) > 1, do: Map.put(%{}, Enum.at(kv_s, 0), Enum.at(kv_s, 1)), else: nil
-    end
-
     includes
     |> String.split("|")
     |> Enum.map(&String.trim(&1))
@@ -95,19 +61,41 @@ defmodule WebServer.Routes.CustomRouter do
     |> Enum.map(&elem(&1, 1))
     |> Enum.map(fn {res, filters_s} ->
       # {:category, "offset=0,limit=5"}
-
-      filters =
-        filters_s
-        |> String.split(",")
-        |> Enum.map(parse_f)
+      filters = filters_s |> String.replace(",", "&")
 
       {res, filters}
     end)
   end
 
-  def put_not_empty(map, key, data) when is_map(map) and is_atom(key) do
-    empty? = (is_list(data) && Enum.empty?(data)) || data == nil
-    if empty?, do: map, else: Map.put(map, key, data)
+  defp dispatch_to(includes, key, method, path, router) do
+    if Keyword.has_key?(includes, key) do
+      conn = conn(method, "#{path}?#{includes[key]}")
+      resp = conn |> router.call(router.init([]))
+
+      if resp.status == 200 do
+        body = Jason.decode!(resp.resp_body)
+
+        if body["passed"] do
+          {:ok, body["data"]}
+        else
+          {:error, "unsuccessful call"}
+        end
+      else
+        {:error, "wrong response"}
+      end
+    else
+      {:error, "[NotLoaded]"}
+    end
+  end
+
+  defp put_data_set(map, key, resp) when is_map(map) and is_atom(key) do
+    case resp do
+      {:ok, data} ->
+        Map.put(map, key, %{status: "[Loaded]", data: data})
+
+      {:error, reason} ->
+        Map.put(map, key, %{status: reason, data: nil})
+    end
   end
 
   use WebServer.RouterHelper, :default_routes

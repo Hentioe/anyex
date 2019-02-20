@@ -52,8 +52,23 @@ defmodule WebServer.Router do
         max_limit = ConfigStore.get(:web_server, :max_limit)
 
         conn = conn |> fetch_query_params()
-        offset = Map.get(conn.params, "offset", 0)
-        limit = Map.get(conn.params, "limit", default_limit)
+        offset = Map.get(conn.params, "offset", "0")
+        limit = Map.get(conn.params, "limit", "#{default_limit}")
+
+        offset =
+          try do
+            String.to_integer(offset)
+          rescue
+            _ in ArgumentError -> 0
+          end
+
+        limit =
+          try do
+            String.to_integer(limit)
+          rescue
+            _ in ArgumentError -> default_limit
+          end
+
         limit = if limit > max_limit, do: max_limit, else: limit
         [conn, [offset: offset, limit: limit]]
       end
