@@ -6,9 +6,7 @@ defmodule WebServerTest.Router.CommentRouterTest do
     conn = conn |> put_json_header |> put_authorization(state) |> call
 
     assert conn.status == 200
-    r = conn |> resp_to_map
-    assert r.passed
-    c1 = r.data
+    c1 = conn |> resp_to_map
 
     conn =
       conn(:post, "/article/admin", %{
@@ -19,9 +17,7 @@ defmodule WebServerTest.Router.CommentRouterTest do
 
     conn = conn |> put_json_header |> put_authorization(state) |> call
     assert conn.status == 200
-    r = conn |> resp_to_map
-    assert r.passed
-    article = r.data
+    article = conn |> resp_to_map
 
     conn =
       conn(:post, "/comment/add", %{
@@ -33,9 +29,7 @@ defmodule WebServerTest.Router.CommentRouterTest do
 
     conn = conn |> put_json_header |> put_authorization(state) |> call
     assert conn.status == 200
-    r = conn |> resp_to_map
-    assert r.passed
-    c1 = r.data
+    c1 = conn |> resp_to_map
     assert c1.owner == false
 
     conn =
@@ -50,8 +44,7 @@ defmodule WebServerTest.Router.CommentRouterTest do
     conn = conn |> put_json_header |> put_authorization(state) |> call
     assert conn.status == 200
     r = conn |> resp_to_map
-    assert r.passed
-    assert r.data.owner == true
+    assert r.owner == true
   end
 
   test "find comment list", state do
@@ -59,9 +52,7 @@ defmodule WebServerTest.Router.CommentRouterTest do
     conn = conn |> put_json_header |> put_authorization(state) |> call
 
     assert conn.status == 200
-    r = conn |> resp_to_map
-    assert r.passed
-    c1 = r.data
+    c1 = conn |> resp_to_map
 
     conn =
       conn(:post, "/article/admin", %{
@@ -72,9 +63,7 @@ defmodule WebServerTest.Router.CommentRouterTest do
 
     conn = conn |> put_json_header |> put_authorization(state) |> call
     assert conn.status == 200
-    r = conn |> resp_to_map
-    assert r.passed
-    article = r.data
+    article = conn |> resp_to_map
 
     [_c1, _c2, c3] =
       1..3
@@ -89,9 +78,7 @@ defmodule WebServerTest.Router.CommentRouterTest do
 
         conn = conn |> put_json_header |> put_authorization(state) |> call
         assert conn.status == 200
-        r = conn |> resp_to_map
-        assert r.passed
-        comment = r.data
+        comment = conn |> resp_to_map
         assert comment.owner == false
         comment
       end)
@@ -107,23 +94,17 @@ defmodule WebServerTest.Router.CommentRouterTest do
 
     conn = conn |> put_json_header |> put_authorization(state) |> call
     assert conn.status == 200
-    r = conn |> resp_to_map
-    assert r.passed
-    comment = r.data
+    comment = conn |> resp_to_map
     assert comment.owner == true
 
     conn = conn(:get, "/comment/list") |> call
     assert conn.status == 200
-    r = conn |> resp_to_map
-    assert r.passed
-    list = r.data
+    list = conn |> resp_to_map
     assert length(list) == 4
 
     conn = conn(:get, "/comment/from_article/#{article.id}") |> call
     assert conn.status == 200
-    r = conn |> resp_to_map
-    assert r.passed
-    list = r.data
+    list = conn |> resp_to_map
     assert length(list) == 3
     c3 = hd(list)
     assert c3.author_email == "[HIDDEN]"
@@ -132,14 +113,10 @@ defmodule WebServerTest.Router.CommentRouterTest do
 
     conn = conn(:delete, "/comment/admin/#{c3.id}") |> put_authorization(state) |> call
     assert conn.status == 200
-    r = conn |> resp_to_map
-    assert r.passed
 
     conn = conn(:get, "/comment/from_article/#{article.id}") |> call
     assert conn.status == 200
-    r = conn |> resp_to_map
-    assert r.passed
-    list = r.data
+    list = conn |> resp_to_map
     assert length(list) == 2
   end
 end

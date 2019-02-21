@@ -75,11 +75,7 @@ defmodule WebServer.Routes.CustomRouter do
       if resp.status == 200 do
         body = Jason.decode!(resp.resp_body)
 
-        if body["passed"] do
-          {:ok, body["data"]}
-        else
-          {:error, "unsuccessful call"}
-        end
+        {:ok, body}
       else
         {:error, "wrong response"}
       end
@@ -94,7 +90,7 @@ defmodule WebServer.Routes.CustomRouter do
         Map.put(map, key, %{status: "[Loaded]", data: data})
 
       {:error, reason} ->
-        Map.put(map, key, %{status: reason, data: nil})
+        Map.put(map, key, %{status: reason, data: []})
     end
   end
 

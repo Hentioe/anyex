@@ -10,9 +10,7 @@ defmodule WebServerTest.Router.TagRouterTest do
 
     conn = conn |> put_json_header |> put_authorization(state) |> call
     assert conn.status == 200
-    r = conn |> resp_to_map
-    assert r.passed
-    tag = r.data
+    tag = conn |> resp_to_map
     assert tag.qname == "tag-1"
     assert tag.name == "标签1"
 
@@ -25,9 +23,7 @@ defmodule WebServerTest.Router.TagRouterTest do
 
     conn = conn |> put_json_header |> put_authorization(state) |> call
     assert conn.status == 200
-    r = conn |> resp_to_map
-    assert r.passed
-    tag = r.data
+    tag = conn |> resp_to_map
     assert tag.qname == "tag-1-updated"
     assert tag.name == "更新后的标签1"
 
@@ -35,27 +31,21 @@ defmodule WebServerTest.Router.TagRouterTest do
 
     conn = conn |> put_authorization(state) |> call
     assert conn.status == 200
-    r = conn |> resp_to_map
-    assert r.passed
-    tag = r.data
+    tag = conn |> resp_to_map
     assert tag.res_status == -1
 
     conn = conn(:put, "/tag/admin/hidden/#{tag.id}")
 
     conn = conn |> put_authorization(state) |> call
     assert conn.status == 200
-    r = conn |> resp_to_map
-    assert r.passed
-    tag = r.data
+    tag = conn |> resp_to_map
     assert tag.res_status == 0
 
     conn = conn(:put, "/tag/admin/normal/#{tag.id}")
 
     conn = conn |> put_authorization(state) |> call
     assert conn.status == 200
-    r = conn |> resp_to_map
-    assert r.passed
-    tag = r.data
+    tag = conn |> resp_to_map
     assert tag.res_status == 1
   end
 
@@ -70,41 +60,31 @@ defmodule WebServerTest.Router.TagRouterTest do
 
       conn = conn |> put_json_header |> put_authorization(state) |> call
       assert conn.status == 200
-      r = conn |> resp_to_map
-      assert r.passed
-      tag = r.data
+      tag = conn |> resp_to_map
       assert tag.qname == "tag-#{i}"
       assert tag.name == "标签#{i}"
     end)
 
     conn = conn(:get, "tag/list") |> call
     assert conn.status == 200
-    r = conn |> resp_to_map
-    assert r.passed
-    list = r.data
+    list = conn |> resp_to_map
     assert length(list) == 15
 
     conn = conn(:delete, "/tag/admin/#{Enum.at(list, 0).id}")
 
     conn = conn |> put_authorization(state) |> call
     assert conn.status == 200
-    r = conn |> resp_to_map
-    assert r.passed
-    tag = r.data
+    tag = conn |> resp_to_map
     assert tag.res_status == -1
 
     conn = conn(:get, "/tag/list") |> call
     assert conn.status == 200
-    r = conn |> resp_to_map
-    assert r.passed
-    list = r.data
+    list = conn |> resp_to_map
     assert length(list) == 14
 
     conn = conn(:get, "/tag/admin/list") |> put_authorization(state) |> call
     assert conn.status == 200
-    r = conn |> resp_to_map
-    assert r.passed
-    list = r.data
+    list = conn |> resp_to_map
     assert length(list) == 15
   end
 end

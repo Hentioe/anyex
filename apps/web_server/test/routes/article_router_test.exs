@@ -8,9 +8,7 @@ defmodule WebServerTest.Router.ArticleRouterTest do
     conn = conn |> put_json_header |> put_authorization(state) |> call
 
     assert conn.status == 200
-    r = conn |> resp_to_map
-    assert r.passed
-    c1 = r.data
+    c1 = conn |> resp_to_map
 
     [tag1, tag2, tag3] =
       1..3
@@ -18,9 +16,7 @@ defmodule WebServerTest.Router.ArticleRouterTest do
         conn = conn(:post, "/tag/admin", %{qname: "t#{i}", name: "标签#{i}"})
         conn = conn |> put_json_header |> put_authorization(state) |> call
         assert conn.status == 200
-        r = conn |> resp_to_map
-        assert r.passed
-        r.data
+        conn |> resp_to_map
       end)
 
     conn =
@@ -33,17 +29,13 @@ defmodule WebServerTest.Router.ArticleRouterTest do
 
     conn = conn |> put_json_header |> put_authorization(state) |> call
     assert conn.status == 200
-    r = conn |> resp_to_map
-    assert r.passed
-    a1 = r.data
+    a1 = conn |> resp_to_map
     assert length(a1.tags) == 3
 
     conn = conn(:put, "/article/admin", %{id: a1.id, tags: [%{id: tag1.id}]})
     conn = conn |> put_json_header |> put_authorization(state) |> call
     assert conn.status == 200
-    r = conn |> resp_to_map
-    assert r.passed
-    a1 = r.data
+    a1 = conn |> resp_to_map
     assert length(a1.tags) == 1
   end
 
@@ -52,17 +44,13 @@ defmodule WebServerTest.Router.ArticleRouterTest do
     conn = conn |> put_json_header |> put_authorization(state) |> call
 
     assert conn.status == 200
-    r = conn |> resp_to_map
-    assert r.passed
-    c1 = r.data
+    c1 = conn |> resp_to_map
 
     conn = conn(:post, "/category/admin", %{qname: "c2", name: "类别2"})
     conn = conn |> put_json_header |> put_authorization(state) |> call
 
     assert conn.status == 200
-    r = conn |> resp_to_map
-    assert r.passed
-    c2 = r.data
+    c2 = conn |> resp_to_map
 
     [tag1, tag2, tag3] =
       1..3
@@ -70,9 +58,7 @@ defmodule WebServerTest.Router.ArticleRouterTest do
         conn = conn(:post, "/tag/admin", %{qname: "t#{i}", name: "标签#{i}"})
         conn = conn |> put_json_header |> put_authorization(state) |> call
         assert conn.status == 200
-        r = conn |> resp_to_map
-        assert r.passed
-        r.data
+        conn |> resp_to_map
       end)
 
     _created_list =
@@ -94,33 +80,25 @@ defmodule WebServerTest.Router.ArticleRouterTest do
 
         conn = conn |> put_json_header |> put_authorization(state) |> call
         assert conn.status == 200
-        r = conn |> resp_to_map
-        assert r.passed
-        r.data
+        conn |> resp_to_map
       end)
 
     conn = conn(:get, "/article/list?category_qname=#{c1.qname}")
     conn = conn |> call
     assert conn.status == 200
-    r = conn |> resp_to_map
-    assert r.passed
-    list = r.data
+    list = conn |> resp_to_map
     assert length(list) == 8
 
     conn = conn(:get, "/article/list?tag_qname=#{tag2.qname}")
     conn = conn |> call
     assert conn.status == 200
-    r = conn |> resp_to_map
-    assert r.passed
-    list = r.data
+    list = conn |> resp_to_map
     assert length(list) == 7
 
     conn = conn(:get, "/article/list")
     conn = conn |> call
     assert conn.status == 200
-    r = conn |> resp_to_map
-    assert r.passed
-    list = r.data
+    list = conn |> resp_to_map
     assert length(list) == 15
     a1 = list |> Enum.at(0)
     assert a1.content == "[NotLoaded]"
@@ -128,27 +106,19 @@ defmodule WebServerTest.Router.ArticleRouterTest do
     conn = conn(:put, "/article/admin/hidden/#{Enum.at(list, 0).id}")
     conn = conn |> put_authorization(state) |> call
     assert conn.status == 200
-    r = conn |> resp_to_map
-    assert r.passed
     conn = conn(:delete, "/article/admin/#{Enum.at(list, 1).id}")
     conn = conn |> put_authorization(state) |> call
     assert conn.status == 200
-    r = conn |> resp_to_map
-    assert r.passed
     conn = conn(:get, "/article/list?offset=1")
     conn = conn |> call
     assert conn.status == 200
-    r = conn |> resp_to_map
-    assert r.passed
-    list = r.data
+    list = conn |> resp_to_map
     assert length(list) == 12
 
     conn = conn(:get, "/article/admin/list")
     conn = conn |> put_authorization(state) |> call
     assert conn.status == 200
-    r = conn |> resp_to_map
-    assert r.passed
-    list = r.data
+    list = conn |> resp_to_map
     assert length(list) == 15
   end
 
@@ -157,9 +127,7 @@ defmodule WebServerTest.Router.ArticleRouterTest do
     conn = conn |> put_json_header |> put_authorization(state) |> call
 
     assert conn.status == 200
-    r = conn |> resp_to_map
-    assert r.passed
-    c1 = r.data
+    c1 = conn |> resp_to_map
 
     [tag1, tag2, tag3] =
       1..3
@@ -167,9 +135,7 @@ defmodule WebServerTest.Router.ArticleRouterTest do
         conn = conn(:post, "/tag/admin", %{qname: "t#{i}", name: "标签#{i}"})
         conn = conn |> put_json_header |> put_authorization(state) |> call
         assert conn.status == 200
-        r = conn |> resp_to_map
-        assert r.passed
-        r.data
+        conn |> resp_to_map
       end)
 
     conn =
@@ -183,33 +149,26 @@ defmodule WebServerTest.Router.ArticleRouterTest do
 
     conn = conn |> put_json_header |> put_authorization(state) |> call
     assert conn.status == 200
-    r = conn |> resp_to_map
-    assert r.passed
-    article = r.data
+    article = conn |> resp_to_map
 
     conn = conn(:get, "/article/query/#{article.qtext}") |> call
     assert conn.status == 200
     r = conn |> resp_to_map
-    assert r.passed
-    assert r.data != nil
-    assert r.data.content == "<h1>前言</h1>\n"
+    assert r != nil
+    assert r.content == "<h1>前言</h1>\n"
 
     conn = conn(:delete, "/article/admin/#{article.id}") |> put_authorization(state) |> call
     assert conn.status == 200
-    r = conn |> resp_to_map
-    assert r.passed
 
     conn = conn(:get, "/article/query/#{article.qtext}") |> call
     assert conn.status == 200
     r = conn |> resp_to_map
-    assert r.passed
-    assert r.data == nil
+    assert r == nil
 
     conn = conn(:get, "/article/admin/#{article.id}") |> put_authorization(state) |> call
     assert conn.status == 200
     r = conn |> resp_to_map
-    assert r.passed
-    assert r.data != nil
-    assert r.data.content == "# 前言"
+    assert r != nil
+    assert r.content == "# 前言"
   end
 end

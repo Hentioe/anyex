@@ -25,7 +25,7 @@ defmodule WebServer.Routes.TokenRouter do
 
     case validite_r do
       {:ok, token} ->
-        conn |> resp({:ok, token})
+        conn |> resp({:ok, %{token: token}})
 
       {:error, msg} ->
         conn |> resp_error(msg)

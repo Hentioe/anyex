@@ -30,8 +30,7 @@ defmodule WebServer.TestCase do
         conn = conn |> put_req_header("content-type", "application/json") |> Routes.call(@opts)
         unless conn.status == 200, do: raise("request token failed")
         r = conn.resp_body |> Jason.decode!(keys: :atoms)
-        unless r.passed, do: raise(r.message)
-        {:ok, token: r.data}
+        {:ok, token: r.token}
       end
 
       defmacro call(conn) do
