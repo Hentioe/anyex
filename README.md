@@ -23,6 +23,13 @@ git checkout v0.5.1
     touch apps/web_server/config/prod.secret.exs
     ````
 
+1. 生成文档
+
+    ```` bash
+    docker run --rm -v ${PWD}:/local openapitools/openapi-generator-cli \
+    generate -i /local/openapi.yaml -g html2 -o /local/apps/web_server/priv/static/doc
+    ````
+
 1. 打包应用
 
     ```` bash
@@ -123,6 +130,14 @@ git checkout v0.5.1
     ANYEX_DB_PASSWORD=sampledb123 \
     ANYEX_DB_HOSTNAME=localhost \
     MIX_ENV=prod db.migrate
+    ````
+
+1. 生成文档
+
+    文档的生成和部署方式无关，如果您可以使用 Docker 建议使用同上的命令。否则您需要自行安装 `openapi-generator-cli`，并使用下面的命令
+
+    ```` bash
+    openapi-generator-cli generate -i openapi.yaml -g html2 -o apps/web_server/priv/static/doc
     ````
 
 1. 打包应用

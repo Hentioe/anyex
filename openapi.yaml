@@ -7,17 +7,141 @@ info:
     url: "https://opensource.org/licenses/mit-license.php"
   version: alpha
 servers:
-  - url: "/"
+  - url: "https://anyex.bluerain.io/"
 tags:
+  - name: 认证
+    description: 有关认证的操作和获取接口
+  - name: 类别
+    description: 有关类别的操作和获取接口
+  - name: 标签
+    description: 有关标签的操作和获取接口
   - name: 文章
     description: 有关文章的操作和获取接口
 paths:
+  /token/gen:
+    post:
+      tags:
+        - 认证
+      summary: 生成认证令牌
+      operationId: genToken
+      requestBody:
+        description: 管理员信息
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Admin'
+      responses:
+        200:
+          description: 令牌响应
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Token"
+                  
+        400:
+          description: 错误响应
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+  /category/admin:
+    post:
+      tags:
+        - 类别
+      summary: 添加一个类别
+      operationId: addCategory
+      security: [jwt_auth: []]
+      requestBody:
+        description: 管理员信息
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Category'
+      responses:
+        200:
+          description: 添加后的类别响应
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Category"
+        400:
+          description: 错误响应
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+                
+                  
+        401:
+          description: 无效授权
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+  /tag/admin:
+    post:
+      tags:
+        - 标签
+      summary: 添加一个标签
+      operationId: addTag
+      security: [jwt_auth: []]
+      requestBody:
+        description: 管理员信息
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Tag'
+      responses:
+        200:
+          description: 添加后的类别响应
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tag"
+        400:
+          description: 错误响应
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+                
+                  
+        401:
+          description: 无效授权
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
   /article/list:
     get:
       tags:
         - 文章
       summary: 获取前台文章列表
       operationId: findArticleList
+      parameters:
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          description: 数据集偏移
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: 数据集大小
+        - in: query
+          name: category_qname
+          schema:
+            type: string
+          description: 类别(查询)名称
+        - in: query
+          name: tag_qname
+          schema:
+            type: string
+          description: 标签(查询)名称
       responses:
         200:
           description: 文章列表响应
@@ -33,9 +157,51 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrReason"
+  /article/query/{qtext}:
+    get:
+      tags:
+        - 文章
+      summary: 获取前台文章内容
+      operationId: getArticle
+      parameters:
+        - in: path
+          name: qtext
+          required: true
+          schema:
+            type: string
+          description: 文章查询文本
+      responses:
+        200:
+          description: 文章列表响应
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: "#/components/schemas/Article"
+        400:
+          description: 错误响应
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
 
 components:
   schemas:
+    Token:
+      title: 令牌
+      type: object
+      properties:
+        token:
+          type: string
+    Admin:
+      title: 管理员
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
     ErrReason:
       title: 错误
       type: object
@@ -44,6 +210,50 @@ components:
           type: string
         data:
           type: object
+    Category:
+      title: 类别
+      type: object
+      properties:
+        id:
+          type: integer
+        qname:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        top:
+          type: integer
+        inserted_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        res_type:
+          type: integer
+    Tag:
+      title: 标签
+      type: object
+      properties:
+        id:
+          type: integer
+        qname:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        top:
+          type: integer
+        inserted_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        res_type:
+          type: integer
     Article:
       title: 文章
       type: object
