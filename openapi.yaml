@@ -1,0 +1,88 @@
+openapi: 3.0.1
+info:
+  title: AnyEx 接口文档
+  description: "文档正在拼命完善中……"
+  license:
+    name: MIT 许可证
+    url: "https://opensource.org/licenses/mit-license.php"
+  version: alpha
+servers:
+  - url: "/"
+tags:
+  - name: 文章
+    description: 有关文章的操作和获取接口
+paths:
+  /article/list:
+    get:
+      tags:
+        - 文章
+      summary: 获取前台文章列表
+      operationId: findArticleList
+      responses:
+        "200":
+          description: 文章列表响应
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiRespArray"
+                  
+
+components:
+  schemas:
+    ApiRespObject:
+      title: Shell-Object
+      type: object
+      properties:
+        passed:
+          type: boolean
+          default: true
+        message:
+          type: string
+          default: '"SUCCESS"'
+        data:
+          type: object
+    ApiRespArray:
+      title: Shell-Array
+      type: object
+      properties:
+        passed:
+          type: boolean
+          default: true
+        message:
+          type: string
+          default: '"SUCCESS"'
+        data:
+          type: array
+          items:
+            type: object
+    Article:
+      title: 文章
+      type: object
+      properties:
+        id:
+          type: integer
+        category_id:
+          type: integer
+        qtext:
+          type: string
+        title:
+          type: string
+        preface:
+          type: string
+        content:
+          type: string
+        top:
+          type: integer
+        inserted_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        res_type:
+          type: integer
+  securitySchemes:
+    jwt_auth:
+      type: apiKey
+      in: header
+      name: authorization

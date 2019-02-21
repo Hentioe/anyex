@@ -19,15 +19,11 @@ defmodule WebServer.Plugs.JwtAuthPlug do
       match_r = @re_admin |> Regex.scan(conn.request_path)
 
       if length(match_r) > 0 do
-        # 需要验证
         if veryfi_token(conn) do
           conn
         else
-          # 未通过验证
           conn |> resp_401 |> halt()
         end
-
-        # 无需验证
       else
         conn
       end
@@ -38,7 +34,7 @@ defmodule WebServer.Plugs.JwtAuthPlug do
     cookies = Plug.Conn.fetch_cookies(conn).req_cookies
 
     token = cookies["authorization"] || read_token_from_header(conn)
-    # 验证 Token 有效性
+
     if token do
       case WebServer.Jwt.validate(token) do
         {:ok, _} -> true
