@@ -10,6 +10,11 @@
     margin-left: 20px;
 }
 
+.aex-doc-section img {
+    box-shadow: 0 0 10px #cccccc;
+    border-radius: 6px;
+}
+
 @media screen and (max-width: 769px) {
     .section {
         padding: 28px;
