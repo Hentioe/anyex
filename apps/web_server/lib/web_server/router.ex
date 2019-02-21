@@ -239,14 +239,14 @@ defmodule WebServer.Router do
         message = Map.get(error, :message)
 
         if message == nil do
-          resp_json(conn, %{passed: false, message: "EXPECTED", data: error}, 400)
+          resp_json(conn, %{message: "[Expected]", data: error}, 400)
         else
-          resp_json(conn, %{passed: false, message: message, data: nil}, 400)
+          resp_json(conn, %{message: message, data: nil}, 400)
         end
       end
 
       def resp_error(conn, error, data \\ nil) when is_binary(error) do
-        resp_json(conn, %{passed: false, message: error, data: data}, 400)
+        resp_json(conn, %{message: error, data: data}, 400)
       end
     end
   end

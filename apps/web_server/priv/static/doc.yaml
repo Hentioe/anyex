@@ -7,7 +7,7 @@ info:
     url: "https://opensource.org/licenses/mit-license.php"
   version: alpha
 servers:
-  - url: "https://anyex.bluerain.io/"
+  - url: "/"
 tags:
   - name: 认证
     description: 有关认证的操作和获取接口
@@ -230,7 +230,7 @@ components:
         updated_at:
           type: string
           format: date-time
-        res_type:
+        res_status:
           type: integer
     Tag:
       title: 标签
@@ -252,7 +252,7 @@ components:
         updated_at:
           type: string
           format: date-time
-        res_type:
+        res_status:
           type: integer
     Article:
       title: 文章
@@ -278,7 +278,7 @@ components:
         updated_at:
           type: string
           format: date-time
-        res_type:
+        res_status:
           type: integer
   securitySchemes:
     jwt_auth:

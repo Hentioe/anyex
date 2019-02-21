@@ -8,7 +8,7 @@ defmodule WebServer.Plugs.JwtAuthPlug do
   end
 
   def resp_401(conn) do
-    conn |> resp_json(%{passed: false, message: "unauthorized", data: nil}, 401)
+    conn |> resp_json(%{message: "unauthorized", data: nil}, 401)
   end
 
   @re_admin Regex.compile!("^/[^/]+/admin")

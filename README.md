@@ -27,7 +27,7 @@ git checkout v0.5.1
 
     ```` bash
     docker run --rm -v ${PWD}:/local openapitools/openapi-generator-cli \
-    generate -i /local/openapi.yaml -g html2 -o /local/apps/web_server/priv/static/doc
+    generate -i /local/apps/web_server/priv/static/doc.yaml -g html2 -o /local/apps/web_server/priv/static/doc
     ````
 
 1. 打包应用
@@ -137,7 +137,7 @@ git checkout v0.5.1
     文档的生成和部署方式无关，如果您可以使用 Docker 建议使用同上的命令。否则您需要自行安装 `openapi-generator-cli`，并使用下面的命令
 
     ```` bash
-    openapi-generator-cli generate -i openapi.yaml -g html2 -o apps/web_server/priv/static/doc
+    openapi-generator-cli generate -i apps/web_server/priv/static/doc.yaml -g html2 -o apps/web_server/priv/static/doc
     ````
 
 1. 打包应用
