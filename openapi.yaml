@@ -19,42 +19,31 @@ paths:
       summary: 获取前台文章列表
       operationId: findArticleList
       responses:
-        "200":
+        200:
           description: 文章列表响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ApiRespArray"
-                  
+                type: array
+                items:
+                  $ref: "#/components/schemas/Article"
+        400:
+          description: 错误响应
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
 
 components:
   schemas:
-    ApiRespObject:
-      title: Shell-Object
+    ErrReason:
+      title: 错误
       type: object
       properties:
-        passed:
-          type: boolean
-          default: true
         message:
           type: string
-          default: '"SUCCESS"'
         data:
           type: object
-    ApiRespArray:
-      title: Shell-Array
-      type: object
-      properties:
-        passed:
-          type: boolean
-          default: true
-        message:
-          type: string
-          default: '"SUCCESS"'
-        data:
-          type: array
-          items:
-            type: object
     Article:
       title: 文章
       type: object
