@@ -53,7 +53,7 @@ paths:
       operationId: addCategory
       security: [jwt_auth: []]
       requestBody:
-        description: 管理员信息
+        description: 类别
         required: true
         content:
           application/json:
@@ -61,7 +61,7 @@ paths:
               $ref: "#/components/schemas/Category"
       responses:
         200:
-          description: 添加后的类别响应
+          description: 添加后的类别
           content:
             application/json:
               schema:
@@ -87,7 +87,7 @@ paths:
       operationId: addTag
       security: [jwt_auth: []]
       requestBody:
-        description: 管理员信息
+        description: 标签
         required: true
         content:
           application/json:
@@ -95,7 +95,7 @@ paths:
               $ref: "#/components/schemas/Tag"
       responses:
         200:
-          description: 添加后的类别响应
+          description: 添加后的标签
           content:
             application/json:
               schema:
@@ -121,7 +121,7 @@ paths:
       operationId: addArticle
       security: [jwt_auth: []]
       requestBody:
-        description: 文章信息
+        description: 文章
         required: true
         content:
           application/json:
@@ -129,7 +129,7 @@ paths:
               $ref: "#/components/schemas/Article"
       responses:
         200:
-          description: 添加后的类别响应
+          description: 添加后的文章
           content:
             application/json:
               schema:
@@ -143,6 +143,222 @@ paths:
 
         401:
           description: 无效授权
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+    put:
+      tags:
+        - 文章
+      summary: 更新一个文章
+      operationId: updateArticle
+      security: [jwt_auth: []]
+      requestBody:
+        description: 文章
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Article"
+      responses:
+        200:
+          description: 更新后的文章
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Article"
+        400:
+          description: 错误响应
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+
+        401:
+          description: 无效授权
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+  /admin/hidden/{id}:
+    put:
+      tags:
+        - 文章
+      summary: 隐藏一个文章
+      operationId: hiddenArticle
+      security: [jwt_auth: []]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: 文章的 ID
+      requestBody:
+        description: 文章
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Article"
+      responses:
+        200:
+          description: 隐藏后的文章
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Article"
+        400:
+          description: 错误响应
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+
+        401:
+          description: 无效授权
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+  /admin/{id}:
+    delete:
+      tags:
+        - 文章
+      summary: 删除一个文章
+      operationId: deleteArticle
+      security: [jwt_auth: []]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: 文章的 ID
+      requestBody:
+        description: 文章
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Article"
+      responses:
+        200:
+          description: 删除后的文章
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Article"
+        400:
+          description: 错误响应
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+
+        401:
+          description: 无效授权
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+  /admin/normal/{id}:
+    put:
+      tags:
+        - 文章
+      summary: 恢复一个文章
+      operationId: normalArticle
+      security: [jwt_auth: []]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: 文章的 ID
+      requestBody:
+        description: 文章
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Article"
+      responses:
+        200:
+          description: 恢复后的文章
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Article"
+        400:
+          description: 错误响应
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+  /article/admin/top/{id}:
+    post:
+      tags:
+        - 文章
+      summary: 置顶一个文章
+      operationId: topArticle
+      security: [jwt_auth: []]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: 文章的 ID
+      requestBody:
+        description: 文章
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Article"
+      responses:
+        200:
+          description: 置顶后的文章
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Article"
+        400:
+          description: 错误响应
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+    delete:
+      tags:
+        - 文章
+      summary: 取消文章置顶
+      operationId: cancelTopArticle
+      security: [jwt_auth: []]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: 文章的 ID
+      requestBody:
+        description: 文章
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Article"
+      responses:
+        200:
+          description: 取消置顶后的文章
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Article"
+        400:
+          description: 错误响应
           content:
             application/json:
               schema:
@@ -189,6 +405,55 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrReason"
+  /article/admin/list:
+    get:
+      tags:
+        - 文章
+      summary: 获取后台文章列表
+      operationId: findAdminArticleList
+      security: [jwt_auth: []]
+      parameters:
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          description: 数据集偏移
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: 数据集大小
+        - in: query
+          name: category_qname
+          schema:
+            type: string
+          description: 类别(查询)名称
+        - in: query
+          name: tag_qname
+          schema:
+            type: string
+          description: 标签(查询)名称
+      responses:
+        200:
+          description: 文章列表响应
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Article"
+        400:
+          description: 错误响应
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+        401:
+          description: 无效授权
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
   /article/query/{qtext}:
     get:
       tags:
@@ -204,7 +469,7 @@ paths:
           description: 文章查询文本
       responses:
         200:
-          description: 文章列表响应
+          description: 文章
           content:
             application/json:
               schema:
@@ -217,7 +482,41 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrReason"
-
+  /article/admin/{id}:
+    get:
+      tags:
+        - 文章
+      summary: 获取后台文章内容
+      operationId: getAdminArticle
+      security: [jwt_auth: []]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: 文章 ID
+      responses:
+        200:
+          description: 文章
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: "#/components/schemas/Article"
+        400:
+          description: 错误响应
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+        401:
+          description: 无效授权
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
 components:
   schemas:
     Token:
