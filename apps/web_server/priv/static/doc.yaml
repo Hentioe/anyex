@@ -30,7 +30,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Admin'
+              $ref: "#/components/schemas/Admin"
       responses:
         200:
           description: 令牌响应
@@ -38,7 +38,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Token"
-                  
+
         400:
           description: 错误响应
           content:
@@ -58,7 +58,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Category'
+              $ref: "#/components/schemas/Category"
       responses:
         200:
           description: 添加后的类别响应
@@ -72,8 +72,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrReason"
-                
-                  
+
         401:
           description: 无效授权
           content:
@@ -93,7 +92,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Tag'
+              $ref: "#/components/schemas/Tag"
       responses:
         200:
           description: 添加后的类别响应
@@ -107,8 +106,41 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrReason"
-                
-                  
+
+        401:
+          description: 无效授权
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+  /article/admin:
+    post:
+      tags:
+        - 文章
+      summary: 添加一个文章
+      operationId: addArticle
+      security: [jwt_auth: []]
+      requestBody:
+        description: 文章信息
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Article"
+      responses:
+        200:
+          description: 添加后的类别响应
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Article"
+        400:
+          description: 错误响应
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+
         401:
           description: 无效授权
           content:
