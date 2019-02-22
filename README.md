@@ -76,7 +76,7 @@ git checkout v0.6.0
     touch apps/web_server/config/prod.secret.exs
     ````
 
-    如果您想将配置数据编译到二进制应用中，则需要进行下面的编辑（如果不需要直接看下一步）：
+    如果您想将配置信息编译到二进制应用中，则需要进行下面的编辑（如果不需要直接看下一步）：
 
     编辑 `apps/storage/config/prod.secret.exs` 文件：
 
@@ -129,7 +129,7 @@ git checkout v0.6.0
     ANYEX_DB_USERNAME=postgres \
     ANYEX_DB_PASSWORD=sampledb123 \
     ANYEX_DB_HOSTNAME=localhost \
-    MIX_ENV=prod db.migrate
+    MIX_ENV=prod mix db.migrate
     ````
 
 1. 生成文档
@@ -137,7 +137,8 @@ git checkout v0.6.0
     文档的生成和部署方式无关，如果您可以使用 Docker 建议使用同上的命令。否则您需要自行安装 `openapi-generator-cli`，并使用下面的命令
 
     ```` bash
-    openapi-generator-cli generate -i apps/web_server/priv/static/doc.yaml -g html2 -o apps/web_server/priv/static/doc
+    openapi-generator-cli generate -i apps/web_server/priv/static/doc.yaml \
+    -g html2 -o apps/web_server/priv/static/doc
     ````
 
 1. 打包应用
