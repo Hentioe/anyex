@@ -180,7 +180,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrReason"
-  /admin/hidden/{id}:
+  /article/admin/hidden/{id}:
     put:
       tags:
         - 文章
@@ -221,7 +221,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrReason"
-  /admin/{id}:
+  /article/admin/{id}:
     delete:
       tags:
         - 文章
@@ -262,7 +262,41 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrReason"
-  /admin/normal/{id}:
+    get:
+      tags:
+        - 文章
+      summary: 获取后台文章内容
+      operationId: getAdminArticle
+      security: [jwt_auth: []]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: 文章 ID
+      responses:
+        200:
+          description: 文章
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: "#/components/schemas/Article"
+        400:
+          description: 错误响应
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+        401:
+          description: 无效授权
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+  /article/admin/normal/{id}:
     put:
       tags:
         - 文章
@@ -478,41 +512,6 @@ paths:
                   $ref: "#/components/schemas/Article"
         400:
           description: 错误响应
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrReason"
-  /article/admin/{id}:
-    get:
-      tags:
-        - 文章
-      summary: 获取后台文章内容
-      operationId: getAdminArticle
-      security: [jwt_auth: []]
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: integer
-          description: 文章 ID
-      responses:
-        200:
-          description: 文章
-          content:
-            application/json:
-              schema:
-                type: object
-                items:
-                  $ref: "#/components/schemas/Article"
-        400:
-          description: 错误响应
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrReason"
-        401:
-          description: 无效授权
           content:
             application/json:
               schema:
