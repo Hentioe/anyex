@@ -195,7 +195,7 @@ components:
         token:
           type: string
     Admin:
-      title: 管理员
+      title: 认证
       type: object
       properties:
         username:
