@@ -194,13 +194,6 @@ paths:
           schema:
             type: integer
           description: 文章的 ID
-      requestBody:
-        description: 文章
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Article"
       responses:
         200:
           description: 隐藏后的文章
@@ -235,13 +228,6 @@ paths:
           schema:
             type: integer
           description: 文章的 ID
-      requestBody:
-        description: 文章
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Article"
       responses:
         200:
           description: 删除后的文章
@@ -310,13 +296,6 @@ paths:
           schema:
             type: integer
           description: 文章的 ID
-      requestBody:
-        description: 文章
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Article"
       responses:
         200:
           description: 恢复后的文章
@@ -344,13 +323,6 @@ paths:
           schema:
             type: integer
           description: 文章的 ID
-      requestBody:
-        description: 文章
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Article"
       responses:
         200:
           description: 置顶后的文章
@@ -377,13 +349,6 @@ paths:
           schema:
             type: integer
           description: 文章的 ID
-      requestBody:
-        description: 文章
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Article"
       responses:
         200:
           description: 取消置顶后的文章
