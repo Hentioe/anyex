@@ -2,6 +2,10 @@ openapi: 3.0.1
 info:
   title: AnyEx 接口文档
   description: "文档正在拼命完善中……"
+  contact:
+    name: AnyEx Project
+    email: me@bluerain.io
+    url: https://anyex.bluerain.io
   license:
     name: MIT 许可证
     url: "https://opensource.org/licenses/mit-license.php"
