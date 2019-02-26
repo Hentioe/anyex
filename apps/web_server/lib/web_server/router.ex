@@ -21,6 +21,7 @@ defmodule WebServer.Router do
         at: "/",
         from: {:web_server, "priv/static"}
 
+      if Mix.env() != :test, do: plug(Plug.Logger, log: :debug)
       plug :dispatch
 
       def redirect(conn, url) do
@@ -102,6 +103,7 @@ defmodule WebServer.Router do
 
       plug JSONHeaderPlug
       plug JwtAuthPlug
+      if Mix.env() != :test, do: plug(Plug.Logger, log: :debug)
       plug :dispatch
 
       unquote(import_helper_macro())
