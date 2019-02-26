@@ -117,6 +117,258 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrReason"
+    put:
+      tags:
+        - 标签
+      summary: 更新一个标签
+      operationId: updateTag
+      security: [jwt_auth: []]
+      requestBody:
+        description: 标签
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Tag"
+      responses:
+        200:
+          description: 更新后的标签
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tag"
+        400:
+          description: 错误响应
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+
+        401:
+          description: 无效授权
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+  /tag/admin/hidden/{id}:
+    put:
+      tags:
+        - 标签
+      summary: 隐藏一个标签
+      operationId: hiddenTag
+      security: [jwt_auth: []]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: 标签的 ID
+      responses:
+        200:
+          description: 隐藏后的标签
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tag"
+        400:
+          description: 错误响应
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+
+        401:
+          description: 无效授权
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+  /tag/admin/{id}:
+    delete:
+      tags:
+        - 标签
+      summary: 删除一个标签
+      operationId: deleteTag
+      security: [jwt_auth: []]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: 标签的 ID
+      responses:
+        200:
+          description: 删除后的标签
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tag"
+        400:
+          description: 错误响应
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+
+        401:
+          description: 无效授权
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+  /tag/admin/normal/{id}:
+    put:
+      tags:
+        - 标签
+      summary: 恢复一个标签
+      operationId: normalTag
+      security: [jwt_auth: []]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: 标签的 ID
+      responses:
+        200:
+          description: 恢复后的标签
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tag"
+        400:
+          description: 错误响应
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+  /tag/admin/top/{id}:
+    post:
+      tags:
+        - 标签
+      summary: 置顶一个标签
+      operationId: topTag
+      security: [jwt_auth: []]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: 标签的 ID
+      responses:
+        200:
+          description: 置顶后的标签
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tag"
+        400:
+          description: 错误响应
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+    delete:
+      tags:
+        - 标签
+      summary: 取消标签置顶
+      operationId: cancelTopTag
+      security: [jwt_auth: []]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: 标签的 ID
+      responses:
+        200:
+          description: 取消置顶后的标签
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tag"
+        400:
+          description: 错误响应
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+  /tag/list:
+    get:
+      tags:
+        - 标签
+      summary: 获取前台标签列表
+      operationId: findTagList
+      parameters:
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          description: 数据集偏移
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: 数据集大小
+      responses:
+        200:
+          description: 标签列表响应
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Tag"
+        400:
+          description: 错误响应
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+  /tag/admin/list:
+    get:
+      tags:
+        - 标签
+      summary: 获取后台标签列表
+      operationId: findAdminTagList
+      security: [jwt_auth: []]
+      parameters:
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          description: 数据集偏移
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: 数据集大小
+      responses:
+        200:
+          description: 标签列表响应
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Tag"
+        400:
+          description: 错误响应
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+        401:
+          description: 无效授权
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
   /article/admin:
     post:
       tags:
