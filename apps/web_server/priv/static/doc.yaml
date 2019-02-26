@@ -21,6 +21,8 @@ tags:
     description: 有关标签的操作和获取接口
   - name: 文章
     description: 有关文章的操作和获取接口
+  - name: 评论
+    description: 有关评论的操作和获取接口
 paths:
   /token/gen:
     post:
@@ -989,6 +991,317 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrReason"
+  /comment/add:
+    post:
+      tags:
+        - 评论
+      summary: 添加一个评论
+      operationId: addComment
+      requestBody:
+        description: 评论
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Comment"
+      responses:
+        200:
+          description: 添加后的评论
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Comment"
+        400:
+          description: 错误响应
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+  /comment/admin:
+    post:
+      tags:
+        - 评论
+      summary: 以管理员身份添加一个评论
+      operationId: addAdminComment
+      security: [jwt_auth: []]
+      requestBody:
+        description: 评论
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Comment"
+      responses:
+        200:
+          description: 添加后的评论
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Comment"
+        400:
+          description: 错误响应
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+        401:
+          description: 无效授权
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+    put:
+      tags:
+        - 评论
+      summary: 更新一个评论
+      operationId: updateComment
+      security: [jwt_auth: []]
+      requestBody:
+        description: 评论
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Comment"
+      responses:
+        200:
+          description: 更新后的评论
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Comment"
+        400:
+          description: 错误响应
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+
+        401:
+          description: 无效授权
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+  /comment/admin/hidden/{id}:
+    put:
+      tags:
+        - 评论
+      summary: 隐藏一个评论
+      operationId: hiddenComment
+      security: [jwt_auth: []]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: 评论的 ID
+      responses:
+        200:
+          description: 隐藏后的评论
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Comment"
+        400:
+          description: 错误响应
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+
+        401:
+          description: 无效授权
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+  /comment/admin/{id}:
+    delete:
+      tags:
+        - 评论
+      summary: 删除一个评论
+      operationId: deleteComment
+      security: [jwt_auth: []]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: 评论的 ID
+      responses:
+        200:
+          description: 删除后的评论
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Comment"
+        400:
+          description: 错误响应
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+
+        401:
+          description: 无效授权
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+  /comment/admin/normal/{id}:
+    put:
+      tags:
+        - 评论
+      summary: 恢复一个评论
+      operationId: normalComment
+      security: [jwt_auth: []]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: 评论的 ID
+      responses:
+        200:
+          description: 恢复后的评论
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Comment"
+        400:
+          description: 错误响应
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+  /comment/admin/top/{id}:
+    post:
+      tags:
+        - 评论
+      summary: 置顶一个评论
+      operationId: topComment
+      security: [jwt_auth: []]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: 评论的 ID
+      responses:
+        200:
+          description: 置顶后的评论
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Comment"
+        400:
+          description: 错误响应
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+    delete:
+      tags:
+        - 评论
+      summary: 取消评论置顶
+      operationId: cancelTopComment
+      security: [jwt_auth: []]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: 评论的 ID
+      responses:
+        200:
+          description: 取消置顶后的评论
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Comment"
+        400:
+          description: 错误响应
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+  /comment/list:
+    get:
+      tags:
+        - 评论
+      summary: 获取前台评论列表
+      operationId: findCommentList
+      parameters:
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          description: 数据集偏移
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: 数据集大小
+      responses:
+        200:
+          description: 评论列表响应
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Comment"
+        400:
+          description: 错误响应
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+  /comment/admin/list:
+    get:
+      tags:
+        - 评论
+      summary: 获取后台评论列表
+      operationId: findAdminCommentList
+      security: [jwt_auth: []]
+      parameters:
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          description: 数据集偏移
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: 数据集大小
+      responses:
+        200:
+          description: 评论列表响应
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Comment"
+        400:
+          description: 错误响应
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+        401:
+          description: 无效授权
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
 components:
   schemas:
     Token:
@@ -1073,6 +1386,32 @@ components:
           type: string
         content:
           type: string
+        top:
+          type: integer
+        inserted_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        res_status:
+          type: integer
+    Comment:
+      title: 评论
+      type: object
+      properties:
+        id:
+          type: integer
+        author_nickname:
+          type: string
+        author_email:
+          type: string
+        personal_site:
+          type: string
+        content:
+          type: string
+        owner:
+          type: boolean
         top:
           type: integer
         inserted_at:

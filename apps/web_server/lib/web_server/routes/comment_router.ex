@@ -41,7 +41,7 @@ defmodule WebServer.Routes.CommentRouter do
     conn |> resp(r)
   end
 
-  post "/admin/add" do
+  post "/admin" do
     data =
       conn.body_params
       |> string_key_map
