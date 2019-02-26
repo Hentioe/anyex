@@ -83,6 +83,258 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrReason"
+    put:
+      tags:
+        - 类别
+      summary: 更新一个类别
+      operationId: updateCategory
+      security: [jwt_auth: []]
+      requestBody:
+        description: 类别
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Category"
+      responses:
+        200:
+          description: 更新后的类别
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Category"
+        400:
+          description: 错误响应
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+
+        401:
+          description: 无效授权
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+  /category/admin/hidden/{id}:
+    put:
+      tags:
+        - 类别
+      summary: 隐藏一个类别
+      operationId: hiddenCategory
+      security: [jwt_auth: []]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: 类别的 ID
+      responses:
+        200:
+          description: 隐藏后的类别
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Category"
+        400:
+          description: 错误响应
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+
+        401:
+          description: 无效授权
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+  /category/admin/{id}:
+    delete:
+      tags:
+        - 类别
+      summary: 删除一个类别
+      operationId: deleteCategory
+      security: [jwt_auth: []]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: 类别的 ID
+      responses:
+        200:
+          description: 删除后的类别
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Category"
+        400:
+          description: 错误响应
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+
+        401:
+          description: 无效授权
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+  /category/admin/normal/{id}:
+    put:
+      tags:
+        - 类别
+      summary: 恢复一个类别
+      operationId: normalCategory
+      security: [jwt_auth: []]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: 类别的 ID
+      responses:
+        200:
+          description: 恢复后的类别
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Category"
+        400:
+          description: 错误响应
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+  /category/admin/top/{id}:
+    post:
+      tags:
+        - 类别
+      summary: 置顶一个类别
+      operationId: topCategory
+      security: [jwt_auth: []]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: 类别的 ID
+      responses:
+        200:
+          description: 置顶后的类别
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Category"
+        400:
+          description: 错误响应
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+    delete:
+      tags:
+        - 类别
+      summary: 取消类别置顶
+      operationId: cancelTopCategory
+      security: [jwt_auth: []]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: 类别的 ID
+      responses:
+        200:
+          description: 取消置顶后的类别
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Category"
+        400:
+          description: 错误响应
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+  /category/list:
+    get:
+      tags:
+        - 类别
+      summary: 获取前台类别列表
+      operationId: findCategoryList
+      parameters:
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          description: 数据集偏移
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: 数据集大小
+      responses:
+        200:
+          description: 类别列表响应
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Category"
+        400:
+          description: 错误响应
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+  /category/admin/list:
+    get:
+      tags:
+        - 类别
+      summary: 获取后台类别列表
+      operationId: findAdminCategoryList
+      security: [jwt_auth: []]
+      parameters:
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          description: 数据集偏移
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: 数据集大小
+      responses:
+        200:
+          description: 类别列表响应
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Category"
+        400:
+          description: 错误响应
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+        401:
+          description: 无效授权
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
   /tag/admin:
     post:
       tags:
