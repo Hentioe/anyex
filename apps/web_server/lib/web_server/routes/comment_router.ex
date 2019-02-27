@@ -9,17 +9,20 @@ defmodule WebServer.Routes.CommentRouter do
   get "/list" do
     [conn, paging] = conn |> fetch_paging_params()
     filters = paging |> specify_normal_status
+    article_id = Map.get(conn.params, "article_id")
+    filters = filters |> Keyword.merge(article_id: article_id)
 
     r =
       case Comment.find_list(filters) do
         {:ok, list} ->
           list =
-            list
-            |> Enum.map(fn c ->
-              %{c | comments: []}
-            end)
+            if article_id do
+              list
+            else
+              list |> empty_subs()
+            end
 
-          list = list |> hidden_comments_email
+          list = list = list |> hidden_comments_email
 
           {:ok, list}
 
@@ -28,6 +31,13 @@ defmodule WebServer.Routes.CommentRouter do
       end
 
     conn |> resp(r)
+  end
+
+  def empty_subs(list) when is_list(list) do
+    list
+    |> Enum.map(fn c ->
+      %{c | comments: []}
+    end)
   end
 
   post "/add" do
@@ -49,23 +59,6 @@ defmodule WebServer.Routes.CommentRouter do
       |> Map.put(:owner, true)
 
     r = data |> Comment.add()
-    conn |> resp(r)
-  end
-
-  get "/from_article/:id" do
-    [conn, paging] = conn |> fetch_paging_params()
-    filters = paging |> specify_normal_status |> Keyword.merge(article_id: id)
-
-    r =
-      case Comment.find_list(filters) do
-        {:ok, list} ->
-          list = list |> hidden_comments_email
-          {:ok, list}
-
-        e ->
-          e
-      end
-
     conn |> resp(r)
   end
 

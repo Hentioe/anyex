@@ -1248,6 +1248,11 @@ paths:
           schema:
             type: integer
           description: 数据集大小
+        - in: query
+          name: article_id
+          schema:
+            type: integer
+          description: 文章 ID
       responses:
         200:
           description: 评论列表响应

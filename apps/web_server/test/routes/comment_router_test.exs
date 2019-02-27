@@ -33,7 +33,7 @@ defmodule WebServerTest.Router.CommentRouterTest do
     assert c1.owner == false
 
     conn =
-      conn(:post, "/comment/admin/add", %{
+      conn(:post, "/comment/admin", %{
         article_id: article.id,
         author_email: "me@bluerain.io",
         author_nickname: "我才是绅士喵",
@@ -84,7 +84,7 @@ defmodule WebServerTest.Router.CommentRouterTest do
       end)
 
     conn =
-      conn(:post, "/comment/admin/add", %{
+      conn(:post, "/comment/admin", %{
         article_id: article.id,
         author_email: "me@bluerain.io",
         author_nickname: "绅士喵",
@@ -102,7 +102,7 @@ defmodule WebServerTest.Router.CommentRouterTest do
     list = conn |> resp_to_map
     assert length(list) == 4
 
-    conn = conn(:get, "/comment/from_article/#{article.id}") |> call
+    conn = conn(:get, "/comment/list?article_id=#{article.id}") |> call
     assert conn.status == 200
     list = conn |> resp_to_map
     assert length(list) == 3
@@ -114,7 +114,7 @@ defmodule WebServerTest.Router.CommentRouterTest do
     conn = conn(:delete, "/comment/admin/#{c3.id}") |> put_authorization(state) |> call
     assert conn.status == 200
 
-    conn = conn(:get, "/comment/from_article/#{article.id}") |> call
+    conn = conn(:get, "/comment/list?article_id=#{article.id}") |> call
     assert conn.status == 200
     list = conn |> resp_to_map
     assert length(list) == 2
