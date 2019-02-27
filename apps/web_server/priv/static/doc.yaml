@@ -1268,45 +1268,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrReason"
-  /comment/admin/list:
-    get:
-      tags:
-        - 评论
-      summary: 获取后台评论列表
-      operationId: findAdminCommentList
-      security: [jwt_auth: []]
-      parameters:
-        - in: query
-          name: offset
-          schema:
-            type: integer
-          description: 数据集偏移
-        - in: query
-          name: limit
-          schema:
-            type: integer
-          description: 数据集大小
-      responses:
-        200:
-          description: 评论列表响应
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Comment"
-        400:
-          description: 错误响应
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrReason"
-        401:
-          description: 无效授权
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrReason"
 components:
   schemas:
     Token:
