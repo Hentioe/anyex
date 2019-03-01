@@ -15,6 +15,8 @@ servers:
 tags:
   - name: 认证
     description: 有关认证的操作和获取接口
+  - name: 定制
+    description: 有关定制的操作和获取接口
   - name: 类别
     description: 有关类别的操作和获取接口
   - name: 标签
@@ -47,6 +49,34 @@ paths:
               schema:
                 $ref: "#/components/schemas/Token"
 
+        400:
+          description: 错误响应
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+  /custom:
+    get:
+      tags:
+        - 定制
+      summary: 获取前台定制内容
+      operationId: findCustomList
+      parameters:
+        - in: query
+          name: includes
+          schema:
+            type: string
+          description: 包含表达式
+          example: "article|category|tag|comment|tweet|link"
+      responses:
+        200:
+          description: 定制列表响应
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Custom"
         400:
           description: 错误响应
           content:
@@ -2006,6 +2036,64 @@ components:
           format: date-time
         res_status:
           type: integer
+    Custom:
+      title: 定制
+      type: object
+      properties:
+        articles:
+          type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: "#/components/schemas/Article"
+            status:
+              type: string
+        categories:
+          type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: "#/components/schemas/Category"
+            status:
+              type: string
+        comments:
+          type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: "#/components/schemas/Comment"
+            status:
+              type: string
+        links:
+          type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: "#/components/schemas/Link"
+            status:
+              type: string
+        tags:
+          type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: "#/components/schemas/Tag"
+            status:
+              type: string
+        tweets:
+          type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: "#/components/schemas/Tweet"
+            status:
+              type: string
   securitySchemes:
     jwt_auth:
       type: apiKey
