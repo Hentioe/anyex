@@ -23,6 +23,8 @@ tags:
     description: 有关文章的操作和获取接口
   - name: 评论
     description: 有关评论的操作和获取接口
+  - name: 链接
+    description: 有关链接的操作和获取接口
 paths:
   /token/gen:
     post:
@@ -1268,6 +1270,292 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrReason"
+  /link/admin:
+    post:
+      tags:
+        - 链接
+      summary: 添加一个链接
+      operationId: addLink
+      security: [jwt_auth: []]
+      requestBody:
+        description: 链接
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Link"
+      responses:
+        200:
+          description: 添加后的链接
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Link"
+        400:
+          description: 错误响应
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+
+        401:
+          description: 无效授权
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+    put:
+      tags:
+        - 链接
+      summary: 更新一个链接
+      operationId: updateLink
+      security: [jwt_auth: []]
+      requestBody:
+        description: 链接
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Link"
+      responses:
+        200:
+          description: 更新后的链接
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Link"
+        400:
+          description: 错误响应
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+
+        401:
+          description: 无效授权
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+  /link/admin/hidden/{id}:
+    put:
+      tags:
+        - 链接
+      summary: 隐藏一个链接
+      operationId: hiddenLink
+      security: [jwt_auth: []]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: 链接的 ID
+      responses:
+        200:
+          description: 隐藏后的链接
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Link"
+        400:
+          description: 错误响应
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+
+        401:
+          description: 无效授权
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+  /link/admin/{id}:
+    delete:
+      tags:
+        - 链接
+      summary: 删除一个链接
+      operationId: deleteLink
+      security: [jwt_auth: []]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: 链接的 ID
+      responses:
+        200:
+          description: 删除后的链接
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Link"
+        400:
+          description: 错误响应
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+
+        401:
+          description: 无效授权
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+  /link/admin/normal/{id}:
+    put:
+      tags:
+        - 链接
+      summary: 恢复一个链接
+      operationId: normalLink
+      security: [jwt_auth: []]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: 链接的 ID
+      responses:
+        200:
+          description: 恢复后的链接
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Link"
+        400:
+          description: 错误响应
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+  /link/admin/top/{id}:
+    post:
+      tags:
+        - 链接
+      summary: 置顶一个链接
+      operationId: topLink
+      security: [jwt_auth: []]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: 链接的 ID
+      responses:
+        200:
+          description: 置顶后的链接
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Link"
+        400:
+          description: 错误响应
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+    delete:
+      tags:
+        - 链接
+      summary: 取消链接置顶
+      operationId: cancelTopLink
+      security: [jwt_auth: []]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: 链接的 ID
+      responses:
+        200:
+          description: 取消置顶后的链接
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Link"
+        400:
+          description: 错误响应
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+  /link/list:
+    get:
+      tags:
+        - 链接
+      summary: 获取前台链接列表
+      operationId: findLinkList
+      parameters:
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          description: 数据集偏移
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: 数据集大小
+      responses:
+        200:
+          description: 链接列表响应
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Link"
+        400:
+          description: 错误响应
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+  /link/admin/list:
+    get:
+      tags:
+        - 链接
+      summary: 获取后台链接列表
+      operationId: findAdminLinkList
+      security: [jwt_auth: []]
+      parameters:
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          description: 数据集偏移
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: 数据集大小
+      responses:
+        200:
+          description: 链接列表响应
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Link"
+        400:
+          description: 错误响应
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+        401:
+          description: 无效授权
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
 components:
   schemas:
     Token:
@@ -1378,6 +1666,30 @@ components:
           type: string
         owner:
           type: boolean
+        top:
+          type: integer
+        inserted_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        res_status:
+          type: integer
+    Link:
+      title: 链接
+      type: object
+      properties:
+        id:
+          type: integer
+        text:
+          type: string
+        address:
+          type: string
+        description:
+          type: string
+        type:
+          type: string
         top:
           type: integer
         inserted_at:
