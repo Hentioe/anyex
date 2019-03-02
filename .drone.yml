@@ -32,7 +32,7 @@ pipeline:
   build-image:
     image: docker
     commands:
-      - docker build . -t bluerain/studio
+      - docker build . -t bluerain/anyex
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
 
