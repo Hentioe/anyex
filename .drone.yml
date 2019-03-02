@@ -21,7 +21,7 @@ pipeline:
     image: openapitools/openapi-generator-cli
     commands:
       - alias openapi-generator-cli="java -jar /opt/openapi-generator/modules/openapi-generator-cli/target/openapi-generator-cli.jar"
-      - openapi-generator-cli generate -i web_server/priv/static/doc.yaml -g html2 -o web_server/priv/static/doc
+      - openapi-generator-cli generate -i apps/web_server/priv/static/doc.yaml -g html2 -o apps/web_server/priv/static/doc
 
   build:
     image: bluerain/elixir:1.8.1-slim
