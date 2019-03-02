@@ -1,0 +1,41 @@
+clone:
+  git:
+    image: plugins/git
+    recursive: false
+
+pipeline:
+  test:
+    image: bluerain/elixir:1.8.1-slim
+    when:
+      event: [push, tag, deployment]
+    commands:
+      - sleep 5
+      - touch apps/storage/config/prod.secret.exs
+      - touch apps/web_server/config/prod.secret.exs
+      - mix deps.get
+      - MIX_ENV=test mix do db.create, db.migrate
+      - MIX_ENV=test mix do db.test, server.test
+
+  build-doc:
+    image: openapitools/openapi-generator-cli
+    commands:
+      - generate -i web_server/priv/static/doc.yaml -g html2 -o web_server/priv/static/doc
+
+  build:
+    image: bluerain/elixir:1.8.1-slim
+    commands:
+      - mix do clean, deps.get, release
+
+  build-image:
+    image: docker
+    commands:
+      - docker build . -t bluerain/studio
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+services:
+  database:
+    image: postgres:11
+    environment:
+      POSTGRES_PASSWORD: sampledb123
+      POSTGRES_DB: anyex_prod
