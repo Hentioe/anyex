@@ -10,6 +10,7 @@ pipeline:
       event: [push, tag, deployment]
     commands:
       - sleep 5
+      - export ANYEX_DB_HOSTNAME=database
       - touch apps/storage/config/prod.secret.exs
       - touch apps/web_server/config/prod.secret.exs
       - mix deps.get
