@@ -15,7 +15,7 @@
 ```` bash
 git clone https://github.com/anyex-project/anyex.git
 cd anyex
-git checkout v0.6.2
+git checkout v0.7.0
 ````
 
 ### 基于 Docker
