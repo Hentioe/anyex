@@ -26,6 +26,7 @@ pipeline:
   build:
     image: bluerain/elixir:1.8.1-slim
     commands:
+      - export MIX_ENV=prod
       - mix do clean, deps.get, release
 
   build-image:
