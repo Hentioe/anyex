@@ -1,4 +1,4 @@
-# AnyEx [![Build Status](https://anyex-ci.bluerain.io/api/badges/anyex-project/anyex/status.svg)](https://anyex-ci.bluerain.io/anyex-project/anyex)
+# AnyEx [![Build Status](https://github-ci.bluerain.io/api/badges/anyex-project/anyex/status.svg)](https://github-ci.bluerain.io/anyex-project/anyex)
 
 快速、轻量级、功能完备的博客 API 服务
 
