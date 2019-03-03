@@ -36,7 +36,7 @@ defmodule WebServer.Plugs.JwtAuthPlug do
     token = cookies["authorization"] || read_token_from_header(conn)
 
     if token do
-      case WebServer.Jwt.validate(token) do
+      case WebServer.Token.authorization(token) do
         {:ok, _} -> true
         {:error, _} -> false
       end

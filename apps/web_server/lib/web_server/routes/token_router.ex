@@ -2,7 +2,7 @@ defmodule WebServer.Routes.TokenRouter do
   @moduledoc false
   use WebServer.Router, :json_support
 
-  alias WebServer.Jwt
+  alias WebServer.Token
 
   post "/gen" do
     login_info = conn.body_params
@@ -15,7 +15,7 @@ defmodule WebServer.Routes.TokenRouter do
         password = ConfigStore.get(:web_server, :password)
 
         if ru == username && rp == password do
-          {:ok, Jwt.gen_token(username, password)}
+          {:ok, Token.generate(username, password)}
         else
           {:error, "invalid authentication information"}
         end
@@ -24,11 +24,14 @@ defmodule WebServer.Routes.TokenRouter do
       end
 
     case validite_r do
-      {:ok, token} ->
-        conn |> resp({:ok, %{token: token}})
-
       {:error, msg} ->
         conn |> resp_error(msg)
+
+      {:ok, {:ok, token}} ->
+        conn |> resp({:ok, %{token: token}})
+
+      {:ok, {:error, reason}} ->
+        conn |> resp_error(reason)
     end
   end
 
