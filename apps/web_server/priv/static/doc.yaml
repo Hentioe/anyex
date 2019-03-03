@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: AnyEx 接口文档
-  description: "Swagger UI Doc（测试版）。在尝试开发之前请先行阅读开发指南，通常碰到不理解的参数在开发指南中都会找到相关细述。您需要先使用认证接口获取 Token 并通过它解锁访问授权，否则您只能测试公开接口。"
+  description: "OpenAPI Doc（测试版）。在尝试开发之前请先行阅读开发指南，通常碰到不理解的参数在开发指南中都会找到相关细述。您需要先使用认证接口获取 Token 并通过它解锁访问授权，否则您只能测试公开接口。"
   contact:
     name: AnyEx Project
     email: me@bluerain.io
