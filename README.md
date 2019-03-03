@@ -8,9 +8,9 @@
 
 ## 安装指南
 
-如果您没有 Elixir 或 Erlang/OTP 程序的编译和部署经验，推荐使用 Docker 来进行一个傻瓜式的搭建流程，同时也不会污染文件系统（多余的 Erlang/Elixir 运行时和缓存）。
+如果您没有 Elixir 程序的编译和部署经历，推荐使用 Docker 来进行这一套搭建流程，傻瓜式且不会污染文件系统（多余的 Erlang/Elixir 运行时和缓存）。
 
-不过在进行下列的流程之前您需要 clone 代码到本地，进入项目主目录并切到最新的 release 版本：
+不过在进行下列的步骤之前您需要 clone 代码到本地，进入项目主目录并切到最新的 release 版本：
 
 ```` bash
 git clone https://github.com/anyex-project/anyex.git
@@ -159,7 +159,7 @@ git checkout v0.7.1
     cp _build/prod/rel/anyex /usr/local/anyex
     ````
 
-    如果您没有编辑 `.exs` 配置文件，则需要指定环境变量启动应用，完整的配置变量如下：
+    如果您没有编辑 `.exs` 配置文件，则需要指定环境变量（以下称之为“配置变量”）启动应用，完整的配置变量如下：
 
     ```` bash
     ANYEX_DB_NAME=anyex_prod \
@@ -179,9 +179,9 @@ git checkout v0.7.1
 
 ### 配置说明
 
-使用 Docker 容器运行和本地运行的配置方式本质上都是一样的。上面基于 Docker 构建没有“告知”应用连接信息就能迁移数据是因为在 `prod.docker-compose.yml` 中定义了全部的配置变量，而手动编译时如果 `.exs` 不提供配置信息则需要主动定义配置变量。
+使用 Docker 容器运行和本地运行的配置方式本质上都是一样的。上面基于 Docker 构建没有“告知”应用连接信息就能迁移数据是因为在 `prod.docker-compose.yml` 中定义了全部的配置变量，而手动编译时如果 `*.secret.exs` 不提供配置信息则需要主动定义配置变量。
 
-应用运行时，定义的环境变量和 `.exs` 中对应的配置同时存在时环境变量的优先级更高，例如 `.exs` 中定义了 `port: 80` 但同时存在环境变量 `ANYEX_SERVER_PORT=8080` 那么 port 最终将会被设置为 `8080`。
+应用运行时，定义的环境变量和 `*.secret.exs` 中对应的配置同时存在时环境变量的优先级更高，例如在 `apps/web_server/config/prod.secret.exs` 中定义了 `port: 80` 但同时存在环境变量 `ANYEX_SERVER_PORT=8080` 那么 port 最终将会被设置为 `8080`。
 
 完整的配置变量说明：
 
