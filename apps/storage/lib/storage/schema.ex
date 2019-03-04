@@ -87,8 +87,14 @@ defmodule Storage.Schema do
 
   defmacro common_fields(:v001) do
     quote bind_quoted: binding() do
-      timestamps(type: :utc_datetime_usec)
+      timestamp_fields(:v001)
       field :res_status, :integer, default: 1
+    end
+  end
+
+  defmacro timestamp_fields(:v001) do
+    quote bind_quoted: binding() do
+      timestamps(type: :utc_datetime_usec)
     end
   end
 

@@ -3,6 +3,7 @@ defmodule WebServer.Routes.TokenRouter do
   use WebServer.Router, :json_support
 
   alias WebServer.Token
+  alias Storage.Schema.SecretSuffix
 
   post "/gen" do
     login_info = conn.body_params
@@ -32,6 +33,18 @@ defmodule WebServer.Routes.TokenRouter do
 
       {:ok, {:error, reason}} ->
         conn |> resp_error(reason)
+    end
+  end
+
+  get "/admin/clean" do
+    case SecretSuffix.generate() do
+      {:ok, secret_suffix} ->
+        suffix = secret_suffix.val
+        :ok = ConfigStore.update(:web_server, :secret_suffix, suffix)
+        conn |> resp({:ok, %{message: "SUCCESS"}})
+
+      {:error, e} ->
+        conn |> resp_error(e)
     end
   end
 

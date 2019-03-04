@@ -13,14 +13,21 @@ defmodule WebServer.Config.Helper do
   ]
 
   def init do
-    @config_items
-    |> Enum.reduce(Map.new(), fn {app, item, type}, acc ->
-      val = get_config!(app, item)
+    alias Storage.Schema.SecretSuffix
 
-      val = apply(__MODULE__, :"#{type}_conv", [item, val])
+    configs =
+      @config_items
+      |> Enum.reduce(Map.new(), fn {app, item, type}, acc ->
+        val = get_config!(app, item)
 
-      Map.put(acc, gen_key(app, item), val)
-    end)
+        val = apply(__MODULE__, :"#{type}_conv", [item, val])
+
+        Map.put(acc, gen_key(app, item), val)
+      end)
+
+    secret_suffix = SecretSuffix.last_one()
+    secret_suffix = secret_suffix || elem(SecretSuffix.generate(), 1)
+    configs |> Map.put(gen_key(:web_server, :secret_suffix), secret_suffix.val)
   end
 
   def string_in_list_conv(item, val) do

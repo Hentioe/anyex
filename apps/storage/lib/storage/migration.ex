@@ -7,10 +7,18 @@ defmodule Storage.Migration do
       alias Ecto.Migration.Runner
 
       def common_fields(:v001) do
+        timestamp_fields(:v001)
+        status_field(:v001)
+      end
+
+      def timestamp_fields(:v001) do
         opts = Keyword.merge(Runner.repo_config(:migration_timestamps, []), null: false)
         type = :utc_datetime_usec
         add :inserted_at, type, Keyword.merge(opts, comment: "插入时间")
         add :updated_at, type, Keyword.merge(opts, comment: "更新时间")
+      end
+
+      def status_field(:v001) do
         add :res_status, :integer, default: 1, null: false, comment: "资源状态"
       end
 

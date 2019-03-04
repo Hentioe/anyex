@@ -12,6 +12,11 @@ defmodule WebServer.Config.Store do
     val || default
   end
 
+  def update(app, item, val) do
+    key = WebServer.Config.Helper.gen_key(app, item)
+    Agent.update(__MODULE__, &Map.put(&1, key, val))
+  end
+
   def exists(app, item, name) do
     list = get(app, item) || []
     name in list

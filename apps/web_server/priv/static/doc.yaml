@@ -9,7 +9,7 @@ info:
   license:
     name: MIT 许可证
     url: "https://opensource.org/licenses/mit-license.php"
-  version: 0.8.0
+  version: 0.8.1
 servers:
   - url: "/"
 tags:
@@ -51,6 +51,30 @@ paths:
 
         400:
           description: 错误响应
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+  /token/admin/clean:
+    get:
+      tags:
+        - 认证
+      summary: 使所有令牌无效化
+      operationId: cleanToken
+      security: [jwt_auth: []]
+      responses:
+        200:
+          description: 成功响应
+
+        400:
+          description: 错误响应
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+
+        401:
+          description: 无效授权
           content:
             application/json:
               schema:

@@ -37,7 +37,8 @@ defmodule Storage.MixProject do
     [
       {:ecto_sql, "~> 3.0"},
       {:postgrex, "~> 0.14.1"},
-      {:jason, "~> 1.1"}
+      {:jason, "~> 1.1"},
+      {:elixir_uuid, "~> 1.2"}
     ]
   end
 end
