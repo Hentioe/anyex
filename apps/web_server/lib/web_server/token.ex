@@ -7,7 +7,16 @@ defmodule WebServer.Token do
   def gen_signer do
     secret = ConfigStore.get(:web_server, :secret)
     suffix = ConfigStore.get(:web_server, :secret_suffix)
+    suffix = suffix || find_suffix()
     Joken.Signer.create("HS256", "#{secret}.#{suffix}")
+  end
+
+  def find_suffix do
+    alias Storage.Schema.SecretSuffix
+    secret_suffix = SecretSuffix.last_one()
+    secret_suffix = secret_suffix || elem(SecretSuffix.generate(), 1)
+    :ok = ConfigStore.update(:web_server, :secret_suffix, secret_suffix.val)
+    secret_suffix.val
   end
 
   @impl true
