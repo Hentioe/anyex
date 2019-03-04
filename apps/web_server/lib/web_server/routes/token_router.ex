@@ -36,7 +36,7 @@ defmodule WebServer.Routes.TokenRouter do
     end
   end
 
-  get "/admin/clean" do
+  post "/admin/clean" do
     case SecretSuffix.generate() do
       {:ok, secret_suffix} ->
         suffix = secret_suffix.val
