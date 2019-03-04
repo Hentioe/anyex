@@ -20,6 +20,10 @@ defmodule WebServer.Routes.LinkRouter do
     type = conn.params["type"]
     filters = if type, do: filters |> Keyword.put(:type, type), else: filters
 
+    filters =
+      filters
+      |> Keyword.merge(res_status: Map.get(conn.params, "res_status"))
+
     conn |> resp(Link.find_list(filters))
   end
 

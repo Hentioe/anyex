@@ -137,7 +137,10 @@ defmodule WebServer.Router do
           :admin_list ->
             get "/admin/list" do
               [conn, paging] = fetch_paging_params(var!(conn))
-              filters = paging
+
+              filters =
+                paging
+                |> Keyword.merge(res_status: Map.get(conn.params, "res_status"))
 
               conn |> var! |> resp(unquote(schema).find_list(filters))
             end
@@ -284,7 +287,7 @@ defmodule WebServer.Router do
         quote do
           unquote(list)
           |> Enum.map(fn c ->
-            c = %{c | author_email: "[HIDDEN]"}
+            c = %{c | author_email: "[Hidden]"}
 
             if Enum.empty?(c.comments) == 0 do
               c
@@ -292,7 +295,7 @@ defmodule WebServer.Router do
               comments =
                 c.comments
                 |> Enum.map(fn c ->
-                  c = %{c | author_email: "[HIDDEN]"}
+                  c = %{c | author_email: "[Hidden]"}
                 end)
 
               %{c | comments: comments}

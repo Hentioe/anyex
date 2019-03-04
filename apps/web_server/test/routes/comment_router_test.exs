@@ -107,12 +107,21 @@ defmodule WebServerTest.Router.CommentRouterTest do
     list = conn |> resp_to_map
     assert length(list) == 3
     c3 = hd(list)
-    assert c3.author_email == "[HIDDEN]"
+    assert c3.author_email == "[Hidden]"
     c4 = c3.comments |> hd
-    assert c4.author_email == "[HIDDEN]"
+    assert c4.author_email == "[Hidden]"
 
     conn = conn(:delete, "/comment/admin/#{c3.id}") |> put_authorization(state) |> call
     assert conn.status == 200
+
+    conn =
+      conn(:get, "/comment/admin/list?article_id=#{article.id}")
+      |> put_authorization(state)
+      |> call
+
+    assert conn.status == 200
+    list = conn |> resp_to_map
+    assert length(list) == 3
 
     conn = conn(:get, "/comment/list?article_id=#{article.id}") |> call
     assert conn.status == 200

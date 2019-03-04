@@ -22,7 +22,7 @@ defmodule WebServer.Routes.CommentRouter do
               list |> empty_subs()
             end
 
-          list = list = list |> hidden_comments_email
+          list = list |> hidden_comments_email
 
           {:ok, list}
 
@@ -59,6 +59,34 @@ defmodule WebServer.Routes.CommentRouter do
       |> Map.put(:owner, true)
 
     r = data |> Comment.add()
+    conn |> resp(r)
+  end
+
+  get "/admin/list" do
+    [conn, paging] = conn |> fetch_paging_params()
+    article_id = Map.get(conn.params, "article_id")
+
+    filters =
+      paging
+      |> Keyword.merge(article_id: article_id)
+      |> Keyword.merge(res_status: Map.get(conn.params, "res_status"))
+
+    r =
+      case Comment.find_list(filters) do
+        {:ok, list} ->
+          list =
+            if article_id do
+              list
+            else
+              list |> empty_subs()
+            end
+
+          {:ok, list}
+
+        e ->
+          e
+      end
+
     conn |> resp(r)
   end
 

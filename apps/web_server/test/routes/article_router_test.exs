@@ -109,6 +109,11 @@ defmodule WebServerTest.Router.ArticleRouterTest do
     conn = conn(:delete, "/article/admin/#{Enum.at(list, 1).id}")
     conn = conn |> put_authorization(state) |> call
     assert conn.status == 200
+    conn = conn(:get, "/article/admin/list?res_status=1")
+    conn = conn |> put_authorization(state) |> call
+    assert conn.status == 200
+    list = conn |> resp_to_map
+    assert length(list) == 13
     conn = conn(:get, "/article/list?offset=1")
     conn = conn |> call
     assert conn.status == 200
