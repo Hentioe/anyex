@@ -1,4 +1,4 @@
-defmodule WebServer.Plugs.JwtAuthPlug do
+defmodule WebServer.Plugs.AccessControlPlug do
   @moduledoc false
   use WebServer.Conn
 
@@ -11,7 +11,7 @@ defmodule WebServer.Plugs.JwtAuthPlug do
     conn |> resp_json(%{message: "unauthorized", data: nil}, 401)
   end
 
-  @re_admin Regex.compile!("^/[^/]+/admin")
+  @re_admin Regex.compile!("/[^/]+/admin")
   def call(conn, _opts) do
     if route_to_not_found?(conn) do
       conn

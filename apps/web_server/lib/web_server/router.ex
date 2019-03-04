@@ -42,7 +42,7 @@ defmodule WebServer.Router do
         end
       end
 
-      alias WebServer.Plugs.{JSONHeaderPlug, JwtAuthPlug}
+      alias WebServer.Plugs.{JSONHeaderPlug, AccessControlPlug}
 
       unquote(import_json_support())
       unquote(import_schema_status_macro())
@@ -90,7 +90,7 @@ defmodule WebServer.Router do
       use Plug.Router
       use Plug.ErrorHandler
 
-      alias WebServer.Plugs.{JSONHeaderPlug, JwtAuthPlug}
+      alias WebServer.Plugs.{JSONHeaderPlug, AccessControlPlug}
       alias WebServer.Config.Store, as: ConfigStore
 
       plug :match
@@ -102,7 +102,7 @@ defmodule WebServer.Router do
         json_decoder: Jason
 
       plug JSONHeaderPlug
-      plug JwtAuthPlug
+      plug AccessControlPlug
       if Mix.env() != :test, do: plug(Plug.Logger, log: :debug)
       plug :dispatch
 
