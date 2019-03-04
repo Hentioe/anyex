@@ -36,12 +36,25 @@ defmodule WebServer.Routes.TokenRouter do
     end
   end
 
-  post "/admin/clean" do
+  post "/admin/revoke" do
     case SecretSuffix.generate() do
       {:ok, secret_suffix} ->
         suffix = secret_suffix.val
         :ok = ConfigStore.update(:web_server, :secret_suffix, suffix)
         conn |> resp({:ok, %{message: "SUCCESS"}})
+
+      {:error, e} ->
+        conn |> resp_error(e)
+    end
+  end
+
+  post "/admin/refresh" do
+    username = ConfigStore.get(:web_server, :username)
+    password = ConfigStore.get(:web_server, :password)
+
+    case Token.generate(username, password) do
+      {:ok, token} ->
+        conn |> resp({:ok, %{token: token}})
 
       {:error, e} ->
         conn |> resp_error(e)

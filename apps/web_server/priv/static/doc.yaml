@@ -55,16 +55,44 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrReason"
-  /token/admin/clean:
+  /token/admin/revoke:
     post:
       tags:
         - 认证
-      summary: 使所有令牌无效化
-      operationId: cleanToken
+      summary: 吊销所有令牌
+      operationId: revokeToken
       security: [jwt_auth: []]
       responses:
         200:
           description: 成功响应
+
+        400:
+          description: 错误响应
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+
+        401:
+          description: 无效授权
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+  /token/admin/refresh:
+    post:
+      tags:
+        - 认证
+      summary: 刷新一个全新的令牌
+      operationId: refreshToken
+      security: [jwt_auth: []]
+      responses:
+        200:
+          description: 令牌响应
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Token"
 
         400:
           description: 错误响应
