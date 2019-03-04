@@ -9,7 +9,7 @@ info:
   license:
     name: MIT 许可证
     url: "https://opensource.org/licenses/mit-license.php"
-  version: 0.7.0
+  version: 0.8.0
 servers:
   - url: "/"
 tags:
@@ -348,6 +348,11 @@ paths:
           schema:
             type: integer
           description: 数据集大小
+        - in: query
+          name: res_status
+          schema:
+            type: integer
+          description: 资源状态
       responses:
         200:
           description: 类别列表响应
@@ -634,6 +639,11 @@ paths:
           schema:
             type: integer
           description: 数据集大小
+        - in: query
+          name: res_status
+          schema:
+            type: integer
+          description: 资源状态
       responses:
         200:
           description: 标签列表响应
@@ -974,6 +984,11 @@ paths:
           schema:
             type: string
           description: 标签(查询)名称
+        - in: query
+          name: res_status
+          schema:
+            type: integer
+          description: 资源状态
       responses:
         200:
           description: 文章列表响应
@@ -1300,6 +1315,50 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrReason"
+  /comment/admin/list:
+    get:
+      tags:
+        - 评论
+      summary: 获取后台评论列表
+      operationId: findAdminCommentList
+      security: [jwt_auth: []]
+      parameters:
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          description: 数据集偏移
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: 数据集大小
+        - in: query
+          name: res_status
+          schema:
+            type: integer
+          description: 资源状态
+      responses:
+        200:
+          description: 评论列表响应
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Comment"
+        400:
+          description: 错误响应
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
+        401:
+          description: 无效授权
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrReason"
   /link/admin:
     post:
       tags:
@@ -1565,6 +1624,11 @@ paths:
           schema:
             type: integer
           description: 数据集大小
+        - in: query
+          name: res_status
+          schema:
+            type: integer
+          description: 资源状态
       responses:
         200:
           description: 链接列表响应
@@ -1851,6 +1915,11 @@ paths:
           schema:
             type: integer
           description: 数据集大小
+        - in: query
+          name: res_status
+          schema:
+            type: integer
+          description: 资源状态
       responses:
         200:
           description: 推文列表响应

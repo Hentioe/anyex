@@ -15,7 +15,7 @@
 ```` bash
 git clone https://github.com/anyex-project/anyex.git
 cd anyex
-git checkout v0.7.2
+git checkout v0.8.0
 ````
 
 ### 基于 Docker
@@ -126,7 +126,7 @@ git checkout v0.7.2
     MIX_ENV=prod mix db.migrate
     ````
 
-    如果您没有编辑 `.exs` 配置文件，则需要使用环境变量来传递一些数据库连接信息才能进行正确的迁移（创建数据库同理），例如：
+    如果您没有编辑 `*.secret.exs` 配置文件，则需要使用环境变量来传递一些数据库连接信息才能进行正确的迁移（创建数据库同理），例如：
 
     ```` bash
     ANYEX_DB_NAME=anyex_prod \
@@ -141,8 +141,8 @@ git checkout v0.7.2
     文档的生成和部署方式无关，如果您可以使用 Docker 建议使用同上的命令。否则您需要自行安装 `openapi-generator-cli`，并使用下面的命令
 
     ```` bash
-    openapi-generator-cli generate -i apps/web_server/priv/static/doc.yaml \
-    -g html2 -o apps/web_server/priv/static/doc
+    openapi-generator-cli generate -i \
+    apps/web_server/priv/static/doc.yaml -g html2 -o apps/web_server/priv/static/doc
     ````
 
 1. 打包应用
@@ -159,7 +159,7 @@ git checkout v0.7.2
     cp _build/prod/rel/anyex /usr/local/anyex
     ````
 
-    如果您没有编辑 `.exs` 配置文件，则需要指定环境变量（以下称之为“配置变量”）启动应用，完整的配置变量如下：
+    如果您没有编辑 `*.secret.exs` 配置文件，则需要指定环境变量（以下称之为“配置变量”）启动应用，完整的配置变量如下：
 
     ```` bash
     ANYEX_DB_NAME=anyex_prod \
