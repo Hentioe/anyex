@@ -204,7 +204,7 @@ git checkout v0.9.0
 * `ANYEX_SERVER_CORS_ORIGINS`: 允许跨域的 origin 列表（允许全部的星号切记加上引号："*"）
 * `ANYEX_SERVER_TOKEN_SECRET`: Token 密文（用于加解密 Token）
 * `ANYEX_SERVER_TOKEN_VALIDITY`: Token 有效期（单位：秒）
-* `ANYEX_SERVER_SECURITY_CHECK`: Token 颁发的安全检查（限制调用频率，单位：秒）
+* `ANYEX_SERVER_SECURITY_CHECK`: 针对颁发 Token 的安全检查（限制调用频率，单位：秒）
 
 ### 附加说明
 
