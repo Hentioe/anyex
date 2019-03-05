@@ -145,8 +145,8 @@ git checkout v0.9.0
     文档的生成和部署方式无关，如果您可以使用 Docker 建议使用同上的命令。否则您需要自行安装 `openapi-generator-cli`，并使用下面的命令
 
     ```` bash
-    openapi-generator-cli generate -i apps/web_server/priv/static/doc.yaml \
-    -g html2 -o apps/web_server/priv/static/doc
+    openapi-generator-cli generate \
+    -i apps/web_server/priv/static/doc.yaml -g html2 -o apps/web_server/priv/static/doc
     ````
 
 1. 打包应用
@@ -204,7 +204,7 @@ git checkout v0.9.0
 * `ANYEX_SERVER_CORS_ORIGINS`: 允许跨域的 origin 列表（允许全部的星号切记加上引号："*"）
 * `ANYEX_SERVER_TOKEN_SECRET`: Token 密文（用于加解密 Token）
 * `ANYEX_SERVER_TOKEN_VALIDITY`: Token 有效期（单位：秒）
-* `ANYEX_SERVER_SECURITY_CHECK`: Token 颁发的安全检查（限制调用频率，针对客户端 IP），包括生成和刷新接口（单位：秒）
+* `ANYEX_SERVER_SECURITY_CHECK`: Token 颁发的安全检查（限制调用频率，单位：秒）
 
 ### 附加说明
 
