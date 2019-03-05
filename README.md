@@ -103,14 +103,17 @@ git checkout v0.8.1
       port: 8080,
       username: "admin",
       password: "admin123",
-      secret: "7EvrcO4jDM",
-      default_limit: 15,
+      default_limit: 25,
       max_limit: 50,
       markdown_enables: [:article, :tweet],
-      cors_origins: ["*"]
+      cors_origins: ["*"],
+      token_secret: "demo_secret",
+      token_validity: 60 * 60 * 24 * 45
     ````
 
-    上面分别是数据库配置和 Web 服务配置，此处编辑的配置将永久编译到二进制应用中（如果要打包分发的话）。
+    （上面分别是数据库配置和 Web 服务配置，此处编辑的配置将永久编译到二进制应用中）
+
+    注意了，下面会介绍的环境变量配置方式中的变量的命名和此处的配置一一对应，区别在于环境变量有前缀 `ANYEX_DB` 或 `ANYEX_SERVER`，此外环境变量不支持类似 `60 * 60 * 24 * 45` 这种计算表达式。
 
 1. 数据迁移
 
@@ -169,11 +172,12 @@ git checkout v0.8.1
     ANYEX_SERVER_PORT=8080 \
     ANYEX_SERVER_USERNAME=admin \
     ANYEX_SERVER_PASSWORD=admin123 \
-    ANYEX_SERVER_SECRET=7EvrcO4jDM \
     ANYEX_SERVER_MARKDOWN_ENABLES=article,tweet \
     ANYEX_SERVER_DEFAULT_LIMIT=25 \
     ANYEX_SERVER_MAX_LIMIT=25 \
     ANYEX_SERVER_CORS_ORIGINS="*" \
+    ANYEX_SERVER_TOKEN_SECRET=demo_secret \
+    ANYEX_SERVER_TOKEN_VALIDITY=3888000 \
     /usr/local/anyex/bin/anyex foreground
     ````
 
@@ -192,11 +196,12 @@ git checkout v0.8.1
 * `ANYEX_SERVER_PORT`: Web 服务端口
 * `ANYEX_SERVER_USERNAME`: 管理员用户名（申请 Token 的用户名）
 * `ANYEX_SERVER_PASSWORD`: 管理员密码（申请 Token 的密码）
-* `ANYEX_SERVER_SECRET`: Token 密文（用于加解密 Token）
 * `ANYEX_SERVER_MARKDOWN_ENABLES`: 启用 Markdown 支持的资源列表
 * `ANYEX_SERVER_DEFAULT_LIMIT`: 默认的分页限制（没有提供 limit 参数时）
 * `ANYEX_SERVER_MAX_LIMIT`: 最大的分页限制（limit 超过此值会被重置为此值）
 * `ANYEX_SERVER_CORS_ORIGINS`: 允许跨域的 origin 列表（允许全部的星号切记加上引号："*"）
+* `ANYEX_SERVER_TOKEN_SECRET`: Token 密文（用于加解密 Token）
+* `ANYEX_SERVER_TOKEN_VALIDITY`: Token 有效期（单位：秒）
 
 ### 附加说明
 
@@ -208,4 +213,4 @@ git checkout v0.8.1
 
 2. 「生成文档」产生了不健全的文档怎么办？
 
-    严格来说这是一个可选的步骤，当前甚至建议可选。它仅作为首页「静态文档」导航链接所指向的页面，如果不生成就会产生一个 404 访问，仅此而已。建议可选是因为 `OSA3` 的生态还不完全健全，导致目前还不能完美的输出 `html2` 形式的文档（body 和 schema 都是空的），并且这个步骤跟 Swagger 文档没有关系，`OSA3` 版本的 Swagger UI 是完美并推荐的。
+    严格来说这是一个可选的步骤，当前甚至建议可选。它仅作为首页「静态文档」导航链接所指向的页面，如果不生成就会产生一个 404 访问，仅此而已。建议可选是因为 `OSA3` 的生态还不完全健全，导致目前还不能完美的输出 `html2` 形式的文档（Schema 都是空的），并且这个步骤跟 Swagger 文档没有关系，`OSA3` 版本的 Swagger UI 是完美并推荐的。

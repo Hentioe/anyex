@@ -5,7 +5,7 @@ defmodule WebServer.Token do
   alias WebServer.Config.Store, as: ConfigStore
 
   def gen_signer do
-    secret = ConfigStore.get(:web_server, :secret)
+    secret = ConfigStore.get(:web_server, :token_secret)
     suffix = ConfigStore.get(:web_server, :secret_suffix)
     suffix = suffix || find_suffix()
     Joken.Signer.create("HS256", "#{secret}.#{suffix}")
@@ -51,10 +51,9 @@ defmodule WebServer.Token do
     verify_and_validate(token, gen_signer())
   end
 
-  # Effective time (ms)
-  @exp_add_val 60 * 60 * 24 * 45
   defp gen_exp() do
-    now_to_unix() + @exp_add_val
+    validity = ConfigStore.get(:web_server, :token_validity)
+    now_to_unix() + validity
   end
 
   defp now_to_unix do

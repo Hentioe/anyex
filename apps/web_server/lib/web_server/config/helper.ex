@@ -5,11 +5,12 @@ defmodule WebServer.Config.Helper do
     {:web_server, :port, :integer},
     {:web_server, :username, :string},
     {:web_server, :password, :string},
-    {:web_server, :secret, :string},
     {:web_server, :default_limit, :integer},
     {:web_server, :max_limit, :integer},
     {:web_server, :cors_origins, :string_in_list},
-    {:web_server, :markdown_enables, :atom_in_list}
+    {:web_server, :markdown_enables, :atom_in_list},
+    {:web_server, :token_secret, :string},
+    {:web_server, :token_validity, :integer}
   ]
 
   def init do
