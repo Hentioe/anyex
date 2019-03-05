@@ -1,7 +1,7 @@
 defmodule WebServer.MixProject do
   use Mix.Project
 
-  @version "0.9.0-dev"
+  @version "0.8.2"
 
   def project do
     [
