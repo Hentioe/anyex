@@ -1,6 +1,7 @@
 defmodule WebServer.Routes.CommentRouter do
   @moduledoc false
   alias Storage.Schema.{Comment}
+  alias WebServer.Config.Store, as: ConfigStore
 
   use WebServer.Router,
     schema: Comment,
@@ -11,6 +12,7 @@ defmodule WebServer.Routes.CommentRouter do
     filters = paging |> specify_normal_status
     article_id = Map.get(conn.params, "article_id")
     filters = filters |> Keyword.merge(article_id: article_id)
+    markdown_support? = ConfigStore.exists(:web_server, :markdown_enables, :comment)
 
     r =
       case Comment.find_list(filters) do
@@ -23,7 +25,7 @@ defmodule WebServer.Routes.CommentRouter do
             end
 
           list = list |> hidden_comments_email
-
+          list = if markdown_support?, do: markdown_converted(list), else: list
           {:ok, list}
 
         e ->
@@ -37,6 +39,24 @@ defmodule WebServer.Routes.CommentRouter do
     list
     |> Enum.map(fn c ->
       %{c | comments: []}
+    end)
+  end
+
+  def markdown_converted(list) do
+    list
+    |> Enum.map(fn c ->
+      c = %{c | content: Earmark.as_html!(c.content)}
+
+      if Enum.empty?(c.comments) do
+        c
+      else
+        comments =
+          Enum.map(c.comments, fn c ->
+            %{c | content: Earmark.as_html!(c.content)}
+          end)
+
+        %{c | comments: comments}
+      end
     end)
   end
 

@@ -73,7 +73,7 @@ defmodule WebServerTest.Router.CommentRouterTest do
             article_id: article.id,
             author_email: "bot#{i}@bluerain.io",
             author_nickname: "绅士喵 #{i} 号",
-            content: "我是第 #{i} 条评论内容～"
+            content: "# 我是第 #{i} 条评论～"
           })
 
         conn = conn |> put_json_header |> put_authorization(state) |> call
@@ -88,7 +88,7 @@ defmodule WebServerTest.Router.CommentRouterTest do
         article_id: article.id,
         author_email: "me@bluerain.io",
         author_nickname: "绅士喵",
-        content: "我是第一条评论的回复～",
+        content: "# 我是第一条评论的回复～",
         parent_id: c3.id
       })
 
@@ -108,8 +108,10 @@ defmodule WebServerTest.Router.CommentRouterTest do
     assert length(list) == 3
     c3 = hd(list)
     assert c3.author_email == "[Hidden]"
+    assert c3.content == "<h1>我是第 3 条评论～</h1>\n"
     c4 = c3.comments |> hd
     assert c4.author_email == "[Hidden]"
+    assert c4.content == "<h1>我是第一条评论的回复～</h1>\n"
 
     conn = conn(:delete, "/comment/admin/#{c3.id}") |> put_authorization(state) |> call
     assert conn.status == 200
