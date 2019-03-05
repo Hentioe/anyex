@@ -15,7 +15,7 @@
 ```` bash
 git clone https://github.com/anyex-project/anyex.git
 cd anyex
-git checkout v0.8.2
+git checkout v0.9.0
 ````
 
 ### 基于 Docker
@@ -109,6 +109,7 @@ git checkout v0.8.2
       cors_origins: ["*"],
       token_secret: "demo_secret",
       token_validity: 60 * 60 * 24 * 45
+      security_check: 3
     ````
 
     （上面分别是数据库配置和 Web 服务配置，此处编辑的配置将永久编译到二进制应用中）
@@ -144,8 +145,8 @@ git checkout v0.8.2
     文档的生成和部署方式无关，如果您可以使用 Docker 建议使用同上的命令。否则您需要自行安装 `openapi-generator-cli`，并使用下面的命令
 
     ```` bash
-    openapi-generator-cli generate -i \
-    apps/web_server/priv/static/doc.yaml -g html2 -o apps/web_server/priv/static/doc
+    openapi-generator-cli generate -i apps/web_server/priv/static/doc.yaml \
+    -g html2 -o apps/web_server/priv/static/doc
     ````
 
 1. 打包应用
@@ -178,6 +179,7 @@ git checkout v0.8.2
     ANYEX_SERVER_CORS_ORIGINS="*" \
     ANYEX_SERVER_TOKEN_SECRET=demo_secret \
     ANYEX_SERVER_TOKEN_VALIDITY=3888000 \
+    ANYEX_SERVER_SECURITY_CHECK=3 \
     /usr/local/anyex/bin/anyex foreground
     ````
 
@@ -202,6 +204,7 @@ git checkout v0.8.2
 * `ANYEX_SERVER_CORS_ORIGINS`: 允许跨域的 origin 列表（允许全部的星号切记加上引号："*"）
 * `ANYEX_SERVER_TOKEN_SECRET`: Token 密文（用于加解密 Token）
 * `ANYEX_SERVER_TOKEN_VALIDITY`: Token 有效期（单位：秒）
+* `ANYEX_SERVER_SECURITY_CHECK`: Token 颁发的安全检查（限制调用频率，针对客户端 IP），包括生成和刷新接口（单位：秒）
 
 ### 附加说明
 
