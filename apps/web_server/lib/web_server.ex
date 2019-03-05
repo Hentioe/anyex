@@ -12,6 +12,7 @@ defmodule WebServer do
 
     children = [
       {ConfigStore, configs: configs},
+      {WebServer.Login.HostRecord, []},
       Plug.Cowboy.child_spec(
         scheme: :http,
         plug: WebServer.Routes,

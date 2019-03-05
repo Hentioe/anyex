@@ -3,36 +3,42 @@ defmodule WebServer.Routes.TokenRouter do
   use WebServer.Router, :json_support
 
   alias WebServer.Token
+  alias WebServer.Login.FrequencyLimit
   alias Storage.Schema.SecretSuffix
 
   post "/gen" do
-    login_info = conn.body_params
-    ru = login_info |> Map.get("username")
-    rp = login_info |> Map.get("password")
+    if FrequencyLimit.passed?(conn) do
+      login_info = conn.body_params
+      ru = login_info |> Map.get("username")
+      rp = login_info |> Map.get("password")
 
-    validite_r =
-      if ru && rp do
-        username = ConfigStore.get(:web_server, :username)
-        password = ConfigStore.get(:web_server, :password)
+      validite_r =
+        if ru && rp do
+          username = ConfigStore.get(:web_server, :username)
+          password = ConfigStore.get(:web_server, :password)
 
-        if ru == username && rp == password do
-          {:ok, Token.generate(username, password)}
+          if ru == username && rp == password do
+            {:ok, Token.generate(username, password)}
+          else
+            {:error, "invalid authentication information"}
+          end
         else
-          {:error, "invalid authentication information"}
+          {:error, "incomplete authentication information"}
         end
-      else
-        {:error, "incomplete authentication information"}
+
+      case validite_r do
+        {:error, msg} ->
+          conn |> resp_error(msg)
+
+        {:ok, {:ok, token}} ->
+          FrequencyLimit.logged(conn)
+          conn |> resp({:ok, %{token: token}})
+
+        {:ok, {:error, reason}} ->
+          conn |> resp_error(reason)
       end
-
-    case validite_r do
-      {:error, msg} ->
-        conn |> resp_error(msg)
-
-      {:ok, {:ok, token}} ->
-        conn |> resp({:ok, %{token: token}})
-
-      {:ok, {:error, reason}} ->
-        conn |> resp_error(reason)
+    else
+      conn |> resp_error("failure to pass security check (please reduce frequency)")
     end
   end
 
@@ -49,15 +55,20 @@ defmodule WebServer.Routes.TokenRouter do
   end
 
   post "/admin/refresh" do
-    username = ConfigStore.get(:web_server, :username)
-    password = ConfigStore.get(:web_server, :password)
+    if FrequencyLimit.passed?(conn) do
+      username = ConfigStore.get(:web_server, :username)
+      password = ConfigStore.get(:web_server, :password)
 
-    case Token.generate(username, password) do
-      {:ok, token} ->
-        conn |> resp({:ok, %{token: token}})
+      case Token.generate(username, password) do
+        {:ok, token} ->
+          FrequencyLimit.logged(conn)
+          conn |> resp({:ok, %{token: token}})
 
-      {:error, e} ->
-        conn |> resp_error(e)
+        {:error, e} ->
+          conn |> resp_error(e)
+      end
+    else
+      conn |> resp_error("failure to pass security check (please reduce frequency)")
     end
   end
 
