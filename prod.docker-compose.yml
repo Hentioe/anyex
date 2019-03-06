@@ -31,6 +31,7 @@ services:
       ANYEX_SERVER_TOKEN_SECRET: demo_secret
       ANYEX_SERVER_TOKEN_VALIDITY: 3888000
       ANYEX_SERVER_SECURITY_CHECK: 3
+      ANYEX_SERVER_PATH_STRATEGY: raw
 
     depends_on:
       - db
