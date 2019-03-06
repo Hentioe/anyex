@@ -1,7 +1,7 @@
 defmodule WebServer.MixProject do
   use Mix.Project
 
-  @version "0.9.1"
+  @version "0.9.2-dev"
 
   def project do
     [
@@ -39,7 +39,8 @@ defmodule WebServer.MixProject do
       {:joken, "~> 2.0"},
       {:atomic_map, "~> 0.9.3"},
       {:earmark, "~> 1.3"},
-      {:cors_plug, "~> 2.0"}
+      {:cors_plug, "~> 2.0"},
+      {:elixir_uuid, "~> 1.2"}
     ]
   end
 end

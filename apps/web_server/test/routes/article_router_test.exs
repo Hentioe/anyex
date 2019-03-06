@@ -31,6 +31,7 @@ defmodule WebServerTest.Router.ArticleRouterTest do
     assert conn.status == 200
     a1 = conn |> resp_to_map
     assert length(a1.tags) == 3
+    assert a1.qtext == "i-am-first-article"
 
     conn = conn(:put, "/article/admin", %{id: a1.id, tags: [%{id: tag1.id}]})
     conn = conn |> put_json_header |> put_authorization(state) |> call

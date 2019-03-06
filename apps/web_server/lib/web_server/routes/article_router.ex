@@ -5,7 +5,21 @@ defmodule WebServer.Routes.ArticleRouter do
 
   use WebServer.Router,
     schema: Article,
-    include: [:admin_list, :admin_add, :admin_update, :status_manage, :top]
+    include: [:admin_list, :admin_update, :status_manage, :top]
+
+  post "/admin" do
+    data = conn.body_params |> string_key_map
+
+    qtext =
+      case ConfigStore.get(:web_server, :path_strategy) do
+        :raw -> data.qtext
+        :uuid -> UUID.uuid4()
+        _ -> nil
+      end
+
+    result = data |> Map.put(:qtext, qtext) |> Article.add()
+    conn |> resp(result)
+  end
 
   get "/list" do
     [conn, paging] = conn |> fetch_paging_params()

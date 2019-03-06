@@ -37,7 +37,8 @@ defmodule WebServer.Config do
       {:web_server, :markdown_enables, :atom_in_list},
       {:web_server, :token_secret, :string},
       {:web_server, :token_validity, :integer},
-      {:web_server, :security_check, :integer}
+      {:web_server, :security_check, :integer},
+      {:web_server, :path_strategy, :atom}
     ]
 
     def init do
@@ -81,6 +82,10 @@ defmodule WebServer.Config do
       else
         if is_list(val), do: val, else: raise("#{item} needs a list or string value")
       end
+    end
+
+    def atom_conv(_item, val) do
+      if is_atom(val), do: val, else: String.to_atom(val)
     end
 
     def get_config!(app, item) do
