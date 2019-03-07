@@ -4,6 +4,8 @@ defmodule WebServer.Token do
 
   alias WebServer.Config.Store, as: ConfigStore
 
+  import WebServer.Common
+
   def gen_signer do
     secret = ConfigStore.get(:web_server, :token_secret)
     suffix = ConfigStore.get(:web_server, :secret_suffix)
@@ -29,7 +31,7 @@ defmodule WebServer.Token do
     default_config
     |> add_claim("aud", fn -> "Anyex" end)
     |> add_claim("iss", fn -> "Anyex" end)
-    |> add_claim("exp", fn -> gen_exp() end, &(&1 >= now_to_unix()))
+    |> add_claim("exp", fn -> gen_exp() end, &(&1 >= unix_now()))
     |> add_claim("username", fn -> "none" end, &(&1 == username))
     |> add_claim("password", fn -> "none" end, &(&1 == password))
   end
@@ -53,10 +55,6 @@ defmodule WebServer.Token do
 
   defp gen_exp() do
     validity = ConfigStore.get(:web_server, :token_validity)
-    now_to_unix() + validity
-  end
-
-  defp now_to_unix do
-    DateTime.to_unix(DateTime.utc_now())
+    unix_now() + validity
   end
 end

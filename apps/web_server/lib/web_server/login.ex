@@ -23,15 +23,17 @@ defmodule WebServer.Login do
 
     alias WebServer.Config.Store, as: ConfigStore
 
+    import WebServer.Common
+
     def passed?(conn) when is_map(conn) do
       last_login = HostRecord.get(gen_key(conn))
       last_login = last_login || 0
       safe_seconds = ConfigStore.get(:web_server, :security_check)
-      DateTime.to_unix(DateTime.utc_now()) > last_login + safe_seconds
+      unix_now() > last_login + safe_seconds
     end
 
     def logged(conn) when is_map(conn) do
-      :ok = HostRecord.update(gen_key(conn), DateTime.to_unix(DateTime.utc_now()))
+      :ok = HostRecord.update(gen_key(conn), unix_now())
     end
 
     def gen_key(conn) do

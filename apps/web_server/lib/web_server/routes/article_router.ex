@@ -3,6 +3,8 @@ defmodule WebServer.Routes.ArticleRouter do
   alias Storage.Schema.{Article}
   alias WebServer.Config.Store, as: ConfigStore
 
+  import WebServer.Common
+
   use WebServer.Router,
     schema: Article,
     include: [:admin_list, :admin_update, :status_manage, :top]
@@ -10,12 +12,7 @@ defmodule WebServer.Routes.ArticleRouter do
   post "/admin" do
     data = conn.body_params |> string_key_map
 
-    qtext =
-      case ConfigStore.get(:web_server, :path_strategy) do
-        :raw -> data.qtext
-        :uuid -> UUID.uuid4()
-        _ -> nil
-      end
+    qtext = get_path(data.qtext, data.title)
 
     result = data |> Map.put(:qtext, qtext) |> Article.add()
     conn |> resp(result)
