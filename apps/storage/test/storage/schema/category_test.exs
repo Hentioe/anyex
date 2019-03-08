@@ -13,13 +13,13 @@ defmodule Storage.Schema.CategoryTest do
   end
 
   test "add and update category" do
-    {status, category} = add(%{qname: "c1", name: "类别1"})
+    {status, category} = add(%{path: "c1", name: "类别1"})
     assert status == :ok
 
-    category = Map.merge(category, %{qname: "c1-changed", name: "修改后的类别名称"})
+    category = Map.merge(category, %{path: "c1-changed", name: "修改后的类别名称"})
     {status, category} = update(category)
     assert status == :ok
-    assert category.qname == "c1-changed"
+    assert category.path == "c1-changed"
     assert category.name == "修改后的类别名称"
   end
 
@@ -29,7 +29,7 @@ defmodule Storage.Schema.CategoryTest do
       |> Enum.map(fn i ->
         {status, category} =
           add(%{
-            qname: "first-category-#{i}",
+            path: "first-category-#{i}",
             name: "第 #{i} 个类别"
           })
 

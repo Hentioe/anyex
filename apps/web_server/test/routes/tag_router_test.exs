@@ -4,27 +4,27 @@ defmodule WebServerTest.Router.TagRouterTest do
   test "add and update tag", state do
     conn =
       conn(:post, "/tag/admin", %{
-        qname: "tag-1",
+        path: "tag-1",
         name: "标签1"
       })
 
     conn = conn |> put_json_header |> put_authorization(state) |> call
     assert conn.status == 200
     tag = conn |> resp_to_map
-    assert tag.qname == "tag-1"
+    assert tag.path == "tag-1"
     assert tag.name == "标签1"
 
     conn =
       conn(:put, "/tag/admin", %{
         id: tag.id,
-        qname: "tag-1-updated",
+        path: "tag-1-updated",
         name: "更新后的标签1"
       })
 
     conn = conn |> put_json_header |> put_authorization(state) |> call
     assert conn.status == 200
     tag = conn |> resp_to_map
-    assert tag.qname == "tag-1-updated"
+    assert tag.path == "tag-1-updated"
     assert tag.name == "更新后的标签1"
 
     conn = conn(:delete, "/tag/admin/#{tag.id}")
@@ -54,14 +54,14 @@ defmodule WebServerTest.Router.TagRouterTest do
     |> Enum.map(fn i ->
       conn =
         conn(:post, "/tag/admin", %{
-          qname: "tag-#{i}",
+          path: "tag-#{i}",
           name: "标签#{i}"
         })
 
       conn = conn |> put_json_header |> put_authorization(state) |> call
       assert conn.status == 200
       tag = conn |> resp_to_map
-      assert tag.qname == "tag-#{i}"
+      assert tag.path == "tag-#{i}"
       assert tag.name == "标签#{i}"
     end)
 

@@ -18,16 +18,16 @@ defmodule Storage.Schema.ArticleTest do
   end
 
   test "add and update article" do
-    {status, category} = Category.add(%{qname: "c1", name: "类别1"})
+    {status, category} = Category.add(%{path: "c1", name: "类别1"})
     assert status == :ok
 
-    {status, tag1} = Tag.add(%{qname: "t1", name: "标签1"})
+    {status, tag1} = Tag.add(%{path: "t1", name: "标签1"})
     assert status == :ok
-    {status, tag2} = Tag.add(%{qname: "t2", name: "标签2"})
+    {status, tag2} = Tag.add(%{path: "t2", name: "标签2"})
     assert status == :ok
 
     {status, article} =
-      add(%{qtext: "first-article", title: "第一篇文章", category_id: category.id, tags: [tag1, tag2]})
+      add(%{path: "first-article", title: "第一篇文章", category_id: category.id, tags: [tag1, tag2]})
 
     assert status == :ok
     assert article.category_id == category.id
@@ -42,19 +42,19 @@ defmodule Storage.Schema.ArticleTest do
   end
 
   test "find article list" do
-    {status, category} = Category.add(%{qname: "default", name: "默认类别"})
+    {status, category} = Category.add(%{path: "default", name: "默认类别"})
     assert status == :ok
 
-    {status, tag1} = Tag.add(%{qname: "t1", name: "标签1"})
+    {status, tag1} = Tag.add(%{path: "t1", name: "标签1"})
     assert status == :ok
-    {status, tag2} = Tag.add(%{qname: "t2", name: "标签2"})
+    {status, tag2} = Tag.add(%{path: "t2", name: "标签2"})
     assert status == :ok
 
     created_list =
       1..15
       |> Enum.map(fn i ->
         article = %{
-          qtext: "first-article-#{i}",
+          path: "first-article-#{i}",
           title: "第 #{i} 篇文章",
           category_id: category.id,
           tags: []
@@ -77,7 +77,7 @@ defmodule Storage.Schema.ArticleTest do
     assert status == :ok
     assert length(list) == 15
 
-    {status, list} = find_list(tag_qname: "t2", res_status: 1)
+    {status, list} = find_list(tag_path: "t2", res_status: 1)
     assert status == :ok
     assert length(list) == 7
 
@@ -94,17 +94,17 @@ defmodule Storage.Schema.ArticleTest do
   end
 
   test "find article" do
-    {status, category} = Category.add(%{qname: "default", name: "默认类别"})
+    {status, category} = Category.add(%{path: "default", name: "默认类别"})
     assert status == :ok
 
-    {status, tag1} = Tag.add(%{qname: "t1", name: "标签1"})
+    {status, tag1} = Tag.add(%{path: "t1", name: "标签1"})
     assert status == :ok
-    {status, tag2} = Tag.add(%{qname: "t2", name: "标签2"})
+    {status, tag2} = Tag.add(%{path: "t2", name: "标签2"})
     assert status == :ok
 
     {status, article} =
       add(%{
-        qtext: "first-article",
+        path: "first-article",
         title: "第一篇文章",
         category_id: category.id,
         tags: [%{id: tag1.id}, %{id: tag2.id}]
@@ -113,13 +113,13 @@ defmodule Storage.Schema.ArticleTest do
     assert status == :ok
     assert article.category_id == category.id
 
-    {status, article} = find(qtext: "first-article", res_status: 1)
+    {status, article} = find(path: "first-article", res_status: 1)
     assert status == :ok
     assert article.title == "第一篇文章"
 
     {status, _article} = update(%{id: article.id, res_status: -1})
     assert status == :ok
-    {status, article} = find(qtext: "first-article", res_status: 1)
+    {status, article} = find(path: "first-article", res_status: 1)
     assert status == :ok
     assert article == nil
   end

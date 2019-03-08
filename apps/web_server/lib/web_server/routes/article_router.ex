@@ -12,20 +12,20 @@ defmodule WebServer.Routes.ArticleRouter do
   post "/admin" do
     data = conn.body_params |> string_key_map
 
-    qtext = get_path(data.qtext, data.title)
+    path = get_path(data.path, data.title)
 
-    result = data |> Map.put(:qtext, qtext) |> Article.add()
+    result = data |> Map.put(:path, path) |> Article.add()
     conn |> resp(result)
   end
 
   get "/list" do
     [conn, paging] = conn |> fetch_paging_params()
     filter = paging |> specify_normal_status
-    category_qname = conn.params |> Map.get("category_qname", nil)
-    tag_qname = conn.params |> Map.get("tag_qname", nil)
+    category_path = conn.params |> Map.get("category_path", nil)
+    tag_path = conn.params |> Map.get("tag_path", nil)
 
     filter =
-      filter |> Keyword.put(:category_qname, category_qname) |> Keyword.put(:tag_qname, tag_qname)
+      filter |> Keyword.put(:category_path, category_path) |> Keyword.put(:tag_path, tag_path)
 
     r =
       case filter |> Article.find_list() do
@@ -45,8 +45,8 @@ defmodule WebServer.Routes.ArticleRouter do
     conn |> resp(r)
   end
 
-  get "/query/:qtext" do
-    filters = [qtext: qtext] |> specify_normal_status
+  get "/query/:path" do
+    filters = [path: path] |> specify_normal_status
 
     r =
       case Article.find(filters) do

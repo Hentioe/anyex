@@ -206,7 +206,7 @@ git checkout v0.9.2
 * `ANYEX_SERVER_TOKEN_SECRET`: Token 密文（用于加解密 Token）
 * `ANYEX_SERVER_TOKEN_VALIDITY`: Token 有效期（单位：秒）
 * `ANYEX_SERVER_SECURITY_CHECK`: 针对颁发 Token 的安全检查（限制调用频率，单位：秒）
-* `ANYEX_SERVER_PATH_STRATEGY`: 路径生成策略（`qtext` 字段）
+* `ANYEX_SERVER_PATH_STRATEGY`: 路径生成策略（`path` 字段）
 
 ### 附加说明
 

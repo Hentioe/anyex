@@ -10,10 +10,10 @@ defmodule Storage.Schema.Article do
 
   @derive {Jason.Encoder,
            only:
-             [:id, :qtext, :title, :preface, :content, @top_field] ++
+             [:id, :path, :title, :preface, :content, @top_field] ++
                @common_fields ++ [:category, :tags]}
   schema "article" do
-    field :qtext
+    field :path
     field :title
     field :preface
     field :content, :string, default: "[WIP]"
@@ -39,7 +39,7 @@ defmodule Storage.Schema.Article do
 
     article
     |> Changeset.cast(data, [
-      :qtext,
+      :path,
       :title,
       :preface,
       :content,
@@ -48,7 +48,7 @@ defmodule Storage.Schema.Article do
       @status_field
     ])
     |> Changeset.put_assoc(:tags, tags)
-    |> Changeset.validate_required([:qtext, :title, :top, :category_id, @status_field])
+    |> Changeset.validate_required([:path, :title, :top, :category_id, @status_field])
   end
 
   def add(data) do
@@ -76,13 +76,13 @@ defmodule Storage.Schema.Article do
   end
 
   def find_list(filters \\ []) do
-    find(Keyword.drop(filters, [:id, :qtext]))
+    find(Keyword.drop(filters, [:id, :path]))
   end
 
   def find(filters \\ []) when is_list(filters) do
     res_status = Keyword.get(filters, :res_status)
-    find_one? = filters[:id] || filters[:qtext] || nil
-    tag_qname = Keyword.get(filters, :tag_qname)
+    find_one? = filters[:id] || filters[:path] || nil
+    tag_path = Keyword.get(filters, :tag_path)
 
     tags_query = from t in Tag, select: t
 
@@ -102,8 +102,8 @@ defmodule Storage.Schema.Article do
 
     query = from _ in query, preload: [:category, tags: ^tags_query]
 
-    if tag_qname do
-      tag_query = from t in Tag, where: t.qname == ^tag_qname, preload: [articles: ^query]
+    if tag_path do
+      tag_query = from t in Tag, where: t.path == ^tag_path, preload: [articles: ^query]
 
       case tag_query |> Tag.query_one() do
         {:ok, nil} -> {:ok, []}
@@ -134,17 +134,17 @@ defmodule Storage.Schema.Article do
             from _ in acc_query,
               offset: ^value
 
-          :qtext ->
+          :path ->
             from a in acc_query,
-              where: a.qtext == ^value
+              where: a.path == ^value
 
           :id ->
             from a in acc_query,
               where: a.id == ^value
 
-          :category_qname ->
+          :category_path ->
             from [_, c] in acc_query,
-              where: c.qname == ^value
+              where: c.path == ^value
 
           _ ->
             acc_query

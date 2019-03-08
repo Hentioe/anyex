@@ -15,11 +15,11 @@ defmodule Storage.Schema.CommentTest do
   end
 
   test "add and update comment" do
-    {status, category} = Category.add(%{qname: "c1", name: "类别1"})
+    {status, category} = Category.add(%{path: "c1", name: "类别1"})
     assert status == :ok
 
     {status, article} =
-      Article.add(%{qtext: "first-article", title: "第一篇文章", category_id: category.id})
+      Article.add(%{path: "first-article", title: "第一篇文章", category_id: category.id})
 
     assert status == :ok
     assert article.category_id == category.id
@@ -52,11 +52,11 @@ defmodule Storage.Schema.CommentTest do
   end
 
   test "find comment list" do
-    {status, category} = Category.add(%{qname: "c1", name: "类别1"})
+    {status, category} = Category.add(%{path: "c1", name: "类别1"})
     assert status == :ok
 
     {status, article} =
-      Article.add(%{qtext: "first-article", title: "第一篇文章", category_id: category.id})
+      Article.add(%{path: "first-article", title: "第一篇文章", category_id: category.id})
 
     assert status == :ok
     assert article.category_id == category.id

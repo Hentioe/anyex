@@ -13,13 +13,13 @@ defmodule Storage.Schema.TagTest do
   end
 
   test "add and update tag" do
-    {status, tag} = add(%{qname: "t1", name: "标签1"})
+    {status, tag} = add(%{path: "t1", name: "标签1"})
     assert status == :ok
 
-    tag = Map.merge(tag, %{qname: "t1-changed", name: "修改后的标签名称"})
+    tag = Map.merge(tag, %{path: "t1-changed", name: "修改后的标签名称"})
     {status, tag} = update(tag)
     assert status == :ok
-    assert tag.qname == "t1-changed"
+    assert tag.path == "t1-changed"
     assert tag.name == "修改后的标签名称"
   end
 
@@ -29,7 +29,7 @@ defmodule Storage.Schema.TagTest do
       |> Enum.map(fn i ->
         {status, tag} =
           add(%{
-            qname: "first-tag-#{i}",
+            path: "first-tag-#{i}",
             name: "第 #{i} 个标签"
           })
 

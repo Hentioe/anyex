@@ -4,7 +4,7 @@ defmodule WebServerTest.Router.ArticleRouterTest do
   require Integer
 
   test "add and update article", state do
-    conn = conn(:post, "/category/admin", %{qname: "c1", name: "类别1"})
+    conn = conn(:post, "/category/admin", %{path: "c1", name: "类别1"})
     conn = conn |> put_json_header |> put_authorization(state) |> call
 
     assert conn.status == 200
@@ -13,7 +13,7 @@ defmodule WebServerTest.Router.ArticleRouterTest do
     [tag1, tag2, tag3] =
       1..3
       |> Enum.map(fn i ->
-        conn = conn(:post, "/tag/admin", %{qname: "t#{i}", name: "标签#{i}"})
+        conn = conn(:post, "/tag/admin", %{path: "t#{i}", name: "标签#{i}"})
         conn = conn |> put_json_header |> put_authorization(state) |> call
         assert conn.status == 200
         conn |> resp_to_map
@@ -21,7 +21,7 @@ defmodule WebServerTest.Router.ArticleRouterTest do
 
     conn =
       conn(:post, "/article/admin", %{
-        qtext: "i-am-first-article",
+        path: "i-am-first-article",
         title: "我是第一篇文章",
         category: c1,
         tags: [%{id: tag1.id}, %{id: tag2.id}, %{id: tag3.id}]
@@ -31,7 +31,7 @@ defmodule WebServerTest.Router.ArticleRouterTest do
     assert conn.status == 200
     a1 = conn |> resp_to_map
     assert length(a1.tags) == 3
-    assert a1.qtext == "i-am-first-article"
+    assert a1.path == "i-am-first-article"
 
     conn = conn(:put, "/article/admin", %{id: a1.id, tags: [%{id: tag1.id}]})
     conn = conn |> put_json_header |> put_authorization(state) |> call
@@ -41,13 +41,13 @@ defmodule WebServerTest.Router.ArticleRouterTest do
   end
 
   test "find article list", state do
-    conn = conn(:post, "/category/admin", %{qname: "c1", name: "类别1"})
+    conn = conn(:post, "/category/admin", %{path: "c1", name: "类别1"})
     conn = conn |> put_json_header |> put_authorization(state) |> call
 
     assert conn.status == 200
     c1 = conn |> resp_to_map
 
-    conn = conn(:post, "/category/admin", %{qname: "c2", name: "类别2"})
+    conn = conn(:post, "/category/admin", %{path: "c2", name: "类别2"})
     conn = conn |> put_json_header |> put_authorization(state) |> call
 
     assert conn.status == 200
@@ -56,7 +56,7 @@ defmodule WebServerTest.Router.ArticleRouterTest do
     [tag1, tag2, tag3] =
       1..3
       |> Enum.map(fn i ->
-        conn = conn(:post, "/tag/admin", %{qname: "t#{i}", name: "标签#{i}"})
+        conn = conn(:post, "/tag/admin", %{path: "t#{i}", name: "标签#{i}"})
         conn = conn |> put_json_header |> put_authorization(state) |> call
         assert conn.status == 200
         conn |> resp_to_map
@@ -66,7 +66,7 @@ defmodule WebServerTest.Router.ArticleRouterTest do
       1..15
       |> Enum.map(fn i ->
         article = %{
-          qtext: "i-am-article-#{i}",
+          path: "i-am-article-#{i}",
           title: "我是第 #{i} 篇文章"
         }
 
@@ -84,13 +84,13 @@ defmodule WebServerTest.Router.ArticleRouterTest do
         conn |> resp_to_map
       end)
 
-    conn = conn(:get, "/article/list?category_qname=#{c1.qname}")
+    conn = conn(:get, "/article/list?category_path=#{c1.path}")
     conn = conn |> call
     assert conn.status == 200
     list = conn |> resp_to_map
     assert length(list) == 8
 
-    conn = conn(:get, "/article/list?tag_qname=#{tag2.qname}")
+    conn = conn(:get, "/article/list?tag_path=#{tag2.path}")
     conn = conn |> call
     assert conn.status == 200
     list = conn |> resp_to_map
@@ -129,7 +129,7 @@ defmodule WebServerTest.Router.ArticleRouterTest do
   end
 
   test "find article", state do
-    conn = conn(:post, "/category/admin", %{qname: "c1", name: "类别1"})
+    conn = conn(:post, "/category/admin", %{path: "c1", name: "类别1"})
     conn = conn |> put_json_header |> put_authorization(state) |> call
 
     assert conn.status == 200
@@ -138,7 +138,7 @@ defmodule WebServerTest.Router.ArticleRouterTest do
     [tag1, tag2, tag3] =
       1..3
       |> Enum.map(fn i ->
-        conn = conn(:post, "/tag/admin", %{qname: "t#{i}", name: "标签#{i}"})
+        conn = conn(:post, "/tag/admin", %{path: "t#{i}", name: "标签#{i}"})
         conn = conn |> put_json_header |> put_authorization(state) |> call
         assert conn.status == 200
         conn |> resp_to_map
@@ -146,7 +146,7 @@ defmodule WebServerTest.Router.ArticleRouterTest do
 
     conn =
       conn(:post, "/article/admin", %{
-        qtext: "i-am-article",
+        path: "i-am-article",
         title: "我是第一篇文章",
         category: c1,
         content: "# 前言",
@@ -157,7 +157,7 @@ defmodule WebServerTest.Router.ArticleRouterTest do
     assert conn.status == 200
     article = conn |> resp_to_map
 
-    conn = conn(:get, "/article/query/#{article.qtext}") |> call
+    conn = conn(:get, "/article/query/#{article.path}") |> call
     assert conn.status == 200
     r = conn |> resp_to_map
     assert r != nil
@@ -166,7 +166,7 @@ defmodule WebServerTest.Router.ArticleRouterTest do
     conn = conn(:delete, "/article/admin/#{article.id}") |> put_authorization(state) |> call
     assert conn.status == 200
 
-    conn = conn(:get, "/article/query/#{article.qtext}") |> call
+    conn = conn(:get, "/article/query/#{article.path}") |> call
     assert conn.status == 200
     r = conn |> resp_to_map
     assert r == nil

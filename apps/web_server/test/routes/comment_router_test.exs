@@ -2,7 +2,7 @@ defmodule WebServerTest.Router.CommentRouterTest do
   use WebServer.TestCase
 
   test "add and update comment", state do
-    conn = conn(:post, "/category/admin", %{qname: "c1", name: "类别1"})
+    conn = conn(:post, "/category/admin", %{path: "c1", name: "类别1"})
     conn = conn |> put_json_header |> put_authorization(state) |> call
 
     assert conn.status == 200
@@ -10,7 +10,7 @@ defmodule WebServerTest.Router.CommentRouterTest do
 
     conn =
       conn(:post, "/article/admin", %{
-        qtext: "i-am-first-article",
+        path: "i-am-first-article",
         title: "我是第一篇文章",
         category: c1
       })
@@ -48,7 +48,7 @@ defmodule WebServerTest.Router.CommentRouterTest do
   end
 
   test "find comment list", state do
-    conn = conn(:post, "/category/admin", %{qname: "c1", name: "类别1"})
+    conn = conn(:post, "/category/admin", %{path: "c1", name: "类别1"})
     conn = conn |> put_json_header |> put_authorization(state) |> call
 
     assert conn.status == 200
@@ -56,7 +56,7 @@ defmodule WebServerTest.Router.CommentRouterTest do
 
     conn =
       conn(:post, "/article/admin", %{
-        qtext: "i-am-first-article",
+        path: "i-am-first-article",
         title: "我是第一篇文章",
         category: c1
       })

@@ -8,9 +8,9 @@ defmodule Storage.Schema.Category do
 
   import Ecto.Query, only: [from: 2]
 
-  @derive {Jason.Encoder, only: [:id, :qname, :name, :description, @top_field] ++ @common_fields}
+  @derive {Jason.Encoder, only: [:id, :path, :name, :description, @top_field] ++ @common_fields}
   schema "category" do
-    field :qname
+    field :path
     field :name
     field :description, :string, default: "none"
 
@@ -23,8 +23,8 @@ defmodule Storage.Schema.Category do
   @impl Storage.Schema
   def changeset(category, data \\ %{}) do
     category
-    |> Changeset.cast(data, [:qname, :name, :description, :top, @status_field])
-    |> Changeset.validate_required([:qname, :name, :top, @status_field])
+    |> Changeset.cast(data, [:path, :name, :description, :top, @status_field])
+    |> Changeset.validate_required([:path, :name, :top, @status_field])
   end
 
   def add(data), do: add(%__MODULE__{}, data)

@@ -984,12 +984,12 @@ paths:
             type: integer
           description: 数据集大小
         - in: query
-          name: category_qname
+          name: category_path
           schema:
             type: string
           description: 类别(查询)名称
         - in: query
-          name: tag_qname
+          name: tag_path
           schema:
             type: string
           description: 标签(查询)名称
@@ -1027,12 +1027,12 @@ paths:
             type: integer
           description: 数据集大小
         - in: query
-          name: category_qname
+          name: category_path
           schema:
             type: string
           description: 类别(查询)名称
         - in: query
-          name: tag_qname
+          name: tag_path
           schema:
             type: string
           description: 标签(查询)名称
@@ -1062,7 +1062,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrReason"
-  /article/query/{qtext}:
+  /article/query/{path}:
     get:
       tags:
         - 文章
@@ -1070,7 +1070,7 @@ paths:
       operationId: getArticle
       parameters:
         - in: path
-          name: qtext
+          name: path
           required: true
           schema:
             type: string
@@ -2023,7 +2023,7 @@ components:
       properties:
         id:
           type: integer
-        qname:
+        path:
           type: string
         name:
           type: string
@@ -2045,7 +2045,7 @@ components:
       properties:
         id:
           type: integer
-        qname:
+        path:
           type: string
         name:
           type: string
@@ -2069,7 +2069,7 @@ components:
           type: integer
         category_id:
           type: integer
-        qtext:
+        path:
           type: string
         title:
           type: string

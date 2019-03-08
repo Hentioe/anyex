@@ -4,27 +4,27 @@ defmodule WebServerTest.Router.CategoryRouterTest do
   test "add and update category", state do
     conn =
       conn(:post, "/category/admin", %{
-        qname: "category-1",
+        path: "category-1",
         name: "类别1"
       })
 
     conn = conn |> put_json_header |> put_authorization(state) |> call
     assert conn.status == 200
     category = conn |> resp_to_map
-    assert category.qname == "category-1"
+    assert category.path == "category-1"
     assert category.name == "类别1"
 
     conn =
       conn(:put, "/category/admin", %{
         id: category.id,
-        qname: "category-1-updated",
+        path: "category-1-updated",
         name: "更新后的类别1"
       })
 
     conn = conn |> put_json_header |> put_authorization(state) |> call
     assert conn.status == 200
     category = conn |> resp_to_map
-    assert category.qname == "category-1-updated"
+    assert category.path == "category-1-updated"
     assert category.name == "更新后的类别1"
 
     conn = conn(:delete, "/category/admin/#{category.id}")
@@ -54,14 +54,14 @@ defmodule WebServerTest.Router.CategoryRouterTest do
     |> Enum.map(fn i ->
       conn =
         conn(:post, "/category/admin", %{
-          qname: "category-#{i}",
+          path: "category-#{i}",
           name: "类别#{i}"
         })
 
       conn = conn |> put_json_header |> put_authorization(state) |> call
       assert conn.status == 200
       category = conn |> resp_to_map
-      assert category.qname == "category-#{i}"
+      assert category.path == "category-#{i}"
       assert category.name == "类别#{i}"
     end)
 
