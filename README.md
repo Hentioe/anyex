@@ -15,7 +15,7 @@
 ```` bash
 git clone https://github.com/anyex-project/anyex.git
 cd anyex
-git checkout v0.9.2
+git checkout v0.10.0
 ````
 
 ### 基于 Docker
@@ -109,7 +109,8 @@ git checkout v0.9.2
       cors_origins: ["*"],
       token_secret: "demo_secret",
       token_validity: 60 * 60 * 24 * 45
-      security_check: 3
+      security_check: 3,
+      path_strategy: :raw
     ````
 
     （上面分别是数据库配置和 Web 服务配置，此处编辑的配置将永久编译到二进制应用中）
