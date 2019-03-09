@@ -240,18 +240,20 @@ defmodule WebServer.Router do
 
   defp import_resp_error_json do
     quote do
+      import WebServer.Result
+
       def resp_error(conn, error) when is_map(error) do
         message = Map.get(error, :message)
 
         if message == nil do
-          resp_json(conn, %{message: "[Expected]", data: error}, 400)
+          resp_json(conn, result(5000, "[Expected]", error), 400)
         else
-          resp_json(conn, %{message: message, data: nil}, 400)
+          resp_json(conn, result(5000, message), 400)
         end
       end
 
       def resp_error(conn, error, data \\ nil) when is_binary(error) do
-        resp_json(conn, %{message: error, data: data}, 400)
+        resp_json(conn, result(5000, error, data), 400)
       end
     end
   end

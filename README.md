@@ -108,7 +108,7 @@ git checkout v0.10.0
       markdown_enables: [:article, :tweet],
       cors_origins: ["*"],
       token_secret: "demo_secret",
-      token_validity: 60 * 60 * 24 * 45
+      token_validity: 60 * 60 * 24 * 45,
       security_check: 3,
       path_strategy: :raw
     ````
