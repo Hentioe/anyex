@@ -4,16 +4,16 @@ defmodule WebServer.Result do
   @derive Jason.Encoder
   defstruct [:code, :message, :data]
 
-  def result(code, message, data \\ nil) do
+  def result(reason_type, message, data \\ nil) when is_atom(reason_type) do
     %__MODULE__{
-      code: code,
+      code: error_code(reason_type),
       message: message,
       data: data
     }
   end
 
   @errors general: 5000,
-          invalid_header: 8001
+          header_invalid: 8001
   def error_code(reason_type) do
     @errors[reason_type] || @errors[:general]
   end

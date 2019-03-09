@@ -10,7 +10,7 @@ defmodule WebServer.Plugs.AccessControlPlug do
   end
 
   def resp_401(conn) do
-    conn |> resp_json(result(error_code(:invalid_header), "unauthorized"), 401)
+    conn |> resp_json(result(:header_invalid, "unauthorized"), 401)
   end
 
   @re_admin Regex.compile!("/[^/]+/admin")
