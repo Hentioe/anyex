@@ -2,13 +2,15 @@ defmodule WebServer.Plugs.AccessControlPlug do
   @moduledoc false
   use WebServer.Conn
 
+  import WebServer.Result
+
   defp resp_json(conn, body, status) when is_integer(status) do
     conn
     |> send_resp(status, Jason.encode!(body))
   end
 
   def resp_401(conn) do
-    conn |> resp_json(%{message: "unauthorized", data: nil}, 401)
+    conn |> resp_json(result(error_code(:invalid_header), "unauthorized"), 401)
   end
 
   @re_admin Regex.compile!("/[^/]+/admin")
