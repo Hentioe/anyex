@@ -2,8 +2,9 @@ defmodule WebServer.Routes.ArticleRouter do
   @moduledoc false
   alias Storage.Schema.{Article}
   alias WebServer.Config.Store, as: ConfigStore
+  alias WebServer.Error
 
-  import WebServer.Common
+  import WebServer.{Common, Error}
 
   use WebServer.Router,
     schema: Article,
@@ -45,13 +46,16 @@ defmodule WebServer.Routes.ArticleRouter do
     conn |> resp(r)
   end
 
-  get "/query/:path" do
+  get "/" do
+    conn = conn |> fetch_query_params()
+    path = conn.params |> Map.get("path")
+    unless path, do: raise(Error, error(:params_deficiency, "Path parameter not found"))
     filters = [path: path] |> specify_normal_status
 
     r =
       case Article.find(filters) do
         {:ok, nil} ->
-          {:ok, nil}
+          raise(Error, error(:not_found, "This article is missing..."))
 
         {:ok, article} ->
           markdown_support? = ConfigStore.exists(:web_server, :markdown_enables, :article)

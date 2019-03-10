@@ -157,7 +157,7 @@ defmodule WebServerTest.Router.ArticleRouterTest do
     assert conn.status == 200
     article = conn |> resp_to_map
 
-    conn = conn(:get, "/article/query/#{article.path}") |> call
+    conn = conn(:get, "/article?path=#{article.path}") |> call
     assert conn.status == 200
     r = conn |> resp_to_map
     assert r != nil
@@ -166,10 +166,16 @@ defmodule WebServerTest.Router.ArticleRouterTest do
     conn = conn(:delete, "/article/admin/#{article.id}") |> put_authorization(state) |> call
     assert conn.status == 200
 
-    conn = conn(:get, "/article/query/#{article.path}") |> call
-    assert conn.status == 200
-    r = conn |> resp_to_map
-    assert r == nil
+    try do
+      conn(:get, "/article?path=#{article.path}") |> call
+    rescue
+      e in WebServer.Error ->
+        assert true
+        assert e.message == "This article is missing..."
+
+      _ ->
+        assert false
+    end
 
     conn = conn(:get, "/article/admin/#{article.id}") |> put_authorization(state) |> call
     assert conn.status == 200

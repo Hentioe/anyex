@@ -114,10 +114,16 @@ defmodule WebServer.Router do
       end
 
       def handle_errors(conn, %{kind: kind, reason: reason, stack: _stack}) do
-        resp_error(conn, %{
-          kind: kind,
-          reason: "internally did not successfully complete this task"
-        })
+        case {kind, reason} do
+          {:error, %WebServer.Error{message: message, reason_type: reason_type}} ->
+            resp_error(conn, %{message: message, reason_type: reason_type})
+
+          _ ->
+            resp_error(conn, %{
+              kind: kind,
+              reason: "internally did not successfully complete this task"
+            })
+        end
       end
     end
   end
@@ -243,12 +249,23 @@ defmodule WebServer.Router do
       import WebServer.Result
 
       def resp_error(conn, error) when is_map(error) do
-        message = Map.get(error, :message)
+        case error do
+          %{message: message, reason_type: reason_type} ->
+            resp_json(conn, result(reason_type, message), 400)
 
-        if message == nil do
-          resp_json(conn, result(:general, "[Expected]", error), 400)
-        else
-          resp_json(conn, result(:general, message), 400)
+          %{message: message} ->
+            resp_json(conn, result(:general, message), 400)
+
+          _ ->
+            resp_json(
+              conn,
+              result(
+                :general,
+                "Caught the internal cause of the error, but can't tell you~",
+                error
+              ),
+              400
+            )
         end
       end
 

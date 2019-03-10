@@ -13,7 +13,9 @@ defmodule WebServer.Result do
   end
 
   @errors general: 5000,
-          header_invalid: 8001
+          header_invalid: 8001,
+          not_found: 7002,
+          params_deficiency: 6001
   def error_code(reason_type) do
     @errors[reason_type] || @errors[:general]
   end
