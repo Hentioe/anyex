@@ -49,7 +49,7 @@ defmodule WebServer.Routes.ArticleRouter do
   get "/" do
     conn = conn |> fetch_query_params()
     path = conn.params |> Map.get("path")
-    unless path, do: raise(Error, error(:params_deficiency, "Path parameter not found"))
+    unless path, do: raise(Error, error(:params_deficiency, "path parameter not found"))
     filters = [path: path] |> specify_normal_status
 
     r =
