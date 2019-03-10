@@ -261,7 +261,7 @@ defmodule WebServer.Router do
               conn,
               result(
                 :general,
-                "Caught the internal cause of the error, but can't tell you~",
+                "caught the internal cause of the error, but can't tell you~",
                 error
               ),
               400

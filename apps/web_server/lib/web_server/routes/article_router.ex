@@ -55,7 +55,7 @@ defmodule WebServer.Routes.ArticleRouter do
     r =
       case Article.find(filters) do
         {:ok, nil} ->
-          raise(Error, error(:not_found, "This article is missing..."))
+          raise(Error, error(:not_found, "this article is missing..."))
 
         {:ok, article} ->
           markdown_support? = ConfigStore.exists(:web_server, :markdown_enables, :article)

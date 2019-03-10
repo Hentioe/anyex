@@ -171,7 +171,7 @@ defmodule WebServerTest.Router.ArticleRouterTest do
     rescue
       e in WebServer.Error ->
         assert true
-        assert e.message == "This article is missing..."
+        assert e.message == "this article is missing..."
 
       _ ->
         assert false
