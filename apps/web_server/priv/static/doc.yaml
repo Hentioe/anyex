@@ -1062,7 +1062,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrReason"
-  /article/query/{path}:
+  /article:
     get:
       tags:
         - 文章
@@ -1071,7 +1071,6 @@ paths:
       parameters:
         - in: path
           name: path
-          required: true
           schema:
             type: string
           description: 文章查询文本
@@ -1081,9 +1080,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                items:
-                  $ref: "#/components/schemas/Article"
+                $ref: "#/components/schemas/Article"
         400:
           description: 错误响应
           content:
@@ -2013,10 +2010,14 @@ components:
       title: 错误
       type: object
       properties:
+        code:
+          type: integer
+          example: 5000
         message:
           type: string
         data:
           type: object
+          example: null
     Category:
       title: 类别
       type: object
