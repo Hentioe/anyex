@@ -6,8 +6,6 @@ clone:
 pipeline:
   test:
     image: bluerain/elixir:1.8.1-slim
-    when:
-      event: [push, tag, deployment]
     commands:
       - sleep 5
       - export ANYEX_DB_HOSTNAME=database
