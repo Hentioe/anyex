@@ -46,11 +46,17 @@ defmodule WebServer.Routes.ArticleRouter do
     conn |> resp(r)
   end
 
+  @params_conflict "'id' and 'path' can only exist one at the same time"
+  @params_deficiency "'id' or 'path' not found"
   get "/" do
     conn = conn |> fetch_query_params()
     path = conn.params |> Map.get("path")
-    unless path, do: raise(Error, error(:params_deficiency, "path parameter not found"))
-    filters = [path: path] |> specify_normal_status
+    id = conn.params |> Map.get("id")
+
+    if id && path, do: raise(Error, error(:params_conflict, @params_conflict))
+    unless id || path, do: raise(Error, error(:params_deficiency, @params_deficiency))
+
+    filters = [id: id, path: path] |> specify_normal_status
 
     r =
       case Article.find(filters) do
