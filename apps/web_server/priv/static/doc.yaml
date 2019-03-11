@@ -1069,11 +1069,16 @@ paths:
       summary: 获取前台文章内容
       operationId: getArticle
       parameters:
-        - in: path
+        - in: query
+          name: id
+          schema:
+            type: integer
+          description: 文章 ID
+        - in: query
           name: path
           schema:
             type: string
-          description: 文章查询文本
+          description: 文章查询路径
       responses:
         200:
           description: 文章
