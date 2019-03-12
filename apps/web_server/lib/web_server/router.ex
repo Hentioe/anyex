@@ -114,6 +114,14 @@ defmodule WebServer.Router do
       end
 
       def handle_errors(conn, %{kind: kind, reason: reason, stack: _stack}) do
+        json_opts = JSONHeaderPlug.init(nil)
+        cors_opts = CORSPlug.init(origin: &__MODULE__.origins/0, methods: ["*"])
+
+        conn =
+          conn
+          |> JSONHeaderPlug.call(json_opts)
+          |> CORSPlug.call(cors_opts)
+
         case {kind, reason} do
           {:error, %WebServer.Error{message: message, reason_type: reason_type}} ->
             resp_error(conn, %{message: message, reason_type: reason_type})
