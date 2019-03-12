@@ -9,7 +9,7 @@ info:
   license:
     name: MIT 许可证
     url: "https://opensource.org/licenses/mit-license.php"
-  version: 0.10.2
+  version: 0.10.3
 servers:
   - url: "/"
 tags:
