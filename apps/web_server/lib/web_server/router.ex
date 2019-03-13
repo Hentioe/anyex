@@ -48,6 +48,9 @@ defmodule WebServer.Router do
       unquote(import_schema_status_macro())
 
       def fetch_paging_params(conn) do
+        alias WebServer.Error
+        import WebServer.Error
+
         alias WebServer.Config.Store, as: ConfigStore
         default_limit = ConfigStore.get(:web_server, :default_limit)
         max_limit = ConfigStore.get(:web_server, :max_limit)
@@ -57,17 +60,15 @@ defmodule WebServer.Router do
         limit = Map.get(conn.params, "limit", "#{default_limit}")
 
         offset =
-          try do
-            String.to_integer(offset)
-          rescue
-            _ in ArgumentError -> 0
+          case Integer.parse(offset) do
+            :error -> raise Error, error(:params_invalid, "'offset' is not a valid number")
+            {n, _} -> n
           end
 
         limit =
-          try do
-            String.to_integer(limit)
-          rescue
-            _ in ArgumentError -> default_limit
+          case Integer.parse(limit) do
+            :error -> raise Error, error(:params_invalid, "'limit' is not a valid number")
+            {n, _} -> n
           end
 
         limit = if limit > max_limit, do: max_limit, else: limit
